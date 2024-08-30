@@ -16,6 +16,16 @@ connection.connect((err) => {
     console.log('Connected to MySQL database.');
 });
 
+// homepage route
+router.get('/', (req, res) => {
+    res.render('login', { errorMessage: null });
+    // return res.send({
+    //     error: false,
+    //     message: 'Welcome to RESTful CRUD API with NodeJS, Express, MYSQL',
+    //     written_by: 'yongyut',
+    // })
+})
+
 // GET login page
 router.get('/login', (req, res) => {
     res.render('login', { errorMessage: null });
@@ -53,11 +63,11 @@ router.post('/signup', (req, res) => {
     const { email, firstname, lastname, password, icode } = req.body;
     const username = email; // Use email as username for simplicity
 
-    // Check if user already exists
+    // Check if user ซ้ำ
     connection.query('SELECT * FROM users WHERE username = ?', [username], (err, results) => {
         if (err) throw err;
         if (results.length > 0) {
-            res.render('signup', { errorMessage: 'Username already exists' });
+            res.render('signup', { errorMessage: 'Username นี้มีชื่อผู้ใช้งานแล้ว' });
         } else {
             bcrypt.hash(password, 10, (err, hashedPassword) => {
                 if (err) throw err;

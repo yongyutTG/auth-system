@@ -1,9 +1,10 @@
 {
   "name": "auth-system",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,10 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "mysql2": "^3.11.0",
-    "Router": "^2.1.0"
+    "Router": "^2.1.0",
+    "sweetalert2": "^11.12.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
   }
 }
