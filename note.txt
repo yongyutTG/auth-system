@@ -1,0 +1,12 @@
+
+สร้าง app
+Run Command Line
+1.เลือก Drive ที่จะ Create app
+cd D: 
+2. Create folder name
+mkdir auth-system
+cd auth-system
+3.Create package.jason
+npm init -y
+ติดตั้ง 
+npm install express body-parser express-session bcryptjs ejs Router
