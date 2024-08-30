@@ -42,7 +42,7 @@ router.post('/login', (req, res) => {
             bcrypt.compare(password, user.password, (err, result) => {
                 if (result) {
                     req.session.user = username;
-                    res.redirect('/home');
+                    res.redirect('/profile');  // เปลี่ยนเส้นทาง จาก home ไปเป็น Profile
                 } else {
                     res.render('login', { errorMessage: 'Invalid password' });
                 }
@@ -82,14 +82,77 @@ router.post('/signup', (req, res) => {
     });
 });
 
-// GET home page
-router.get('/home', (req, res) => {
+// // GET home page show list-signup all 
+// router.get('/home', (req, res) => {
+//     if (req.session.user) {
+//         const searchQuery = req.query.search || ''; // รับคำค้นหาจาก query string
+//         const searchSQL = 'SELECT * FROM users WHERE username LIKE ? OR email LIKE ? OR firstname LIKE ? OR lastname LIKE ?';
+//         const searchValue = `%${searchQuery}%`;
+
+//         connection.query(searchSQL, [searchValue, searchValue, searchValue, searchValue], (err, results) => {
+//             if (err) throw err;
+//             res.render('home', { username: req.session.user, users: results, searchQuery: searchQuery });
+//         });
+//     } else {
+//         res.redirect('/login');
+//     }
+// });
+
+
+
+// GET profile page  เพิ่ม Route เพื่อแสดงข้อมูลผู้ใช้และจัดการการแก้ไขข้อมูล
+router.get('/profile', (req, res) => {
     if (req.session.user) {
-        res.render('home', { username: req.session.user });
+        // ดึงข้อมูลของผู้ใช้จากฐานข้อมูล
+        connection.query('SELECT * FROM users WHERE username = ?', [req.session.user], (err, results) => {
+            if (err) throw err;
+            const user = results[0];
+            res.render('profile', { user, errorMessage: null });
+        });
     } else {
         res.redirect('/login');
     }
 });
+
+// GET all users page
+router.get('/users', (req, res) => {
+    if (req.session.user) {
+        const currentUser = req.session.user; // Assuming `req.session.user` contains user details
+
+        connection.query('SELECT * FROM users', (err, results) => {
+            if (err) throw err;
+            res.render('users', { users: results, user: currentUser });
+        });
+    } else {
+        res.redirect('/login');
+    }
+});
+
+
+
+// POST update profile
+router.post('/profile/update', (req, res) => {
+    const { email, firstname, lastname } = req.body;
+    const username = req.session.user;
+
+    // ตรวจสอบความถูกต้องของข้อมูล
+    if (!email || !firstname || !lastname) {
+        connection.query('SELECT * FROM users WHERE username = ?', [username], (err, results) => {
+            if (err) throw err;
+            const user = results[0];
+            res.render('profile', { user, errorMessage: 'Please fill in all fields' });
+        });
+    } else {
+        // อัปเดตข้อมูลผู้ใช้ในฐานข้อมูล
+        connection.query('UPDATE users SET email = ?, firstname = ?, lastname = ? WHERE username = ?', 
+        [email, firstname, lastname, username], (err) => {
+            if (err) throw err;
+            res.redirect('/profile');
+        });
+    }
+});
+
+
 
 // GET logout
 router.get('/logout', (req, res) => {
