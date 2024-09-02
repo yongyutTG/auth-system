@@ -21,7 +21,7 @@ router.get('/', (req, res) => {
     res.render('login', { errorMessage: null });
     // return res.send({
     //     error: false,
-    //     message: 'Welcome to RESTful CRUD API with NodeJS, Express, MYSQL',
+    //     message: ' RESTful CRUD API with NodeJS, Express, MYSQL',
     //     written_by: 'yongyut',
     // })
 })
@@ -61,7 +61,7 @@ router.get('/signup', (req, res) => {
 // POST signup
 router.post('/signup', (req, res) => {
     const { email, firstname, lastname, password, icode } = req.body;
-    const username = email; // Use email as username for simplicity
+    const username = email;
 
     // Check if user ซ้ำ
     connection.query('SELECT * FROM users WHERE username = ?', [username], (err, results) => {
@@ -100,7 +100,7 @@ router.post('/signup', (req, res) => {
 
 
 
-// GET profile page  เพิ่ม Route เพื่อแสดงข้อมูลผู้ใช้และจัดการการแก้ไขข้อมูล
+// GET profile page
 router.get('/profile', (req, res) => {
     if (req.session.user) {
         // ดึงข้อมูลของผู้ใช้จากฐานข้อมูล
