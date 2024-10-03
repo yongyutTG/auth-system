@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit&display=swap');
+* {
+    padding: 0;
+    margin: 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-family: "Kanit", sans-serif;
+}
+
+body {
+    background-color: #e8ebf3;
+}
+
+.header {
+    background-color: #001337;
+    text-align: center;
+    padding: 2em 0;
+}
+
+.header h2 {
+    color: #3194ee;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 2em;
+    letter-spacing: 0.05em;
+}
+
+.header h3 {
+    color: #f5f5f5;
+    font-size: 1.5em;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+p {
+    width: 90%;
+    max-width: 500px;
+    margin: 1.5em auto;
+    text-align: center;
+    font-size: 1.1em;
+    font-style: italic;
+    color: #001337;
+}
+
+a {
+    font-size: 1.2em;
+    display: block;
+    max-width: 500px;
+    text-align: center;
+    text-decoration: none;
+    padding: 0.8em 0;
+    border-radius: 0.3em;
+}
+
+.container a {
+    background-color: #3194ee;
+    color: #f5f5f5;
+    width: 90%;
+    -webkit-box-shadow: 0 0.6em #24629b;
+    box-shadow: 0 0.6em #24629b;
+    margin: 1.1em auto;
+}
+
+#website-link {
+    width: 95%;
+    background-color: #eebc31;
+    color: #001337;
+    margin: 2em auto;
+    -webkit-box-shadow: 0 0.6em #9a791e;
+    box-shadow: 0 0.6em #9a791e;
+}
+
+a:active {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -webkit-transform: translateY(0.6em);
+    -ms-transform: translateY(0.6em);
+    transform: translateY(0.6em);
+}
+
+@media screen and (max-width: 500px) {
+    body {
+        font-size: 14px;
+    }
+}

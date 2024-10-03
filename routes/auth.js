@@ -3,12 +3,13 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const mysql = require('mysql2');
 
-// Create MySQL connection
+require('dotenv').config();
+//connection env
 const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '12345678',
-    database: 'auth_system'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
 });
 
 connection.connect((err) => {
@@ -16,53 +17,73 @@ connection.connect((err) => {
     console.log('Connected to MySQL database.');
 });
 
-// homepage route
+
 router.get('/', (req, res) => {
-    res.render('login', { errorMessage: null });
-    // return res.send({
-    //     error: false,
-    //     message: ' RESTful CRUD API with NodeJS, Express, MYSQL',
-    //     written_by: 'yongyut',
-    // })
+    res.render('signin', { errorMessage: null });
 })
 
-// GET login page
-router.get('/login', (req, res) => {
-    res.render('login', { errorMessage: null });
+// GET signin page
+router.get('/signin', (req, res) => {
+    res.render('signin', { errorMessage: null });
 });
 
-// POST login
-router.post('/login', (req, res) => {
+router.post('/signin', (req, res) => {
     const { username, password } = req.body;
+    connection.query('SELECT * FROM users WHERE email = ?', [username], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({
+                status: 'error',
+                message: 'Internal server error'
+            });
+        }
 
-    connection.query('SELECT * FROM users WHERE username = ?', [username], (err, results) => {
-        if (err) throw err;
         if (results.length > 0) {
-            const user = results[0];
+            const user = results[0];          
             bcrypt.compare(password, user.password, (err, result) => {
+                // console.log(user.password);
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({
+                        status: 'error',
+                        message: 'Error during password validation'
+                    });
+                }
                 if (result) {
-                    req.session.user = username;
-                    res.redirect('/profile');  // เปลี่ยนเส้นทาง จาก home ไปเป็น Profile
+                    req.session.user = username;  // Set session user
+                    console.log('Session User loging:', req.session.user);
+                    res.status(200).json({
+                        status: 'success',
+                        message: 'Login successful. Redirecting to profile...',
+                        redirectUrl: '/home'  
+                    });
                 } else {
-                    res.render('login', { errorMessage: 'Invalid password' });
+                    console.log('Password ไม่ถูกต้อง');
+                    res.json({
+                        status: 'error',
+                        message: 'Incorrect password. Please try again.'
+                    });
                 }
             });
         } else {
-            res.render('login', { errorMessage: 'Invalid username' });
+            console.log('ไม่พบ Email ในระบบ');
+            res.json({
+                status: 'error',
+                message: 'Email not found'
+            });
         }
     });
 });
+
 
 // GET signup page
 router.get('/signup', (req, res) => {
     res.render('signup', { errorMessage: null });
 });
-
 // POST signup
 router.post('/signup', (req, res) => {
     const { email, firstname, lastname, password, icode } = req.body;
     const username = email;
-
     // Check if user ซ้ำ
     connection.query('SELECT * FROM users WHERE username = ?', [username], (err, results) => {
         if (err) throw err;
@@ -82,82 +103,29 @@ router.post('/signup', (req, res) => {
     });
 });
 
-// // GET home page show list-signup all 
-// router.get('/home', (req, res) => {
-//     if (req.session.user) {
-//         const searchQuery = req.query.search || ''; // รับคำค้นหาจาก query string
-//         const searchSQL = 'SELECT * FROM users WHERE username LIKE ? OR email LIKE ? OR firstname LIKE ? OR lastname LIKE ?';
-//         const searchValue = `%${searchQuery}%`;
-
-//         connection.query(searchSQL, [searchValue, searchValue, searchValue, searchValue], (err, results) => {
-//             if (err) throw err;
-//             res.render('home', { username: req.session.user, users: results, searchQuery: searchQuery });
-//         });
-//     } else {
-//         res.redirect('/login');
-//     }
-// });
-
-
-
 // GET profile page
-router.get('/profile', (req, res) => {
+router.get('/home', (req, res) => {
     if (req.session.user) {
+        console.log('Rendering home page for user:', req.session.user);
         // ดึงข้อมูลของผู้ใช้จากฐานข้อมูล
         connection.query('SELECT * FROM users WHERE username = ?', [req.session.user], (err, results) => {
             if (err) throw err;
             const user = results[0];
-            res.render('profile', { user, errorMessage: null });
+            res.render('home', { user});
         });
     } else {
-        res.redirect('/login');
+        console.log('No session found, redirecting to signin');
+        res.redirect('/signin');
     }
 });
 
-// GET all users page
-router.get('/users', (req, res) => {
-    if (req.session.user) {
-        const currentUser = req.session.user; // Assuming `req.session.user` contains user details
-
-        connection.query('SELECT * FROM users', (err, results) => {
-            if (err) throw err;
-            res.render('users', { users: results, user: currentUser });
-        });
-    } else {
-        res.redirect('/login');
-    }
-});
-
-
-
-// POST update profile
-router.post('/profile/update', (req, res) => {
-    const { email, firstname, lastname } = req.body;
-    const username = req.session.user;
-
-    // ตรวจสอบความถูกต้องของข้อมูล
-    if (!email || !firstname || !lastname) {
-        connection.query('SELECT * FROM users WHERE username = ?', [username], (err, results) => {
-            if (err) throw err;
-            const user = results[0];
-            res.render('profile', { user, errorMessage: 'Please fill in all fields' });
-        });
-    } else {
-        // อัปเดตข้อมูลผู้ใช้ในฐานข้อมูล
-        connection.query('UPDATE users SET email = ?, firstname = ?, lastname = ? WHERE username = ?', 
-        [email, firstname, lastname, username], (err) => {
-            if (err) throw err;
-            res.redirect('/profile');
-        });
-    }
-});
 
 
 
 // GET logout
 router.get('/logout', (req, res) => {
     req.session.destroy();
-    res.redirect('/login');
+    res.redirect('/signin');
 });
 
 module.exports = router;

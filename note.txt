@@ -9,4 +9,7 @@ cd auth-system
 3.Create package.jason
 npm init -y
 ติดตั้ง 
-npm install express body-parser express-session bcryptjs ejs Router
+npm install express body-parser express-session bcryptjs ejs Router dotenv config
+
+npm install config   //กรณีมีหลายโปรเจค
+

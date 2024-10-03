@@ -6,9 +6,12 @@ const path = require('path');
 const app = express();
 const authRouter = require('./routes/auth'); // ตรวจสอบเส้นทางของไฟล์ให้ถูกต้อง
 
+
 app.set('view engine', 'ejs');
+app.use('/public', express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(session({
     secret: 'your-secret-key',
     resave: false,

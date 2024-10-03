@@ -12,8 +12,8 @@
     <div id="signupbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                    
         <div class="panel panel-info">
             <div class="panel-heading">
-                <div class="panel-title">Sign Up</div>
-                <div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="/login">Sign In</a></div>
+                <div class="panel-title">ลงทะเบียน</div>
+                <div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="/login">เข้าสูระบบ</a></div>
             </div>
 
             <div class="panel-body">
@@ -22,25 +22,31 @@
                         <div class="alert alert-danger"><%= errorMessage %></div>
                     <% } %>
                     <div class="form-group">
-                        <label for="email" class="col-md-3 control-label">Email</label>
+                        <label for="empid" class="col-md-3 control-label">เลขพนักงาน</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" name="empid" placeholder="Empid">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="col-md-3 control-label">อีเมลล์</label>
                         <div class="col-md-9">
                             <input type="text" class="form-control" name="email" placeholder="Email Address">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="firstname" class="col-md-3 control-label">First Name</label>
+                        <label for="firstname" class="col-md-3 control-label">ชื่อ</label>
                         <div class="col-md-9">
                             <input type="text" class="form-control" name="firstname" placeholder="First Name">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="lastname" class="col-md-3 control-label">Last Name</label>
+                        <label for="lastname" class="col-md-3 control-label">นามสกุล</label>
                         <div class="col-md-9">
                             <input type="text" class="form-control" name="lastname" placeholder="Last Name">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="password" class="col-md-3 control-label">Password</label>
+                        <label for="password" class="col-md-3 control-label">รหัสผ่าน</label>
                         <div class="col-md-9">
                             <input type="password" class="form-control" name="password" placeholder="Password">
                         </div>
