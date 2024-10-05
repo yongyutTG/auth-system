@@ -75,6 +75,8 @@ function validat_signin() {
         })
         .then(response => response.json())
         .then(response => {
+            //  if (response.status === 200) {
+            //  if(response.RespCode == 200) {
             if (response.status === 'success') {
                 Swal.fire({
                     position: "top-end",
@@ -108,101 +110,117 @@ function validat_signin() {
 
 
 
-function goto_register(){
+function validate_signup(){
     const error_msg_register = $("#error_msg_register");
     error_msg_register.hide();
-    const check_register_fname = document.getElementById("txt_modal_register_fname").value;
-    const check_register_lname = document.getElementById("txt_modal_register_lname").value;
-    const check_register_dept = document.getElementById("txt_modal_register_dept").value;
-    const check_register_salary = document.getElementById("txt_modal_register_salary").value;
-    const check_register_username = document.getElementById("txt_modal_register_username").value;
-    const check_register_password = document.getElementById("txt_modal_register_password").value;
-    const check_register_email = document.getElementById("txt_modal_register_email").value;
-    // const check_register_fname = $("#txt_modal_register_fname")
-
-
-
-    //let check_format_register_email = document.getElementById("txt_modal_register_email");
+    const chk_signup_empid = document.getElementById("txt-modal-signup-empid").value;
+    const chk_signup_username = document.getElementById("txt-modal-signup-username").value;
+    const chk_signup_email = document.getElementById("txt-modal-signup-email").value;
+    const chk_signup_firstname = document.getElementById("txt-modal-signup-firstname").value;
+    const chk_signup_lastname = document.getElementById("txt-modal-signup-lastname").value;
+    const chk_signup_password = document.getElementById("txt-modal-signup-password").value;
+    // const chk_signup_box = document.getElementById("invalidCheck").value;
+    var isChecked = document.querySelector('input[type="checkbox"]').checked;
     const filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-
-
-    //Fullname
-    if (check_register_fname.length <= 0 || (check_register_fname == "" )) {
-        error_msg_register.show();
-        error_msg_register.html("กรุณากรอก fname").css("color", "red") 
-        document.getElementById("txt_modal_register_fname").focus();
+   
+    if (chk_signup_empid.length <= 0 || (chk_signup_empid == "" )) {
+        Swal.fire({
+            icon: 'error',
+            title: 'กรุณากรอกเลขพนักงาน',
+            confirmButtonText: 'OK'
+        });
+        document.getElementById("txt-modal-signup-empid").focus();
         return false
-    //Username
-    } else if (check_register_lname.length <= 0) {
+    } else if (chk_signup_username.length <= 0) {
         error_msg_register.show();
-        error_msg_register.html("กรุณากรอก lastname").css("color","red")
-        document.getElementById("txt_modal_register_lname").focus();
+        error_msg_register.html("กรุณากรอกชื่อผู้ใช้งาน").css("color","red")
+        document.getElementById("txt-modal-signup-username").focus();
         return false
-    } else if (check_register_dept.length <= 0) {
+    } else if (chk_signup_email.length <= 0) {
         error_msg_register.show();
-        error_msg_register.html("กรุณากรอก Department").css("color","red")
-        document.getElementById("txt_modal_register_dept").focus();
+        error_msg_register.html("กรุณากรอก E-mail").css("color","red")
+        document.getElementById("txt-modal-signup-email").focus();
         return false
-    } else if (check_register_salary.length <= 0) {
+    } else if (chk_signup_firstname.length <= 0) {
+            error_msg_register.show();
+            error_msg_register.html("กรุณากรอกชือ").css("color","red")
+            document.getElementById("txt-modal-signup-firstname").focus();
+            return false
+    } else if (chk_signup_lastname.length <= 0) {
         error_msg_register.show();
-        error_msg_register.html("กรุณากรอก Salary").css("color","red")
-        document.getElementById("txt_modal_register_salary").focus();
+        error_msg_register.html("กรุณากรอกนามสกุล").css("color","red")
+        document.getElementById("txt-modal-signup-lastname").focus();
         return false
-
-    } else if (check_register_username.length <= 0) {
+    } else if (chk_signup_password.length <= 0) {
         error_msg_register.show();
-        error_msg_register.html("กรุณากรอก Username").css("color","red")
-        document.getElementById("txt_modal_register_username").focus();
+        error_msg_register.html("กรุณากรอกรัสผ่าน").css("color","red")
+        document.getElementById("txt-modal-signup-password").focus();
         return false
-    
-    } else if (check_register_password.length <= 0) {
+    } else if(!isChecked) {
         error_msg_register.show();
-        error_msg_register.html("กรุณากรอก Password").css("color","red")
-        document.getElementById("txt_modal_register_password").focus();
+        error_msg_register.html("กรุณากด ยอมรับนโยบายความเป็นส่วนตัว").css("color","red")
+        // alert("You must accept the terms before proceeding");
         return false
     //fomat email
-    } else if (!filter.test(check_register_email)) {
+    } else if (!filter.test(chk_signup_email)) {
         $(error_msg_register).show();
         error_msg_register.html("รูปแบบ Email ไม่ถูกต้อง").css("color", "red")
-        document.getElementById("txt_modal_register_email").focus();
+        document.getElementById("txt-modal-signup-email").focus();
         return false 
     
     } else {
-        console.log("Register Request")
-        $.ajax({
+        console.log("Sign Up Request")
+        // ส่งข้อมูลแบบ POST ไปยัง API /signup
+        fetch('http://localhost:3000/signup', {
             method: 'POST',
-            url: 'http://localhost:3000/create_signup',
-            data: {
-                data_reg_fname : check_register_fname,
-                data_reg_lname : check_register_lname,
-                data_reg_dept : check_register_dept,
-                data_reg_salary : check_register_salary,
-                data_reg_email : check_register_email,
-                data_reg_username : check_register_username,
-                data_reg_password: check_register_password,
+            headers: {
+                'Content-Type': 'application/json'
             },
-         
-            success: function(response) {
-                console.log("Response Register Success")
-                if (response.RespCode == 200){
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'register success', // timer: 1000 
-                    })
-
-                } else if (response.RespCode == 400) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Email ซ้ำ กรุณาใช้ email อื่น!'
-                    })
-                    //$("#closeaddmodal").trigger('click')
-                }
-            },
-            error: function(err) {
-                console.log('bad', err)
-            }
-
+            body: JSON.stringify({
+                fchk_signup_empid: chk_signup_empid,
+                fchk_signup_username: chk_signup_username,
+                fchk_signup_email: chk_signup_email,
+                fchk_signup_firstname: chk_signup_firstname,
+                fchk_signup_lastname: chk_signup_lastname,
+                fchk_signup_password: chk_signup_password
+            })
         })
+        .then(response => {
+            // ตรวจสอบว่าผลลัพธ์เป็น JSON หรือไม่
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); // แปลง response ให้เป็น JSON
+        })
+        .then(response => {
+            // ตรวจสอบ status ที่ส่งกลับมาจากเซิร์ฟเวอร์
+            if (response.status === 'success') {
+                Swal.fire({
+                    position: "top-end",
+                    icon: 'success',
+                    title: response.message,
+                    timer: 1500,
+                    showConfirmButton: false
+                }).then(() => {
+                    window.location.href = response.redirectUrl;  // เปลี่ยนเส้นทางไปยังหน้า profile/home
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: response.message || 'Signup Failed',
+                    confirmButtonText: 'OK'
+                });
+            }
+        })
+        .catch(err => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Signup Failed',
+                text: 'There was an error processing your request. Please try again.',
+                confirmButtonText: 'OK'
+            });
+            console.error('Error during signup request:', err);
+        });
     }
 
 }

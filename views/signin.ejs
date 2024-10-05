@@ -15,13 +15,24 @@
             <section style="display: inline;" id="ma">
                 <div class="title">
                     <i class='far fa-user-circle' style='font-size:84px;padding: 1px; color: #070707'></i>
-                    <h2>Smart Device Payment Service Provider (PSP)</h2>
+                    <h2>ระะบบยืม-คืนอุปกรณ์คอมพิวเตอร์ภายในองค์กรณ์</h2>
                 </div> 
                 <br>
+                <!-- <div class="form-group">
+                    <label for="modal-signup-empid">เลขพนักงาน</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        <i class="fa fa-user"></i>
+                    </span>
+                        <input type="text" id="txt-modal-signup-empid" name="modal-empid" style="text-align:center"class="form-control" placeholder="เลขพนักงาน" />
+                    </div>
+                </div> -->
+
                 <div class="form-group">
                     <i class="fa fa-user"></i>
                     <label><input type=text id ="input_username"name="input_username"style="text-align:center"placeholder="username or email"></label>
                     <small></small>
+                    
                 </div>
             
                 <div class="form-group">
@@ -34,12 +45,12 @@
                 <div id="error_msg_login"></div>
                 
                 <div class="signin-link">   
-                    <button  type="submit"   id="input_login" onclick="validat_signin()" >Sign in <i class="fas fa-sign-in-alt"></i></button>
+                    <button  type="submit"   id="input_login" onclick="validat_signin()" >Sign In <i class="fas fa-sign-in-alt"></i></button>
                 
                 </div>
                 <div class="signup-forget_password-link">
                     <br>
-                    <p><a href="#" data-toggle="modal" data-target="#modal_register">Sign up</a></p>
+                    <p><a href="#" data-toggle="modal" data-target="#modal_register">Sign Up</a></p>
                     <p><a href="#" data-toggle="modal" data-target="#modal_forget_password ">Forget Password</a></p>
                 </div>
 
@@ -104,7 +115,7 @@
                 </div>
 
 
-                <!-- Register -->
+                <!-- signup -->
                 <div class="modal fade" id="modal_register">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -120,101 +131,94 @@
                                 <div class="form-row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="modal_fullname">firstName(ชื่อ)</label>
+                                            <label for="modal-signup-empid">เลขพนักงาน</label>
                                             <div class="input-group">
                                                 <span class="input-group-addon">
-                                                <i class="fa fa-user"></i>
+                                                <i class="fa fa-list-numeric"></i>
                                             </span>
-                                                <input type="text" id="txt_modal_register_fname" name="modal_fname" class="form-control" placeholder="Enter First Name" />
+                                                <input type="text" id="txt-modal-signup-empid" name="modal-empid" class="form-control" placeholder="เลขพนักงาน" />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="modal_username">LastName(นามสกุล)</label>
+                                            <label for="modal-username">ชื่อผู้ใช้งาน</label>
                                             <div class="input-group">
                                                 <span class="input-group-addon">
                                                     <i class="fa fa-user"></i> 
                                                 </span>
-                                                <input type="text" id="txt_modal_register_lname" name="modal_lname" class="form-control" placeholder="Enter last name" />
+                                                <input type="text" id="txt-modal-signup-username" name="modal-username" class="form-control" placeholder="ชื่อผู้ใช้งาน" />
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="modal_fullname">Department(แผนก)</label>
+                                            <label for="modal-email">อีเมลล์</label>
                                             <div class="input-group">
                                                 <span class="input-group-addon">
-                                                <i class="fa fa-user"></i>
+                                                <i class="fa fa-voicemail"></i>
                                             </span>
-                                                <input type="text" id="txt_modal_register_dept" name="modal_dept" class="form-control" placeholder="Enter Dept" />
+                                                <input type="text" id="txt-modal-signup-email" name="modal-email" class="form-control" placeholder="อีเมลล์" />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="modal_username">เงินเดือน(Salary)</label>
+                                            <label for="modal-firstname">ชื่อ</label>
                                             <div class="input-group">
                                                 <span class="input-group-addon">
-                                                    <i class="fa fa-user"></i> 
+                                                    <i class="fa fa-user-friends"></i> 
                                                 </span>
-                                                <input type="number" id="txt_modal_register_salary" name="modal_salary" class="form-control" placeholder="Enter Salary" />
+                                                <input type="text" id="txt-modal-signup-firstname" name="modal-firstname" class="form-control" placeholder="ชื่อ" />
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="modal_fullname">User name(ชื่อผู้ใช้งาน)</label>
+                                            <label for="modal-lastlname">นามสกุล</label>
                                             <div class="input-group">
                                                 <span class="input-group-addon">
-                                                <i class="fa fa-user"></i>
+                                                <i class="fa fa-users-rectangle"></i>
                                             </span>
-                                                <input type="text" id="txt_modal_register_username" name="modal_username" class="form-control" placeholder="Enter Username" />
+                                                <input type="text" id="txt-modal-signup-lastname" name="modal-lastlname" class="form-control" placeholder="นามสกุล" />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="modal_username">Password(รหัสผ่าน)</label>
+                                            <label for="modal-password">กำหนด(รหัสผ่าน)</label>
                                             <div class="input-group">
                                                 <span class="input-group-addon">
-                                                    <i class="fa fa-user"></i> 
+                                                    <i class="fa fa-unlock-alt"></i> 
                                                 </span>
-                                                <input type="text" id="txt_modal_register_password" name="modal_password" class="form-control" placeholder="Enter Password" />
+                                                <input type="text" id="txt-modal-signup-password" name="modal-password" class="form-control" placeholder="รหัสผ่าน" />
                                             </div>
                                         </div>
                                     </div>
 
                                 </div>
-                                <div class="form-group">
-                                    <label for="modal_email">Email address(อีเมลล์)</label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                        <i class="fa fa-envelope"></i>
-                                    </span>
-                                        <input type="email" id="txt_modal_register_email" name="modal_email" class="form-control" placeholder="Enter email" />
-                                    </div>
-                                </div>
+                               
                             </div>
                             <div id="error_msg_register"></div>
-
+                            <!-- <div id ="error_msg_register" class="alert alert-primary" role="alert"> -->
+                             
                             <div class="form-group">
                                 <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-                                <label class="form-check-label" for="invalidCheck">
-                                    <p><a href="https://www.baania.com/terms" style="font-size: 14px;color: #27a5df "> ยอมรับนโยบายความเป็นส่วนตัว และเงื่อนไขการใช้บริการ</a></p>
-                                </label>
-                                <div class="invalid-feedback">
-                                    You must agree before submitting.
-                                </div>
+                                    <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+                                    <label class="form-check-label" for="invalidCheck">
+                                        <p><a href="https://www.baania.com/terms" style="font-size: 14px;color: #070707 "> ยอมรับนโยบายความเป็นส่วนตัว และเงื่อนไขการใช้บริการ</a></p>
+                                    </label>
+                                    <div class="invalid-feedback">
+                                        You must agree before submitting.
+                                    </div>
                                 </div>
                             </div>
-
+                            
                             <div class="modal-footer">
                                 
-                                <button onclick="goto_register()" class="btn btn-success">Register</button>
+                                <button onclick="validate_signup()" class="btn btn-success">Sign Up</button>
                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 
                             </div>
@@ -230,13 +234,11 @@
 
     <br><br>
     <footer id="footer ">
-        BY <a> Yongyut.Wacharapongmatee </a>
+        Version <a> Yongyut.W</a>
     </footer><br /><br /><br />
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+    <script src="public/js/jquery-3.4.1.slim.min.js"></script>
     <script src="public/bootstrap-5.2.3-dist/js/bootstrap.min.js"></script>
-    <!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
     <script src="public/js/sweetalert2.all.min.js"></script>
 
     <script src="public/js/action.js" type="text/javascript "></script>

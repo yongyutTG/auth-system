@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const mysql = require('mysql2');
-
+const saltRounds = 10
 require('dotenv').config();
 //connection env
 const connection = mysql.createConnection({
@@ -14,7 +14,7 @@ const connection = mysql.createConnection({
 
 connection.connect((err) => {
     if (err) throw err;
-    console.log('Connected to MySQL database.');
+    console.log('Connected....');
 });
 
 
@@ -29,19 +29,40 @@ router.get('/signin', (req, res) => {
 
 router.post('/signin', (req, res) => {
     const { username, password } = req.body;
+    // ตรวจสอบว่าข้อมูลที่จำเป็นถูกส่งมาหรือไม่
+    if (!username || !password) {
+        return res.status(400).json({
+            status: 'error',
+            message: 'กรุณากรอกข้อมูลให้ครบทุกช่อง'
+        });
+    }
     connection.query('SELECT * FROM users WHERE email = ?', [username], (err, results) => {
         if (err) {
-            console.error(err);
+            console.error('Error querying database:', err);
             return res.status(500).json({
                 status: 'error',
-                message: 'Internal server error'
+                message: 'เกิดข้อผิดพลาดในการค้นหา'
             });
         }
-
         if (results.length > 0) {
             const user = results[0];          
-            bcrypt.compare(password, user.password, (err, result) => {
-                // console.log(user.password);
+            bcrypt.compare(password, user.password, (err, isMatch) => {
+                console.log('Password เข้ารหัส',user.password);
+                if (isMatch) {
+                    req.session.user = username;  // Set session user
+                    console.log('Session User loging:', req.session.user);
+                    res.status(200).json({
+                        status: 'success',
+                        message: 'Login successful. Redirecting to profile...',
+                        redirectUrl: '/home'
+                    });
+                } else {
+                    console.log('Password ไม่ถูกต้อง');
+                    res.status(401).json({
+                        status: 'error',
+                        message: 'Incorrect password. Please try again.'
+                    });
+                }
                 if (err) {
                     console.error(err);
                     return res.status(500).json({
@@ -49,25 +70,10 @@ router.post('/signin', (req, res) => {
                         message: 'Error during password validation'
                     });
                 }
-                if (result) {
-                    req.session.user = username;  // Set session user
-                    console.log('Session User loging:', req.session.user);
-                    res.status(200).json({
-                        status: 'success',
-                        message: 'Login successful. Redirecting to profile...',
-                        redirectUrl: '/home'  
-                    });
-                } else {
-                    console.log('Password ไม่ถูกต้อง');
-                    res.json({
-                        status: 'error',
-                        message: 'Incorrect password. Please try again.'
-                    });
-                }
             });
         } else {
             console.log('ไม่พบ Email ในระบบ');
-            res.json({
+            res.status(401).json({
                 status: 'error',
                 message: 'Email not found'
             });
@@ -82,21 +88,47 @@ router.get('/signup', (req, res) => {
 });
 // POST signup
 router.post('/signup', (req, res) => {
-    const { email, firstname, lastname, password, icode } = req.body;
-    const username = email;
+    const { fchk_signup_empid, fchk_signup_username, fchk_signup_email, fchk_signup_firstname, fchk_signup_lastname , fchk_signup_password} = req.body;
+    // ตรวจสอบว่าข้อมูลที่จำเป็นถูกส่งมาหรือไม่
+    if (!fchk_signup_empid || !fchk_signup_username || !fchk_signup_email || !fchk_signup_firstname || !fchk_signup_lastname || !fchk_signup_password) {
+        return res.status(400).json({
+            status: 'error',
+            message: 'กรุณากรอกข้อมูลให้ครบทุกช่อง'
+        });
+    }
     // Check if user ซ้ำ
-    connection.query('SELECT * FROM users WHERE username = ?', [username], (err, results) => {
-        if (err) throw err;
+    connection.query('SELECT * FROM users WHERE email = ?', [fchk_signup_email], (err, results) => {
+        if (err) {
+            console.error('Error SELECT email:', err);
+            return res.status(500).json({
+                status: 'error',
+                message: 'เกิดข้อผิดพลาดในการค้นหา'
+            });
+        }
+        // if (err) throw err;
         if (results.length > 0) {
-            res.render('signup', { errorMessage: 'Username นี้มีชื่อผู้ใช้งานแล้ว' });
+            console.log('email นี้มีชื่อผู้ใช้งานแล้ว');
+            return res.status(200).json({
+                status: 'warning',
+                message: 'email นี้มีชื่อผู้ใช้งานแล้ว'
+            });
         } else {
             bcrypt.hash(password, 10, (err, hashedPassword) => {
-                if (err) throw err;
-                const newUser = { username, email, firstname, lastname, password: hashedPassword };
+                const newUser = { fchk_signup_empid, fchk_signup_username, fchk_signup_email, fchk_signup_firstname, fchk_signup_lastname , fchk_signup_password: hashedPassword };
                 connection.query('INSERT INTO users SET ?', newUser, (err) => {
-                    if (err) throw err;
-                    req.session.user = username;
-                    res.redirect('/home');
+                    if (err) {
+                        console.error('Error inserting user:', err);
+                        return res.status(400).json({
+                            status: 'error',
+                            message: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล'
+                        });
+                    }
+                      // ส่งผลลัพธ์การลงทะเบียนสำเร็จกลับไปยัง frontend
+                    res.status(201).json({
+                        status: 'success',
+                        message: 'ลงทะเบียนสำเร็จ',
+                        redirectUrl: '/home'  // URL ที่จะ redirect หลังจากลงทะเบียนสำเร็จ
+                    });
                 });
             });
         }
@@ -121,7 +153,6 @@ router.get('/home', (req, res) => {
 
 
 
-
 // GET logout
 router.get('/logout', (req, res) => {
     req.session.destroy();
@@ -129,3 +160,37 @@ router.get('/logout', (req, res) => {
 });
 
 module.exports = router;
+
+// // API /signup สำหรับบันทึกข้อมูลผู้ใช้ลงในฐานข้อมูล
+// app.post('/signup', (req, res) => {
+//     const { fchk_signup_empid, fchk_signup_username, fchk_signup_email, fchk_signup_firstname, fchk_signup_lastname } = req.body;
+
+//     // ตรวจสอบว่าข้อมูลที่จำเป็นถูกส่งมาหรือไม่
+//     if (!fchk_signup_empid || !fchk_signup_username || !fchk_signup_email || !fchk_signup_firstname || !fchk_signup_lastname) {
+//         return res.status(400).json({
+//             status: 'error',
+//             message: 'กรุณากรอกข้อมูลให้ครบทุกช่อง'
+//         });
+//     }
+
+//     // SQL Query สำหรับเพิ่มข้อมูลลงในฐานข้อมูล
+//     const sql = `INSERT INTO users (empid, username, email, firstname, lastname) VALUES (?, ?, ?, ?, ?)`;
+
+//     db.query(sql, [fchk_signup_empid, fchk_signup_username, fchk_signup_email, fchk_signup_firstname, fchk_signup_lastname], (err, result) => {
+//         if (err) {
+//             console.error('Error inserting user:', err);
+//             return res.status(500).json({
+//                 status: 'error',
+//                 message: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล'
+//             });
+//         }
+
+//         // ส่งผลลัพธ์การลงทะเบียนสำเร็จกลับไปยัง frontend
+//         res.status(201).json({
+//             status: 'success',
+//             message: 'ลงทะเบียนสำเร็จ',
+//             redirectUrl: '/profile'  // URL ที่จะ redirect หลังจากลงทะเบียนสำเร็จ
+//         });
+//     });
+// });
+
