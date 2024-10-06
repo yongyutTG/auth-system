@@ -114,11 +114,16 @@ function validate_signup(){
     const error_msg_register = $("#error_msg_register");
     error_msg_register.hide();
     const chk_signup_empid = document.getElementById("txt-modal-signup-empid").value;
-    const chk_signup_username = document.getElementById("txt-modal-signup-username").value;
-    const chk_signup_email = document.getElementById("txt-modal-signup-email").value;
     const chk_signup_firstname = document.getElementById("txt-modal-signup-firstname").value;
     const chk_signup_lastname = document.getElementById("txt-modal-signup-lastname").value;
+    const chk_signup_email = document.getElementById("txt-modal-signup-email").value;
+    const chk_signup_position = document.getElementById("txt-modal-signup-position").value;
+    const chk_signup_start_date = document.getElementById("txt-modal-signup-start_date").value;
     const chk_signup_password = document.getElementById("txt-modal-signup-password").value;
+    const chk_signup_confrim_password = document.getElementById("txt-modal-signup-confrim-password").value;
+    const chk_signup_remaining_leaves = document.getElementById("txt-modal-signup-remaining_leaves").value;
+
+
     // const chk_signup_box = document.getElementById("invalidCheck").value;
     var isChecked = document.querySelector('input[type="checkbox"]').checked;
     const filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
@@ -131,30 +136,46 @@ function validate_signup(){
         });
         document.getElementById("txt-modal-signup-empid").focus();
         return false
-    } else if (chk_signup_username.length <= 0) {
-        error_msg_register.show();
-        error_msg_register.html("กรุณากรอกชื่อผู้ใช้งาน").css("color","red")
-        document.getElementById("txt-modal-signup-username").focus();
-        return false
-    } else if (chk_signup_email.length <= 0) {
-        error_msg_register.show();
-        error_msg_register.html("กรุณากรอก E-mail").css("color","red")
-        document.getElementById("txt-modal-signup-email").focus();
-        return false
     } else if (chk_signup_firstname.length <= 0) {
-            error_msg_register.show();
-            error_msg_register.html("กรุณากรอกชือ").css("color","red")
-            document.getElementById("txt-modal-signup-firstname").focus();
-            return false
+        error_msg_register.show();
+        error_msg_register.html("กรุณากรอกชื่อ").css("color","red")
+        document.getElementById("txt-modal-signup-firstname").focus();
+        return false
     } else if (chk_signup_lastname.length <= 0) {
         error_msg_register.show();
         error_msg_register.html("กรุณากรอกนามสกุล").css("color","red")
         document.getElementById("txt-modal-signup-lastname").focus();
         return false
+    } else if (chk_signup_email.length <= 0) {
+        error_msg_register.show();
+        error_msg_register.html("กรุณากรอกอีเมลล์").css("color","red")
+        document.getElementById("txt-modal-signup-email").focus();
+        return false
+    } else if (chk_signup_position.length <= 0) {
+        error_msg_register.show();
+        error_msg_register.html("กรุณากรอกตำแหน่งงาน").css("color","red")
+        document.getElementById("txt-modal-signup-position").focus();
+        return false
+    } else if (chk_signup_start_date.length <= 0) {
+        error_msg_register.show();
+        error_msg_register.html("กรุณากรอกวันที่เริ่มทำงาน").css("color","red")
+        document.getElementById("txt-modal-signup-start_date").focus();
+        return false
     } else if (chk_signup_password.length <= 0) {
         error_msg_register.show();
-        error_msg_register.html("กรุณากรอกรัสผ่าน").css("color","red")
+        error_msg_register.html("กรุณากรอก password").css("color","red")
         document.getElementById("txt-modal-signup-password").focus();
+        return false
+    } else if (chk_signup_confrim_password.length <= 0) {
+        error_msg_register.show();
+        error_msg_register.html("กรุณากรอก confrim password").css("color","red")
+        document.getElementById("txt-modal-signup-confrim-password").focus();
+        return false
+        
+    } else if (chk_signup_remaining_leaves.length <= 0) {
+        error_msg_register.show();
+        error_msg_register.html("กรุณากรอกสิทธิวันลา").css("color","red")
+        document.getElementById("txt-modal-remaining_leaves").focus();
         return false
     } else if(!isChecked) {
         error_msg_register.show();
@@ -169,7 +190,7 @@ function validate_signup(){
         return false 
     
     } else {
-        console.log("Sign Up Request")
+        // console.log("Sign Up Request")
         // ส่งข้อมูลแบบ POST ไปยัง API /signup
         fetch('http://localhost:3000/signup', {
             method: 'POST',
@@ -178,11 +199,14 @@ function validate_signup(){
             },
             body: JSON.stringify({
                 fchk_signup_empid: chk_signup_empid,
-                fchk_signup_username: chk_signup_username,
-                fchk_signup_email: chk_signup_email,
                 fchk_signup_firstname: chk_signup_firstname,
                 fchk_signup_lastname: chk_signup_lastname,
-                fchk_signup_password: chk_signup_password
+                fchk_signup_email: chk_signup_email,
+                fchk_signup_position: chk_signup_position,
+                fchk_signup_start_date: chk_signup_start_date,
+                fchk_signup_password: chk_signup_password,
+                fchk_signup_confrim_password: chk_signup_confrim_password,
+                fchk_signup_remaining_leaves: chk_signup_remaining_leaves
             })
         })
         .then(response => {

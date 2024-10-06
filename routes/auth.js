@@ -22,6 +22,7 @@ router.get('/', (req, res) => {
     res.render('signin', { errorMessage: null });
 })
 
+
 // GET signin page
 router.get('/signin', (req, res) => {
     res.render('signin', { errorMessage: null });
@@ -36,7 +37,7 @@ router.post('/signin', (req, res) => {
             message: 'กรุณากรอกข้อมูลให้ครบทุกช่อง'
         });
     }
-    connection.query('SELECT * FROM users WHERE email = ?', [username], (err, results) => {
+    connection.query('SELECT * FROM employees WHERE email = ?', [username], (err, results) => {
         if (err) {
             console.error('Error querying database:', err);
             return res.status(500).json({
@@ -88,16 +89,23 @@ router.get('/signup', (req, res) => {
 });
 // POST signup
 router.post('/signup', (req, res) => {
-    const { fchk_signup_empid, fchk_signup_username, fchk_signup_email, fchk_signup_firstname, fchk_signup_lastname , fchk_signup_password} = req.body;
+    const { fchk_signup_empid, fchk_signup_firstname, fchk_signup_lastname, fchk_signup_email, fchk_signup_position , fchk_signup_start_date, fchk_signup_password,fchk_signup_confrim_password,fchk_signup_remaining_leaves} = req.body;
     // ตรวจสอบว่าข้อมูลที่จำเป็นถูกส่งมาหรือไม่
-    if (!fchk_signup_empid || !fchk_signup_username || !fchk_signup_email || !fchk_signup_firstname || !fchk_signup_lastname || !fchk_signup_password) {
+    if (!fchk_signup_empid || !fchk_signup_firstname || !fchk_signup_lastname || !fchk_signup_email || !fchk_signup_position || !fchk_signup_start_date || !fchk_signup_start_date || !fchk_signup_password || !fchk_signup_confrim_password || !fchk_signup_remaining_leaves) {
         return res.status(400).json({
             status: 'error',
             message: 'กรุณากรอกข้อมูลให้ครบทุกช่อง'
         });
     }
+      // ตรวจสอบว่ารหัสผ่านและการยืนยันรหัสผ่านตรงกันหรือไม่
+    if (fchk_signup_password !== fchk_signup_confrim_password) {
+        return res.status(200).json({
+        status: 'warning',
+        message: 'รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน'
+    });
+    }
     // Check if user ซ้ำ
-    connection.query('SELECT * FROM users WHERE email = ?', [fchk_signup_email], (err, results) => {
+    connection.query('SELECT * FROM employees WHERE email = ?', [fchk_signup_email], (err, results) => {
         if (err) {
             console.error('Error SELECT email:', err);
             return res.status(500).json({
@@ -105,17 +113,36 @@ router.post('/signup', (req, res) => {
                 message: 'เกิดข้อผิดพลาดในการค้นหา'
             });
         }
-        // if (err) throw err;
         if (results.length > 0) {
-            console.log('email นี้มีชื่อผู้ใช้งานแล้ว');
+            console.log(results,'email นี้มีชื่อผู้ใช้งานแล้ว');
             return res.status(200).json({
                 status: 'warning',
                 message: 'email นี้มีชื่อผู้ใช้งานแล้ว'
             });
         } else {
-            bcrypt.hash(password, 10, (err, hashedPassword) => {
-                const newUser = { fchk_signup_empid, fchk_signup_username, fchk_signup_email, fchk_signup_firstname, fchk_signup_lastname , fchk_signup_password: hashedPassword };
-                connection.query('INSERT INTO users SET ?', newUser, (err) => {
+             // เข้ารหัสรหัสผ่านก่อนบันทึก
+            bcrypt.hash(fchk_signup_password, saltRounds, (err, hashedPassword) => {
+                if (err) {
+                    console.error('Error hashing password:', err);
+                    return res.status(500).json({
+                        status: 'error',
+                        message: 'เกิดข้อผิดพลาดในการเข้ารหัสรหัสผ่าน'
+                    });
+                }
+                console.log(fchk_signup_password,hashedPassword);
+                // สร้างข้อมูลผู้ใช้ใหม่
+                const newUser = {
+                    empid: fchk_signup_empid,
+                    firstname: fchk_signup_firstname,
+                    lastname: fchk_signup_lastname,
+                    email: fchk_signup_email,
+                    position: fchk_signup_position,
+                    start_date: fchk_signup_start_date,
+                    remaining_leaves: fchk_signup_remaining_leaves,
+                    password: hashedPassword
+                };
+                // บันทึกข้อมูลผู้ใช้ลงในฐานข้อมูล
+                connection.query('INSERT INTO employees SET ?', newUser, (err) => {
                     if (err) {
                         console.error('Error inserting user:', err);
                         return res.status(400).json({
@@ -140,7 +167,7 @@ router.get('/home', (req, res) => {
     if (req.session.user) {
         console.log('Rendering home page for user:', req.session.user);
         // ดึงข้อมูลของผู้ใช้จากฐานข้อมูล
-        connection.query('SELECT * FROM users WHERE username = ?', [req.session.user], (err, results) => {
+        connection.query('SELECT * FROM employees WHERE email = ?', [req.session.user], (err, results) => {
             if (err) throw err;
             const user = results[0];
             res.render('home', { user});
