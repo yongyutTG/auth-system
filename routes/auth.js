@@ -3,7 +3,9 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const mysql = require('mysql2');
 const saltRounds = 10
+
 require('dotenv').config();
+
 //connection env
 const connection = mysql.createConnection({
     host: process.env.DB_HOST,
