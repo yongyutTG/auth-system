@@ -19,13 +19,9 @@ connection.connect((err) => {
     console.log('Connected....');
 });
 
-
 router.get('/', (req, res) => {
     res.render('signin', { errorMessage: null });
 })
-
-
-// GET signin page
 router.get('/signin', (req, res) => {
     res.render('signin', { errorMessage: null });
 });
@@ -59,6 +55,7 @@ router.post('/signin', (req, res) => {
                         message: 'Login successful. Redirecting to profile...',
                         redirectUrl: '/home'
                     });
+                    console.log(isMatch)
                 } else {
                     console.log('Password ไม่ถูกต้อง');
                     res.status(401).json({
@@ -83,7 +80,6 @@ router.post('/signin', (req, res) => {
         }
     });
 });
-
 
 // GET signup page
 router.get('/signup', (req, res) => {
@@ -156,7 +152,7 @@ router.post('/signup', (req, res) => {
                     res.status(201).json({
                         status: 'success',
                         message: 'ลงทะเบียนสำเร็จ',
-                        redirectUrl: '/home'  // URL ที่จะ redirect หลังจากลงทะเบียนสำเร็จ
+                        redirectUrl: '/signin'  // URL ที่จะ redirect หลังจากลงทะเบียนสำเร็จ
                     });
                 });
             });
@@ -164,16 +160,12 @@ router.post('/signup', (req, res) => {
     });
 });
 
-// GET profile page
+
 router.get('/home', (req, res) => {
     if (req.session.user) {
         console.log('Rendering home page for user:', req.session.user);
-        // ดึงข้อมูลของผู้ใช้จากฐานข้อมูล
-        connection.query('SELECT * FROM employees WHERE email = ?', [req.session.user], (err, results) => {
-            if (err) throw err;
-            const user = results[0];
-            res.render('home', { user});
-        });
+       
+        res.render('home', { user: req.session.user });
     } else {
         console.log('No session found, redirecting to signin');
         res.redirect('/signin');
@@ -181,6 +173,61 @@ router.get('/home', (req, res) => {
 });
 
 
+// GET signup page
+// router.get('/users', (req, res) => {
+//     res.render('users', { errorMessage: null });
+// });
+router.get('/users', (req, res) => {
+    if (req.session.user) {
+        console.log('Rendering home page for user:', req.session.user);
+        // ดึงข้อมูลของพนักงานทั้งหมดจากฐานข้อมูล
+        connection.query('SELECT * FROM employees', (err, results) => {
+            if (err) throw err;
+            const employees = results;
+            // ส่งข้อมูลพนักงานทั้งหมดไปยัง EJS template
+            res.render('users', { user: req.session.user, employees });
+        });
+    } else {
+        console.log('No session found, redirecting to signin');
+        res.redirect('/signin');
+    }
+});
+
+router.get('/leave-request', (req, res) => {
+    if (req.session.user) {
+        console.log('Rendering home page for leave_request:', req.session.user);
+        res.render('leave-request', { user: req.session.user });
+    } else {
+        console.log('No session found, redirecting to signin');
+        res.redirect('/signin');
+    }
+});
+router.post('/leave-request', (req, res) => {
+    const { fchk_signup_empid, fchk_signup_firstname} = req.body;
+    // ตรวจสอบว่าข้อมูลที่จำเป็นถูกส่งมาหรือไม่
+    if (!fchk_signup_empid || !fchk_signup_firstname || !fchk_signup_lastname || !fchk_signup_email || !fchk_signup_position || !fchk_signup_start_date || !fchk_signup_start_date || !fchk_signup_password || !fchk_signup_confrim_password || !fchk_signup_remaining_leaves) {
+        return res.status(400).json({
+            status: 'error',
+            message: 'กรุณากรอกข้อมูลให้ครบทุกช่อง'
+        });
+    }
+});
+
+// Search route
+// router.get('/search', (req, res) => {
+//     const searchQuery = req.query.query;
+
+//     // SQL to search employees by ID or Name
+//     const sql = `SELECT * FROM employees WHERE empid LIKE ? OR email LIKE ?`;
+//     const queryValue = `%${searchQuery}%`;
+
+//     connection.query(sql, [queryValue, queryValue], (err, results) => {
+//         if (err) {
+//             return res.status(500).send('Database query error');
+//         }
+//         res.render('home', { employees: results });
+//     });
+// });
 
 // GET logout
 router.get('/logout', (req, res) => {
@@ -189,37 +236,4 @@ router.get('/logout', (req, res) => {
 });
 
 module.exports = router;
-
-// // API /signup สำหรับบันทึกข้อมูลผู้ใช้ลงในฐานข้อมูล
-// app.post('/signup', (req, res) => {
-//     const { fchk_signup_empid, fchk_signup_username, fchk_signup_email, fchk_signup_firstname, fchk_signup_lastname } = req.body;
-
-//     // ตรวจสอบว่าข้อมูลที่จำเป็นถูกส่งมาหรือไม่
-//     if (!fchk_signup_empid || !fchk_signup_username || !fchk_signup_email || !fchk_signup_firstname || !fchk_signup_lastname) {
-//         return res.status(400).json({
-//             status: 'error',
-//             message: 'กรุณากรอกข้อมูลให้ครบทุกช่อง'
-//         });
-//     }
-
-//     // SQL Query สำหรับเพิ่มข้อมูลลงในฐานข้อมูล
-//     const sql = `INSERT INTO users (empid, username, email, firstname, lastname) VALUES (?, ?, ?, ?, ?)`;
-
-//     db.query(sql, [fchk_signup_empid, fchk_signup_username, fchk_signup_email, fchk_signup_firstname, fchk_signup_lastname], (err, result) => {
-//         if (err) {
-//             console.error('Error inserting user:', err);
-//             return res.status(500).json({
-//                 status: 'error',
-//                 message: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล'
-//             });
-//         }
-
-//         // ส่งผลลัพธ์การลงทะเบียนสำเร็จกลับไปยัง frontend
-//         res.status(201).json({
-//             status: 'success',
-//             message: 'ลงทะเบียนสำเร็จ',
-//             redirectUrl: '/profile'  // URL ที่จะ redirect หลังจากลงทะเบียนสำเร็จ
-//         });
-//     });
-// });
 

@@ -17,7 +17,7 @@ app.use(session({
     secret: 'your-secret-key',
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 60000 } // กำหนดเวลาหมดอายุของ session
+    cookie: { maxAge: 120000 } // กำหนดเวลาหมดอายุของ session
 }));
 
 app.use('/', authRouter); // ใช้ router สำหรับเส้นทางหลัก

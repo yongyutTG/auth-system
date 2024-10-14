@@ -5,43 +5,6 @@ window.addEventListener("load", (e)=>{
   input.focus(); // adding the focus
 })
 
-// function goto_login() { 
-//     const error_msg_login = $("#error_msg_login");
-//     $(error_msg_login).hide();
-//     let check_username = document.getElementById("input_username").value;
-//     let check_password = document.getElementById("input_password").value;
-//     if (check_username.length <= 0 || (check_username == null )){
-//         $(error_msg_login).show();
-//         error_msg_login.html("กรุณากรอก Username").css("color", "red")
-//         document.getElementById("input_username").focus();
-//         return false
-//     } else if (check_password.length <= 0 || (check_password == "")){
-//         $(error_msg_login).show();
-//         error_msg_login.html("กรุณากรอก Password").css("color", "red")
-//         document.getElementById("input_password").focus();
-//         return false     
-//     } else {
-//         $.ajax({
-//             method: 'post',
-//             url: 'http://localhost:3000/signin',
-//             data: {  
-//                 username: check_username, //ส่ง Req      //คือ ส่งทั้ง form $('#signupform').serialize(),
-//                 password: check_password,
-//             },
-            
-//             success: (response) => {
-//                     window.location.href = '/home';
-//                 // } else {
-              
-//             },
-            
-//             error: (err) => {
-//                 console.log('bad', err)
-//             }
-//         })
-//     }
-// }
-
 function validat_signin() {
     let chk_username = document.getElementById("input_username").value;
     let chk_password = document.getElementById("input_password").value;
@@ -75,8 +38,6 @@ function validat_signin() {
         })
         .then(response => response.json())
         .then(response => {
-            //  if (response.status === 200) {
-            //  if(response.RespCode == 200) {
             if (response.status === 'success') {
                 Swal.fire({
                     position: "top-end",
@@ -106,9 +67,6 @@ function validat_signin() {
         });
     }
 }
-
-
-
 
 function validate_signup(){
     const error_msg_register = $("#error_msg_register");
