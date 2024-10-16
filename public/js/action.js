@@ -16,7 +16,6 @@ function validat_signin() {
             confirmButtonText: 'OK'
         });
         document.getElementById("input_username").focus();
-        return false;
     } else if (chk_password.length <= 0) {
         Swal.fire({
             icon: 'error',
@@ -24,7 +23,6 @@ function validat_signin() {
             confirmButtonText: 'OK'
         });
         document.getElementById("input_password").focus();
-        return false;
     } else {
         fetch('http://localhost:3000/signin', {
             method: 'POST',
@@ -176,7 +174,9 @@ function validate_signup(){
         })
         .then(response => {
             // ตรวจสอบ status ที่ส่งกลับมาจากเซิร์ฟเวอร์
+            
             if (response.status === 'success') {
+               
                 Swal.fire({
                     position: "top-end",
                     icon: 'success',
@@ -184,7 +184,7 @@ function validate_signup(){
                     timer: 1500,
                     showConfirmButton: false
                 }).then(() => {
-                    window.location.href = response.redirectUrl;  // เปลี่ยนเส้นทางไปยังหน้า profile/home
+                    window.location.href = response.redirectUrl;
                 });
             } else {
                 Swal.fire({
@@ -218,7 +218,7 @@ function gotologout() {
         denyButtonText: `Logout`,
     }).then((result) => {
         if (result.isDenied) {
-    window.location.href = '../index.html'
+    window.location.href = '../signin'
         }
     })
 }

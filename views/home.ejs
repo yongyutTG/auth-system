@@ -95,8 +95,10 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ml-auto">
                 <a href="/home" class="nav-item nav-link"><i class="fa fa-home"></i> หน้าหลัก</a>
-                <a href="/leave-request" class="nav-item nav-link"><i class="fa fa-calendar"></i> คำขอลา</a>
+                <a href="/leave-request" class="nav-item nav-link"><i class="fa fa-calendar"></i> ยื่นคำขอลา</a>
                 <a href="/leave-request" class="nav-item nav-link"><i class="fa fa-calendar"></i> ประวัติการลา</a>
+                <a href="/users" class="nav-item nav-link"><i class="fa fa-users"></i> การอนุมัติหรือปฏิเสธคำขอ</a>
+                <a href="/users" class="nav-item nav-link"><i class="fa fa-users"></i> คำนวณวันลาคงเหลือ</a>
                 <a href="/users" class="nav-item nav-link"><i class="fa fa-users"></i> เจ้าหน้าที่ทั้งหมด</a>
                 <a href="#" class="nav-item nav-link"><i class="fa fa-envelope"></i> ข้อความ</a>
                  <!-- Dropdown Menu for Logout -->
@@ -164,7 +166,7 @@
                     <div class="text-center">
                         <img src="public/img/profile-placeholder.png" class="profile-pic" alt="Profile Picture">
                     </div>
-                    <h5 class="text-center mt-3">ชื่อผู้ใช้งาน</h5>
+                    <h5 class="text-center mt-3">ชื่อผู้ใช้งาน : <%= user %></h5>
                     <p class="text-center">ตำแหน่ง: ผู้จัดการฝ่ายบุคคล</p>
                     <p class="text-center">แผนก: ฝ่ายทรัพยากรบุคคล</p>
                     <hr>

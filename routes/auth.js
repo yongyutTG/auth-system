@@ -28,59 +28,63 @@ router.get('/signin', (req, res) => {
 
 router.post('/signin', (req, res) => {
     const { username, password } = req.body;
-    // ตรวจสอบว่าข้อมูลที่จำเป็นถูกส่งมาหรือไม่
+      // valida data
     if (!username || !password) {
         return res.status(400).json({
-            status: 'error',
-            message: 'กรุณากรอกข้อมูลให้ครบทุกช่อง'
-        });
-    }
-    connection.query('SELECT * FROM employees WHERE email = ?', [username], (err, results) => {
-        if (err) {
-            console.error('Error querying database:', err);
-            return res.status(500).json({
-                status: 'error',
-                message: 'เกิดข้อผิดพลาดในการค้นหา'
-            });
-        }
-        if (results.length > 0) {
-            const user = results[0];          
-            bcrypt.compare(password, user.password, (err, isMatch) => {
-                console.log('Password เข้ารหัส',user.password);
-                if (isMatch) {
-                    req.session.user = username;  // Set session user
-                    console.log('Session User loging:', req.session.user);
-                    res.status(200).json({
-                        status: 'success',
-                        message: 'Login successful. Redirecting to profile...',
-                        redirectUrl: '/home'
+            status: "error",
+            message: "กรุณากรอกข้อมูลให้ครบทุกช่อง"
+        })
+    } else {
+        connection.query('select * from employees where email = ?',[username],(err,results)=>{
+            if (err) {
+                console.error('Error querying database:', err);
+                return res.status(500).json({
+                    status: 'error',
+                    message: 'query เกิดข้อผิดพลาด'
+                });
+            } else {
+                if(results.length > 0){
+                    const user =results[0];
+                    bcrypt.compare(password,user.password, (err, isMatch) => {
+                        console.log('password เข้ารหัส',user.password);
+                        if (err) {
+                            console.error(err);
+                            return res.status(500).json({
+                                status: 'error',
+                                message: 'Error password validation'
+                            });        
+                        }
+                        if (isMatch) {
+                            req.session.user = user.firstname +" "+ user.lastname;  // Set session user
+                            console.log('Session User loging:', req.session.user);
+                            res.status(200).json({
+                                data: results,
+                                status: 'success',
+                                message: 'เข้าสู่ระบบสำเร็จ......',
+                                redirectUrl: '/home'
+                            });
+                            console.log(user.empid)
+                            console.log("Check password เป็น false or true  :",isMatch)
+                        } else {
+                            console.log('Password ไม่ถูกต้อง');
+                            res.status(401).json({
+                                status: 'error',
+                                message: 'Incorrect password. Please try again.'
+                            });
+                        }
                     });
-                    console.log(isMatch)
                 } else {
-                    console.log('Password ไม่ถูกต้อง');
+                    console.log('ไม่พบ Email ในระบบ');
                     res.status(401).json({
                         status: 'error',
-                        message: 'Incorrect password. Please try again.'
+                        message: 'Email not found'
                     });
                 }
-                if (err) {
-                    console.error(err);
-                    return res.status(500).json({
-                        status: 'error',
-                        message: 'Error during password validation'
-                    });
-                }
-            });
-        } else {
-            console.log('ไม่พบ Email ในระบบ');
-            res.status(401).json({
-                status: 'error',
-                message: 'Email not found'
-            });
-        }
-    });
+            }
+        });
+    }
 });
-
+ 
 // GET signup page
 router.get('/signup', (req, res) => {
     res.render('signup', { errorMessage: null });
@@ -134,7 +138,7 @@ router.post('/signup', (req, res) => {
                     firstname: fchk_signup_firstname,
                     lastname: fchk_signup_lastname,
                     email: fchk_signup_email,
-                    position: fchk_signup_position,
+                    emp_type: fchk_signup_position,
                     start_date: fchk_signup_start_date,
                     remaining_leaves: fchk_signup_remaining_leaves,
                     password: hashedPassword
@@ -154,6 +158,7 @@ router.post('/signup', (req, res) => {
                         message: 'ลงทะเบียนสำเร็จ',
                         redirectUrl: '/signin'  // URL ที่จะ redirect หลังจากลงทะเบียนสำเร็จ
                     });
+                    console.log("ลงทะเบียนสำเร็จ")
                 });
             });
         }
@@ -165,7 +170,7 @@ router.get('/home', (req, res) => {
     if (req.session.user) {
         console.log('Rendering home page for user:', req.session.user);
        
-        res.render('home', { user: req.session.user });
+        res.render('home', { user: req.session.user});
     } else {
         console.log('No session found, redirecting to signin');
         res.redirect('/signin');
@@ -213,6 +218,24 @@ router.post('/leave-request', (req, res) => {
     }
 });
 
+// router.get('/users/:id', async (req, res) => {
+//     const { id } = req.params
+//     let sql = "SELECT * FROM users WHERE id = ?"
+//    await conn.execute(sql,
+//         [id],
+//         (err, result) => {
+//             if(err) {
+//                 res.status(500).json({
+//                     message : err.message
+//                 })
+//                 return
+//             }
+//             res.status(200).json({
+//                 message : "เรียกข้อมูลสำเร็จ",
+//                 data : result
+//             })
+//         })
+// })
 // Search route
 // router.get('/search', (req, res) => {
 //     const searchQuery = req.query.query;
