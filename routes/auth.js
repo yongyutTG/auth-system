@@ -218,6 +218,47 @@ router.post('/leave-request', (req, res) => {
     }
 });
 
+
+// Route for leave request form
+router.get('/leave', (req, res) => {
+    const sql = 'SELECT EmployeeID FROM Employee'; // ดึงข้อมูล EmployeeID จากตาราง Employees
+    connection.query(sql, (err, employee) => {
+        if (err) throw err;
+        res.render('leave_form', { employee });
+    });
+});
+
+// POST request to submit leave request
+router.post('/leave', (req, res) => {
+    const { employeeID, leaveType, startDate, endDate, totalDays, status, requestDate } = req.body;
+    const sql = `INSERT INTO LeaveRequests (EmployeeID, LeaveType, StartDate, EndDate, TotalDays, Status, RequestDate) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
+                 connection.query(sql, [employeeID, leaveType, startDate, endDate, totalDays, status, requestDate], (err, result) => {
+        if (err) throw err;
+        res.redirect('/leave');
+    });
+});
+
+// Route for Approval form
+router.get('/approval', (req, res) => {
+    const sql = 'SELECT LeaveRequestID FROM LeaveRequests'; // ดึงข้อมูล LeaveRequestID จากตาราง LeaveRequests
+    db.query(sql, (err, leaveRequests) => {
+        if (err) throw err;
+        res.render('approval_form', { leaveRequests });
+    });
+});
+
+// POST request to submit approval form data
+router.post('/approval', (req, res) => {
+    const { leaveRequestID, approvedBy, approvalDate, comments } = req.body;
+    const sql = `INSERT INTO ApprovalHistory (LeaveRequestID, ApprovedBy, ApprovalDate, Comments) 
+                 VALUES (?, ?, ?, ?)`;
+    db.query(sql, [leaveRequestID, approvedBy, approvalDate, comments], (err, result) => {
+        if (err) throw err;
+        res.redirect('/approval');
+    });
+});
+
 // router.get('/users/:id', async (req, res) => {
 //     const { id } = req.params
 //     let sql = "SELECT * FROM users WHERE id = ?"

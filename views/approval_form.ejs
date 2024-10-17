@@ -122,7 +122,7 @@
 <body>
   <header>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a href="#" class="navbar-brand"><i class="fa fa-cube"></i>สวัสดีคุณ <%= user %></a>
+       
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -171,48 +171,38 @@
                 <h2 class="form-title mb-4">คำขอลาพักร้อน</h2>
     
 
-                <form action="/submit-leave-request" method="POST">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="firstname">ชื่อ</label>
-                            <input type="text" class="form-control" id="firstname" name="firstname" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="lastname">นามสกุล</label>
-                            <input type="text" class="form-control" id="lastname" name="lastname" required>
-                        </div>
-                    </div>
+                <h1>Approval Form</h1>
+    <form action="/approval" method="POST">
+        <div>
+            <label for="leaveRequestID">Leave Request ID:</label>
+            <select name="leaveRequestID" id="leaveRequestID" required>
+                <% leaveRequests.forEach(function(request) { %>
+                    <option value="<%= request.LeaveRequestID %>"><%= request.LeaveRequestID %></option>
+                <% }); %>
+            </select>
+        </div>
+        <br>
+        
+        <div>
+            <label for="approvedBy">Approved By:</label>
+            <input type="text" name="approvedBy" id="approvedBy" required>
+        </div>
+        <br>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="start_date">วันที่เริ่มต้น</label>
-                            <input type="date" class="form-control" id="start_date" name="start_date" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="end_date">วันที่สิ้นสุด</label>
-                            <input type="date" class="form-control" id="end_date" name="end_date" required>
-                        </div>
-                    </div>
+        <div>
+            <label for="approvalDate">Approval Date:</label>
+            <input type="date" name="approvalDate" id="approvalDate" required>
+        </div>
+        <br>
 
-                    <div class="mb-3">
-                        <label for="leave_type">ประเภทการลา</label>
-                        <select class="form-select form-select-custom" id="leave_type" name="leave_type" required>
-                            <option selected disabled>เลือกประเภทการลา</option>
-                            <option value="ลากิจ">ลากิจ</option>
-                            <option value="ลาพักร้อน">ลาพักร้อน</option>
-                            <option value="ลาป่วย">ลาป่วย</option>
-                        </select>
-                    </div>
+        <div>
+            <label for="comments">Comments:</label>
+            <textarea name="comments" id="comments" rows="4" cols="50"></textarea>
+        </div>
+        <br>
 
-                    <div class="mb-3">
-                        <label for="reason">เหตุผลในการลา</label>
-                        <textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>
-                    </div>
-                    <button class="btn btn-primary">ยื่นคำขอลา</button>
-                    <button class="btn btn-secondary">ยกเลิก</button>
-                    <!-- <button class="btn btn-primary" type="submit">ยื่นคำขอ</button> -->
-                    <!-- <button class="btn btn-custom" type="submit">ยื่นคำขอ</button> -->
-                </form>
+        <button type="submit">Submit</button>
+    </form>
             </div>
         </div>
     </main>

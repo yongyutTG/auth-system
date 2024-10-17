@@ -26,40 +26,7 @@
             font-weight: bold;
         }
     </style>
-     <!-- <style>
-        .dashboard-card {
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        .card-title {
-            color: #007bff;
-            font-weight: bold;
-        }
-        .profile-pic {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-        }
-        .stat-item {
-            padding: 15px;
-            border-radius: 10px;
-            background-color: #f0f8ff;
-            text-align: center;
-        }
-        .calendar {
-            height: 300px;
-            background-color: #e9ecef;
-            border-radius: 10px;
-        }
-        .carousel-item img {
-            width: 10%;
-            height: 400px;
-            object-fit: cover;
-        }
-    </style> -->
+  
     <style>
         .dashboard-card {
             background-color: #f8f9fa;
@@ -88,34 +55,36 @@
 <body>
   <header>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a href="#" class="navbar-brand"><i class="fa fa-cube"></i>สวัสดีคุณ <%= user %></a>
+        <a href="#" class="navbar-brand"><i class="fa fa-cube"></i> สวัสดีคุณ <%= user %></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
+            <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ml-auto">
                 <a href="/home" class="nav-item nav-link"><i class="fa fa-home"></i> หน้าหลัก</a>
-                <a href="/leave-request" class="nav-item nav-link"><i class="fa fa-calendar"></i> ยื่นคำขอลา</a>
-                <a href="/leave-request" class="nav-item nav-link"><i class="fa fa-calendar"></i> ประวัติการลา</a>
-                <a href="/users" class="nav-item nav-link"><i class="fa fa-users"></i> การอนุมัติหรือปฏิเสธคำขอ</a>
-                <a href="/users" class="nav-item nav-link"><i class="fa fa-users"></i> คำนวณวันลาคงเหลือ</a>
+                <a href="/leave-request" class="nav-item nav-link"><i class="fa fa-file-alt"></i> ยื่นคำขอลา</a>
+               
+                <a href="/leave-history" class="nav-item nav-link"><i class="fa fa-history"></i> ประวัติการลา</a>
+                <a href="/approval" class="nav-item nav-link"><i class="fa fa-check-circle"></i> การอนุมัติหรือปฏิเสธคำขอ</a>
+                <a href="/leave-balance" class="nav-item nav-link"><i class="fa fa-calculator"></i> คำนวณวันลาคงเหลือ</a>
                 <a href="/users" class="nav-item nav-link"><i class="fa fa-users"></i> เจ้าหน้าที่ทั้งหมด</a>
                 <a href="#" class="nav-item nav-link"><i class="fa fa-envelope"></i> ข้อความ</a>
-                 <!-- Dropdown Menu for Logout -->
+                <!-- Dropdown Menu for Logout -->
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa fa-sign-out"></i> ออกจากระบบ
+                        <i class="fa fa-sign-out-alt"></i> ออกจากระบบ
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="/profile"><i class="fa fa-user"></i> โปรไฟล์ของฉัน</a></li>
-                    <li><a class="dropdown-item" href="/settings"><i class="fa fa-cog"></i> ตั้งค่า</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="/logout"><i class="fa fa-sign-out"></i> ออกจากระบบ</a></li>
+                        <li><a class="dropdown-item" href="/profile"><i class="fa fa-user"></i> โปรไฟล์ของฉัน</a></li>
+                        <li><a class="dropdown-item" href="/settings"><i class="fa fa-cog"></i> ตั้งค่า</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="/logout"><i class="fa fa-sign-out-alt"></i> ออกจากระบบ</a></li>
                     </ul>
                 </div>
             </div>
         </div>
     </nav>
+    
   </header>
   <main role="main">
     <div class="container mt-5">

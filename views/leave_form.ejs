@@ -122,7 +122,7 @@
 <body>
   <header>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a href="#" class="navbar-brand"><i class="fa fa-cube"></i>สวัสดีคุณ <%= user %></a>
+       
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -171,47 +171,51 @@
                 <h2 class="form-title mb-4">คำขอลาพักร้อน</h2>
     
 
-                <form action="/submit-leave-request" method="POST">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="firstname">ชื่อ</label>
-                            <input type="text" class="form-control" id="firstname" name="firstname" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="lastname">นามสกุล</label>
-                            <input type="text" class="form-control" id="lastname" name="lastname" required>
-                        </div>
+                <h1>Leave Request Form</h1>
+                <form action="/leave" method="POST">
+                    <div>
+                        <label for="leaveType">Employee ID:</label>
+                        <input type="text" name="employeeID" id="employeeID" required>
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="start_date">วันที่เริ่มต้น</label>
-                            <input type="date" class="form-control" id="start_date" name="start_date" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="end_date">วันที่สิ้นสุด</label>
-                            <input type="date" class="form-control" id="end_date" name="end_date" required>
-                        </div>
+                    <br>
+            
+                    <div>
+                        <label for="leaveType">Leave Type:</label>
+                        <input type="text" name="leaveType" id="leaveType" required>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="leave_type">ประเภทการลา</label>
-                        <select class="form-select form-select-custom" id="leave_type" name="leave_type" required>
-                            <option selected disabled>เลือกประเภทการลา</option>
-                            <option value="ลากิจ">ลากิจ</option>
-                            <option value="ลาพักร้อน">ลาพักร้อน</option>
-                            <option value="ลาป่วย">ลาป่วย</option>
-                        </select>
+                    <br>
+            
+                    <div>
+                        <label for="startDate">Start Date:</label>
+                        <input type="date" name="startDate" id="startDate" required>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="reason">เหตุผลในการลา</label>
-                        <textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>
+                    <br>
+            
+                    <div>
+                        <label for="endDate">End Date:</label>
+                        <input type="date" name="endDate" id="endDate" required>
                     </div>
-                    <button class="btn btn-primary">ยื่นคำขอลา</button>
-                    <button class="btn btn-secondary">ยกเลิก</button>
-                    <!-- <button class="btn btn-primary" type="submit">ยื่นคำขอ</button> -->
-                    <!-- <button class="btn btn-custom" type="submit">ยื่นคำขอ</button> -->
+                    <br>
+            
+                    <div>
+                        <label for="totalDays">Total Days:</label>
+                        <input type="number" name="totalDays" id="totalDays" required>
+                    </div>
+                    <br>
+            
+                    <div>
+                        <label for="status">Status:</label>
+                        <input type="text" name="status" id="status" required>
+                    </div>
+                    <br>
+            
+                    <div>
+                        <label for="requestDate">Request Date:</label>
+                        <input type="date" name="requestDate" id="requestDate" required>
+                    </div>
+                    <br>
+            
+                    <button type="submit">Submit</button>
                 </form>
             </div>
         </div>
