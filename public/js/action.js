@@ -30,8 +30,8 @@ function validat_signin() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                username: chk_username,
-                password: chk_password
+                fchk_username: chk_username,
+                fchk_password: chk_password
             })
         })
         .then(response => response.json())
@@ -75,9 +75,10 @@ function validate_signup(){
     const chk_signup_confrim_password = document.getElementById("txt-modal-signup-confrim-password").value;
     const chk_signup_firstname = document.getElementById("txt-modal-signup-firstname").value;
     const chk_signup_lastname = document.getElementById("txt-modal-signup-lastname").value;
-    const chk_signup_role = document.getElementById("txt-modal-signup-role").value;
-    const chk_signup_total_leave_days = document.getElementById("txt-modal-signup-total_leave_days").value;
-    const chk_signup_remaining_leave_days = document.getElementById("txt-modal-signup-remaining_leave_days").value;
+    const chk_signup_position = document.getElementById("txt-modal-signup-position").value;
+    const chk_signup_department = document.getElementById("txt-modal-signup-department").value;
+    const chk_signup_startdate = document.getElementById("txt-modal-signup-startdate").value;
+    const chk_signup_leavebalance = document.getElementById("txt-modal-signup-leavebalance").value;
 
 
     // const chk_signup_box = document.getElementById("invalidCheck").value;
@@ -118,20 +119,25 @@ function validate_signup(){
         error_msg_register.html("กรุณากรอกนามสกุล").css("color","red")
         document.getElementById("txt-modal-signup-lastname").focus();
         return false
-    } else if (chk_signup_role.length <= 0) {
+    } else if (chk_signup_position.length <= 0) {
         error_msg_register.show();
         error_msg_register.html("กรุณากรอกตำแหน่งงาน").css("color","red")
-        document.getElementById("txt-modal-signup-role").focus();
+        document.getElementById("txt-modal-signup-position").focus();
         return false
-    } else if (chk_signup_total_leave_days.length <= 0) {
+    } else if (chk_signup_department.length <= 0) {
         error_msg_register.show();
-        error_msg_register.html("กรุณากรอกจำนวนวันลาที่ได้สิทธิ์").css("color","red")
-        document.getElementById("txt-modal-signup-total_leave_days").focus();
+        error_msg_register.html("กรุณากรอกฝ่าย/แผนก").css("color","red")
+        document.getElementById("txt-modal-signup-department").focus();
         return false
-    } else if (chk_signup_remaining_leave_days.length <= 0) {
+    } else if (chk_signup_startdate.length <= 0) {
         error_msg_register.show();
-        error_msg_register.html("กรุณากรอกวันลาที่เหลือ").css("color","red")
-        document.getElementById("txt-modal-signup-remaining_leave_days").focus();
+        error_msg_register.html("กรุณากรอกวันที่เริ่มทำงาน").css("color","red")
+        document.getElementById("txt-modal-signup-startdate").focus();
+        return false
+    } else if (chk_signup_leavebalance.length <= 0) {
+        error_msg_register.show();
+        error_msg_register.html("กรุณากรอกวันลาตามสิทธิ์").css("color","red")
+        document.getElementById("txt-modal-signup-leavebalance").focus();
         return false
     } else if(!isChecked) {
         error_msg_register.show();
@@ -160,9 +166,10 @@ function validate_signup(){
                 fchk_signup_confrim_password: chk_signup_confrim_password,
                 fchk_signup_firstname: chk_signup_firstname,
                 fchk_signup_lastname: chk_signup_lastname,
-                fchk_signup_role: chk_signup_role,
-                fchk_signup_total_leave_days: chk_signup_total_leave_days,
-                fchk_signup_remaining_leave_days: chk_signup_remaining_leave_days
+                fchk_signup_position: chk_signup_position,
+                fchk_signup_department: chk_signup_department,
+                fchk_signup_startdate: chk_signup_startdate,
+                fchk_signup_leavebalance: chk_signup_leavebalance
             })
         })
         .then(response => {
@@ -207,6 +214,25 @@ function validate_signup(){
 
 }
 
+function validate_leave_request(){
+    const chk_leave_requeste_employeeid = document.getElementById("leave_requeste_employeeid").value;
+    const chk_leave_requeste_firstname = document.getElementById("leave_requeste_firstname").value
+    if (chk_leave_requeste_employeeid.length <= 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'กรุณากรอกเลขพนักงาน',
+            confirmButtonText: 'OK'
+        });
+        document.getElementById("leave_requeste_employeeid").focus();
+    } else if (chk_leave_requeste_firstname.length <= 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'กรุณากรอกชื่อ',
+            confirmButtonText: 'OK'
+        });
+        document.getElementById("leave_requeste_firstname").focus();
+    }    
+}
 function gotologout() {
     Swal.fire({
         icon: "warning",

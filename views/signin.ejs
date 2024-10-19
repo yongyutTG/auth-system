@@ -126,7 +126,7 @@
                                                     <span class="input-group-addon">
                                                         <i class="fa fa-id-badge"></i>
                                                     </span>
-                                                    <input type="text" id="txt-modal-signup-empid" name="modal-empid" class="form-control" placeholder="เลขพนักงาน" />
+                                                    <input type="number" id="txt-modal-signup-empid" name="modal-empid" class="form-control" placeholder="เลขพนักงาน" />
                                                 </div>
                                             </div>
                                         </div>
@@ -154,7 +154,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="modal-confrim-password">ยืนยัน(รหัสผ่าน)</label>
+                                                <label for="modal-confrim-password">รหัสผ่าน(ยืนยัน)</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
                                                         <i class="fa fa-key"></i> 
@@ -187,34 +187,46 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="modal-role">ประเภทผู้ใช้งาน</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-users"></i> 
-                                                    </span>
-                                                    <input type="text" id="txt-modal-signup-role" name="modal-role" class="form-control" placeholder="ประเภทผู้ใช้งาน" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="modal-total_leave_days">จำนวนวันลาที่ได้สิทธิ์</label>
+                                                <label for="modal-role">ตำแหน่ง</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
                                                         <i class="fa fa-calendar-check"></i> 
                                                     </span>
-                                                    <input type="number" id="txt-modal-signup-total_leave_days" name="modal-total_leave_days" class="form-control" placeholder="จำนวนวันลาที่ได้สิทธิ์" />
+                                                    <input type="text" id="txt-modal-signup-position" name="modal-position" class="form-control" placeholder="ตำแหน่ง" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="modal-department">ฝ่าย/แผนก</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-calendar-check"></i> 
+                                                    </span>
+                                                    <input type="text" id="txt-modal-signup-department" name="modal-department" class="form-control" placeholder="ฝ่าย/แผนก" />
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="modal-remaining_leave_days">วันลาที่เหลือ</label>
+                                                <label for="modal-StartDate">StartDate</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
                                                         <i class="fa fa-calendar-alt"></i> 
                                                     </span>
-                                                    <input type="number" id="txt-modal-signup-remaining_leave_days" name="modal-remaining_leave_days" class="form-control" placeholder="วันลาที่เหลือ" />
+                                                    <input type="date" id="txt-modal-signup-startdate" name="modal-startdate" class="form-control" placeholder="วันที่เริ่มงาน" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="modal-leavebalance">วันลาตามสิทธิ์</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-calendar-check"></i> 
+                                                    </span>
+                                                    <input type="number" id="txt-modal-signup-leavebalance" name="modal-leavebalance" class="form-control" placeholder="วันลาตามสิทธิ์" />
                                                 </div>
                                             </div>
                                         </div>

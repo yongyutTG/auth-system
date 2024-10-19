@@ -27,15 +27,15 @@ router.get('/signin', (req, res) => {
 });
 
 router.post('/signin', (req, res) => {
-    const { username, password } = req.body;
+    const { fchk_username, fchk_password } = req.body;
       // valida data
-    if (!username || !password) {
+    if (!fchk_username || !fchk_password) {
         return res.status(400).json({
             status: "error",
             message: "กรุณากรอกข้อมูลให้ครบทุกช่อง"
         })
     } else {
-        connection.query('select * from employees where email = ?',[username],(err,results)=>{
+        connection.query('select * from employee where email = ?',[fchk_username],(err,results)=>{
             if (err) {
                 console.error('Error querying database:', err);
                 return res.status(500).json({
@@ -45,7 +45,7 @@ router.post('/signin', (req, res) => {
             } else {
                 if(results.length > 0){
                     const user =results[0];
-                    bcrypt.compare(password,user.password, (err, isMatch) => {
+                    bcrypt.compare(fchk_password,user.password, (err, isMatch) => {
                         console.log('password เข้ารหัส',user.password);
                         if (err) {
                             console.error(err);
@@ -91,9 +91,9 @@ router.get('/signup', (req, res) => {
 });
 // POST signup
 router.post('/signup', (req, res) => {
-    const { fchk_signup_empid, fchk_signup_firstname, fchk_signup_lastname, fchk_signup_email, fchk_signup_position , fchk_signup_start_date, fchk_signup_password,fchk_signup_confrim_password,fchk_signup_remaining_leaves} = req.body;
+    const { fchk_signup_empid,fchk_signup_email,fchk_signup_password,fchk_signup_confrim_password, fchk_signup_firstname, fchk_signup_lastname, fchk_signup_position ,fchk_signup_department, fchk_signup_startdate,fchk_signup_leavebalance} = req.body;
     // ตรวจสอบว่าข้อมูลที่จำเป็นถูกส่งมาหรือไม่
-    if (!fchk_signup_empid || !fchk_signup_firstname || !fchk_signup_lastname || !fchk_signup_email || !fchk_signup_position || !fchk_signup_start_date || !fchk_signup_start_date || !fchk_signup_password || !fchk_signup_confrim_password || !fchk_signup_remaining_leaves) {
+    if (!fchk_signup_empid || !fchk_signup_email || !fchk_signup_password || !fchk_signup_confrim_password || !fchk_signup_firstname || !fchk_signup_lastname || !fchk_signup_position || !fchk_signup_department || !fchk_signup_startdate || !fchk_signup_leavebalance) {
         return res.status(400).json({
             status: 'error',
             message: 'กรุณากรอกข้อมูลให้ครบทุกช่อง'
@@ -103,11 +103,11 @@ router.post('/signup', (req, res) => {
     if (fchk_signup_password !== fchk_signup_confrim_password) {
         return res.status(200).json({
         status: 'warning',
-        message: 'รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน'
+        message: 'ข้อมูลรหัสผ่านไม่ตรงกัน'
     });
     }
     // Check if user ซ้ำ
-    connection.query('SELECT * FROM employees WHERE email = ?', [fchk_signup_email], (err, results) => {
+    connection.query('SELECT * FROM employee WHERE email = ?', [fchk_signup_email], (err, results) => {
         if (err) {
             console.error('Error SELECT email:', err);
             return res.status(500).json({
@@ -134,17 +134,19 @@ router.post('/signup', (req, res) => {
                 console.log(fchk_signup_password,hashedPassword);
                 // สร้างข้อมูลผู้ใช้ใหม่
                 const newUser = {
-                    empid: fchk_signup_empid,
+                    employeeid : fchk_signup_empid,
+                    email: fchk_signup_email,
+                    password: hashedPassword,
                     firstname: fchk_signup_firstname,
                     lastname: fchk_signup_lastname,
-                    email: fchk_signup_email,
-                    emp_type: fchk_signup_position,
-                    start_date: fchk_signup_start_date,
-                    remaining_leaves: fchk_signup_remaining_leaves,
-                    password: hashedPassword
+                    position: fchk_signup_position,
+                    department: fchk_signup_department,
+                    startdate: fchk_signup_startdate,
+                    leavebalance: fchk_signup_leavebalance
+                    
                 };
                 // บันทึกข้อมูลผู้ใช้ลงในฐานข้อมูล
-                connection.query('INSERT INTO employees SET ?', newUser, (err) => {
+                connection.query('INSERT INTO employee SET ?', newUser, (err) => {
                     if (err) {
                         console.error('Error inserting user:', err);
                         return res.status(400).json({
@@ -207,10 +209,13 @@ router.get('/leave-request', (req, res) => {
         res.redirect('/signin');
     }
 });
+
+//submit
 router.post('/leave-request', (req, res) => {
-    const { fchk_signup_empid, fchk_signup_firstname} = req.body;
+    const { leave_requeste_employeeid, leave_requeste_firstname,leave_requeste_lastname,leave_requeste_start_date,leave_requeste_end_date,leave_requeste_type,totaldays,requestdate,reason } = req.body;
     // ตรวจสอบว่าข้อมูลที่จำเป็นถูกส่งมาหรือไม่
-    if (!fchk_signup_empid || !fchk_signup_firstname || !fchk_signup_lastname || !fchk_signup_email || !fchk_signup_position || !fchk_signup_start_date || !fchk_signup_start_date || !fchk_signup_password || !fchk_signup_confrim_password || !fchk_signup_remaining_leaves) {
+    
+    if (!leave_requeste_employeeid || !leave_requeste_firstname || !leave_requeste_lastname || !leave_requeste_start_date || !leave_requeste_end_date || !leave_requeste_type || !totaldays || !requestdate || !reason ) {
         return res.status(400).json({
             status: 'error',
             message: 'กรุณากรอกข้อมูลให้ครบทุกช่อง'
@@ -219,45 +224,47 @@ router.post('/leave-request', (req, res) => {
 });
 
 
+
+
 // Route for leave request form
-router.get('/leave', (req, res) => {
-    const sql = 'SELECT EmployeeID FROM Employee'; // ดึงข้อมูล EmployeeID จากตาราง Employees
-    connection.query(sql, (err, employee) => {
-        if (err) throw err;
-        res.render('leave_form', { employee });
-    });
-});
+// router.get('/leave', (req, res) => {
+//     const sql = 'SELECT EmployeeID FROM Employee'; // ดึงข้อมูล EmployeeID จากตาราง Employees
+//     connection.query(sql, (err, employee) => {
+//         if (err) throw err;
+//         res.render('leave_form', { employee });
+//     });
+// });
 
 // POST request to submit leave request
-router.post('/leave', (req, res) => {
-    const { employeeID, leaveType, startDate, endDate, totalDays, status, requestDate } = req.body;
-    const sql = `INSERT INTO LeaveRequests (EmployeeID, LeaveType, StartDate, EndDate, TotalDays, Status, RequestDate) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
-                 connection.query(sql, [employeeID, leaveType, startDate, endDate, totalDays, status, requestDate], (err, result) => {
-        if (err) throw err;
-        res.redirect('/leave');
-    });
-});
+// router.post('/leave', (req, res) => {
+//     const { employeeID, leaveType, startDate, endDate, totalDays, status, requestDate } = req.body;
+//     const sql = `INSERT INTO LeaveRequests (EmployeeID, LeaveType, StartDate, EndDate, TotalDays, Status, RequestDate) 
+//                  VALUES (?, ?, ?, ?, ?, ?, ?)`;
+//                  connection.query(sql, [employeeID, leaveType, startDate, endDate, totalDays, status, requestDate], (err, result) => {
+//         if (err) throw err;
+//         res.redirect('/leave');
+//     });
+// });
 
 // Route for Approval form
-router.get('/approval', (req, res) => {
-    const sql = 'SELECT LeaveRequestID FROM LeaveRequests'; // ดึงข้อมูล LeaveRequestID จากตาราง LeaveRequests
-    db.query(sql, (err, leaveRequests) => {
-        if (err) throw err;
-        res.render('approval_form', { leaveRequests });
-    });
-});
+// router.get('/approval', (req, res) => {
+//     const sql = 'SELECT LeaveRequestID FROM LeaveRequests'; // ดึงข้อมูล LeaveRequestID จากตาราง LeaveRequests
+//     db.query(sql, (err, leaveRequests) => {
+//         if (err) throw err;
+//         res.render('approval_form', { leaveRequests });
+//     });
+// });
 
 // POST request to submit approval form data
-router.post('/approval', (req, res) => {
-    const { leaveRequestID, approvedBy, approvalDate, comments } = req.body;
-    const sql = `INSERT INTO ApprovalHistory (LeaveRequestID, ApprovedBy, ApprovalDate, Comments) 
-                 VALUES (?, ?, ?, ?)`;
-    db.query(sql, [leaveRequestID, approvedBy, approvalDate, comments], (err, result) => {
-        if (err) throw err;
-        res.redirect('/approval');
-    });
-});
+// router.post('/approval', (req, res) => {
+//     const { leaveRequestID, approvedBy, approvalDate, comments } = req.body;
+//     const sql = `INSERT INTO ApprovalHistory (LeaveRequestID, ApprovedBy, ApprovalDate, Comments) 
+//                  VALUES (?, ?, ?, ?)`;
+//     db.query(sql, [leaveRequestID, approvedBy, approvalDate, comments], (err, result) => {
+//         if (err) throw err;
+//         res.redirect('/approval');
+//     });
+// });
 
 // router.get('/users/:id', async (req, res) => {
 //     const { id } = req.params
@@ -297,6 +304,7 @@ router.post('/approval', (req, res) => {
 router.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/signin');
+   
 });
 
 module.exports = router;
