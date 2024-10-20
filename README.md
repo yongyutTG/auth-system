@@ -1,6 +1,4 @@
-﻿# auth-system
-https://developer.mozilla.org/en-US/docs/Web/JavaScript
-Tables 
+# auth-system
 -employees = signin
 -leave_approvals = อนุมัติลา
 -leave_requests = สมัครลา
