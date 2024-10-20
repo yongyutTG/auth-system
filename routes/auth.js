@@ -211,17 +211,19 @@ router.get('/leave-request', (req, res) => {
 });
 
 //submit
-router.post('/leave-request', (req, res) => {
-    const { leave_requeste_employeeid, leave_requeste_firstname,leave_requeste_lastname,leave_requeste_start_date,leave_requeste_end_date,leave_requeste_type,totaldays,requestdate,reason } = req.body;
-    // ตรวจสอบว่าข้อมูลที่จำเป็นถูกส่งมาหรือไม่
+// router.post('/leave-request', (req, res) => {
+//     const { leave_requeste_employeeid, leave_requeste_firstname,leave_requeste_lastname,leave_requeste_start_date,
+//             leave_requeste_end_date,leave_requeste_type,totaldays,requestdate,reason } = req.body;
+//     // ตรวจสอบว่าข้อมูลที่จำเป็นถูกส่งมาหรือไม่
     
-    if (!leave_requeste_employeeid || !leave_requeste_firstname || !leave_requeste_lastname || !leave_requeste_start_date || !leave_requeste_end_date || !leave_requeste_type || !totaldays || !requestdate || !reason ) {
-        return res.status(400).json({
-            status: 'error',
-            message: 'กรุณากรอกข้อมูลให้ครบทุกช่อง'
-        });
-    }
-});
+//     if (!leave_requeste_employeeid || !leave_requeste_firstname || !leave_requeste_lastname || !leave_requeste_start_date ||
+//         !leave_requeste_end_date || !leave_requeste_type || !totaldays || !requestdate || !reason ) {
+//         return res.status(400).json({
+//             status: 'error',
+//             message: 'กรุณากรอกข้อมูลให้ครบทุกช่อง'
+//         });
+//     }
+// });
 
 
 

@@ -4,14 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Home</title>
-    <!-- <link rel="stylesheet" href="public/css/signin.css"> -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
     <link rel="stylesheet" href="public/css/home.css">
     <!-- FullCalendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css" rel="stylesheet" />
     <link href="public/bootstrap-5.2.3-dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="public/fontawesome-free-6.2.1-web/css/all.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
     <link href="public/css/carousel.css" rel="stylesheet">
  
     <style>
@@ -136,7 +134,7 @@
                         <img src="public/img/profile-placeholder.png" class="profile-pic" alt="Profile Picture">
                     </div>
                     <h5 class="text-center mt-3">ชื่อผู้ใช้งาน : <%= user %></h5>
-                    <p class="text-center">ตำแหน่ง: ผู้จัดการฝ่ายบุคคล</p>
+                    <p class="text-center">ตำแหน่ง: `</p>
                     <p class="text-center">แผนก: ฝ่ายทรัพยากรบุคคล</p>
                     <hr>
                     <h6>สิทธิการลา</h6>
@@ -148,6 +146,10 @@
                 </div>
             </div>
 
+            <div class="collapse navbar-collapse" id="results">
+            </div>
+            
+            
             <!-- Pending Leave Requests (ยังคงเดิม) -->
             <div class="col-md-6">
                 <div class="dashboard-card">

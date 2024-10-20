@@ -1,4 +1,5 @@
 
+
 let input = document.querySelector("#input_username");
 
 window.addEventListener("load", (e)=>{
@@ -79,9 +80,9 @@ function validate_signup(){
     const chk_signup_department = document.getElementById("txt-modal-signup-department").value;
     const chk_signup_startdate = document.getElementById("txt-modal-signup-startdate").value;
     const chk_signup_leavebalance = document.getElementById("txt-modal-signup-leavebalance").value;
-
-
-    // const chk_signup_box = document.getElementById("invalidCheck").value;
+    // if(document.getElementById("txt-modal-signup-empid").value=="" || document.getElementById("txt-modal-signup-email").value==""){
+    //     alert("Please fill Username and Password "); 
+    //     return;}
     var isChecked = document.querySelector('input[type="checkbox"]').checked;
     const filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
    
@@ -216,7 +217,16 @@ function validate_signup(){
 
 function validate_leave_request(){
     const chk_leave_requeste_employeeid = document.getElementById("leave_requeste_employeeid").value;
-    const chk_leave_requeste_firstname = document.getElementById("leave_requeste_firstname").value
+    const chk_leave_requeste_firstname = document.getElementById("leave_requeste_firstname").value;
+    const chk_leave_requeste_lastname = document.getElementById("leave_requeste_lastname").value;
+    const chk_leave_requeste_start_date = document.getElementById("leave_requeste_start_date").value;
+    const chk_leave_requeste_end_date = document.getElementById("leave_requeste_end_date").value;
+    const chk_leave_requeste_type = document.getElementById("leave_requeste_type").value;
+    const chk_leave_totaldays = document.getElementById("leave_totaldays").value;
+    const chk_leave_requestdate = document.getElementById("leave_requestdate").value;
+    const chk_leave_reason = document.getElementById("leave_reason").value;
+
+
     if (chk_leave_requeste_employeeid.length <= 0) {
         Swal.fire({
             icon: 'error',
@@ -224,6 +234,7 @@ function validate_leave_request(){
             confirmButtonText: 'OK'
         });
         document.getElementById("leave_requeste_employeeid").focus();
+        return false
     } else if (chk_leave_requeste_firstname.length <= 0) {
         Swal.fire({
             icon: 'error',
@@ -231,8 +242,87 @@ function validate_leave_request(){
             confirmButtonText: 'OK'
         });
         document.getElementById("leave_requeste_firstname").focus();
-    }    
+        return false
+    } else if(chk_leave_requeste_lastname.length <= 0){
+        Swal.fire({
+            icon:"error",
+            title: "กรุณากรอกนามสกุล",
+            confirmButtonText: "OK" 
+        });
+        document.getElementById("leave_requeste_lastname").focus();
+        return false
+    } else if(chk_leave_requeste_lastname.length <= 0){
+        Swal.fire({     
+            icon: "error",
+            title: "กรุณากรอกนามสกุล",
+            confirmButtonText: "OK",
+        });
+        return false
+    } else if(chk_leave_requeste_start_date.length <= 0){
+        Swal.fire({
+            icon: "error",
+            title: "กรุณากรอกวันที่เรื่มลา",
+            confirmButtonText: "OK"
+        });
+        return false
+    } else if(chk_leave_requeste_end_date.length <= 0){
+        Swal.fire({
+            icon: "error",
+            title: "กรุณากรอกวันที่สิ้นสุดลา"
+        });
+        return false
+    } else if(chk_leave_requeste_type.length <= 0){
+        Swal.fire({
+            icon: "error",
+            title: "กรูณากรอกประเภทการลา",
+            confirmButtonText: "OK"
+        });
+        return false
+    } else if(chk_leave_totaldays.length <= 0){
+        Swal.fire({
+            icon: "error",
+            title: "กรูณากรอกจำนวนวันที่ขอลา",
+            confirmButtonText: "OK"   
+        });
+        return false
+    } else if(chk_leave_requestdate.length <= 0){
+        Swal.fire({
+            icon: "error",
+            title: "กรูณากรอกวันที่ขอลา",
+            confirmButtonText: "OK"   
+        });
+        return false
+    } else if(chk_leave_reason.length <= 0){
+        Swal.fire({
+            icon: "error",
+            title: "กรูรากรอกเหตุผลการลา",
+            confirmbuttontext: "OK"
+        }); 
+        return false
+    } else {
+        fetch('http://localhost:3000/leave-request',{
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                fchk_leave_requeste_employeeid: chk_leave_requeste_employeeid,
+                fchk_leave_requeste_firstname: chk_leave_requeste_firstname,
+                fchk_leave_requeste_lastname: chk_leave_requeste_lastname,
+                fchk_leave_requeste_start_date: chk_leave_requeste_start_date,
+                fchk_leave_requeste_end_date: chk_leave_requeste_end_date,
+                fchk_leave_requeste_type: chk_leave_requeste_type,
+                fchk_leave_totaldays: chk_leave_totaldays,
+                fchk_leave_requestdate: chk_leave_requestdate,
+                fchk_leave_reason: chk_leave_reason            
+            })
+
+        })
+        console.log(fchk_leave_requeste_employeeid)
+    }
 }
+
+
+
+
 function gotologout() {
     Swal.fire({
         icon: "warning",
