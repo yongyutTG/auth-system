@@ -210,20 +210,52 @@ router.get('/leave-request', (req, res) => {
     }
 });
 
+
+router.get('/leave-request-add', (req, res) => {
+    if (req.session.user) {
+        console.log('Rendering home page for leave_add:', req.session.user);
+        res.render('leave-request-add', { user: req.session.user });
+    } else {
+        console.log('No session found, redirecting to signin');
+        res.redirect('/signin');
+    }
+});
+
 //submit
-// router.post('/leave-request', (req, res) => {
-//     const { leave_requeste_employeeid, leave_requeste_firstname,leave_requeste_lastname,leave_requeste_start_date,
-//             leave_requeste_end_date,leave_requeste_type,totaldays,requestdate,reason } = req.body;
-//     // ตรวจสอบว่าข้อมูลที่จำเป็นถูกส่งมาหรือไม่
+router.post('/leave-request', (req, res) => {
+    const { fchk_leave_requeste_employeeid,fchk_leave_requeste_firstname, fchk_leave_requeste_lastname,fchk_leave_requeste_type,fchk_leave_reason,fchk_leave_requeste_start_date,fchk_leave_requeste_end_date,fchk_leave_totaldays,fchk_leave_status,fchk_leave_requestdate} = req.body;
+    // ตรวจสอบว่าข้อมูลที่จำเป็นถูกส่งมาหรือไม่
+    if (!fchk_leave_requeste_employeeid || !fchk_leave_requeste_firstname || !fchk_leave_requeste_lastname || !fchk_leave_requeste_start_date || !fchk_leave_requeste_end_date || !fchk_leave_requeste_type || !fchk_leave_totaldays || !fchk_leave_requestdate || !fchk_leave_reason) {
+        return res.status(400).json({
+            status: 'error',
+            message: 'กรุณากรอกข้อมูลให้ครบทุกช่อง'
+        });
+    } else {
+        connection.query("insert into leaverequests (employeeid,firstname,lastname,leavetype,reason,startdate,enddate,totaldays,status,requestdate) values(?,?,?,?,?,?,?,?,?,?)",[fchk_leave_requeste_employeeid,fchk_leave_requeste_firstname,
+            fchk_leave_requeste_lastname,fchk_leave_requeste_type,fchk_leave_reason,fchk_leave_requeste_start_date,fchk_leave_requeste_end_date,fchk_leave_totaldays,
+            fchk_leave_status,fchk_leave_requestdate],(error,results) => {
+            if (error){
+                console.error('Error inserting leaverequests:', err);
+                return res.status(400).json({
+                    status: 'error',
+                    message: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล leaverequest'
+                }); 
+            } else {
+                res.status(201).json({
+                    status: 'success',
+                    message: 'ยื่นแบบฟอร์มลาสำเร็จ',
+                    // redirectUrl: '/signin' 
+                });
+            }
+        });
+    }
     
-//     if (!leave_requeste_employeeid || !leave_requeste_firstname || !leave_requeste_lastname || !leave_requeste_start_date ||
-//         !leave_requeste_end_date || !leave_requeste_type || !totaldays || !requestdate || !reason ) {
-//         return res.status(400).json({
-//             status: 'error',
-//             message: 'กรุณากรอกข้อมูลให้ครบทุกช่อง'
-//         });
-//     }
-// });
+    
+    
+
+});
+
+
 
 
 

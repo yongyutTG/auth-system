@@ -24,17 +24,19 @@
                         <i class="fa fa-user"></i>
                         <label><input type=text id ="input_username"name="input_username"style="text-align:center"placeholder="username or email"></label>
                         <small></small>
-                        
+                        <!-- <div class="bg-error_msg bg-danger-subtle text-white" id="error_msg_signin_user"></div>   -->
+                        <div id="error_msg_signin_user"></div>
                     </div>
-                
+                    
                     <div class="form-group">
                         <i class="fa fa-unlock-alt"></i>
                         <label for="password"></label>
                         <input type="password"id="input_password" name = "input_password" style="text-align:center" placeholder =" password">
                         <small></small>
+                        <div id="error_msg_signin_password"></div>
                     </div>
 
-                    <div id="error_msg_login"></div>
+                    
                     
                     <div class="signin-link">   
                         <button  type="submit"   id="input_login" onclick="validat_signin()" >Sign In <i class="fas fa-sign-in-alt"></i></button>

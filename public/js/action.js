@@ -7,22 +7,21 @@ window.addEventListener("load", (e)=>{
 })
 
 function validat_signin() {
+    const error_msg_signin_user = $("#error_msg_signin_user");
+    const error_msg_signin_password = $("#error_msg_signin_password");
+    $(error_msg_signin_user).hide();
+    $(error_msg_signin_password).hide();
+    
     let chk_username = document.getElementById("input_username").value;
     let chk_password = document.getElementById("input_password").value;
 
     if (chk_username.length <= 0) {
-        Swal.fire({
-            icon: 'error',
-            title: 'กรุณากรอก Username',
-            confirmButtonText: 'OK'
-        });
+        $(error_msg_signin_user).show();
+        error_msg_signin_user.html("กรุณากรอก Username").css("color", "red");
         document.getElementById("input_username").focus();
     } else if (chk_password.length <= 0) {
-        Swal.fire({
-            icon: 'error',
-            title: 'กรุณากรอก Password',
-            confirmButtonText: 'OK'
-        });
+        $(error_msg_signin_password).show();
+        error_msg_signin_password.html("กรุณากรอก password").css("color", "red");
         document.getElementById("input_password").focus();
     } else {
         fetch('http://localhost:3000/signin', {
@@ -219,13 +218,16 @@ function validate_leave_request(){
     const chk_leave_requeste_employeeid = document.getElementById("leave_requeste_employeeid").value;
     const chk_leave_requeste_firstname = document.getElementById("leave_requeste_firstname").value;
     const chk_leave_requeste_lastname = document.getElementById("leave_requeste_lastname").value;
+    const chk_leave_requeste_type = document.getElementById("leave_requeste_type").value;
+    const chk_leave_reason = document.getElementById("leave_reason").value;
     const chk_leave_requeste_start_date = document.getElementById("leave_requeste_start_date").value;
     const chk_leave_requeste_end_date = document.getElementById("leave_requeste_end_date").value;
-    const chk_leave_requeste_type = document.getElementById("leave_requeste_type").value;
     const chk_leave_totaldays = document.getElementById("leave_totaldays").value;
+    // const fchk_leave_status = ('pending,', 'approved', 'rejected')
+    const chk_leave_status = "pending";
     const chk_leave_requestdate = document.getElementById("leave_requestdate").value;
-    const chk_leave_reason = document.getElementById("leave_reason").value;
-
+   
+   
 
     if (chk_leave_requeste_employeeid.length <= 0) {
         Swal.fire({
@@ -312,16 +314,51 @@ function validate_leave_request(){
                 fchk_leave_requeste_type: chk_leave_requeste_type,
                 fchk_leave_totaldays: chk_leave_totaldays,
                 fchk_leave_requestdate: chk_leave_requestdate,
-                fchk_leave_reason: chk_leave_reason            
+                fchk_leave_reason: chk_leave_reason,  
+                fchk_leave_status: chk_leave_status          
             })
 
         })
-        console.log(fchk_leave_requeste_employeeid)
+        .then(response => {
+            // ตรวจสอบว่าผลลัพธ์เป็น JSON หรือไม่
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); // แปลง response ให้เป็น JSON
+        })
+        .then(response => {
+            // ตรวจสอบ status ที่ส่งกลับมาจากเซิร์ฟเวอร์
+            
+            if (response.status === 'success') {
+               
+                Swal.fire({
+                    position: "top-end",
+                    icon: 'success',
+                    title: response.message,
+                    timer: 1500,
+                    showConfirmButton: false
+                // }).then(() => {
+                //     window.location.href = response.redirectUrl;
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: response.message || 'leave_requeste Failed',
+                    confirmButtonText: 'OK'
+                });
+            }
+        })
+        .catch(err => {
+            Swal.fire({
+                icon: 'error',
+                title: 'leave_requeste Failed',
+                text: 'There was an error processing your request. Please try again.',
+                confirmButtonText: 'OK'
+            });
+            console.error('Error during leave_requeste request:', err);
+        });
     }
 }
-
-
-
 
 function gotologout() {
     Swal.fire({
@@ -338,3 +375,6 @@ function gotologout() {
         }
     })
 }
+
+
+

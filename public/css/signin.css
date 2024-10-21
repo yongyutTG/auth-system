@@ -161,5 +161,8 @@ footer {
     text-align: -webkit-center;
     border-radius: 5px;
 }  */
-
+.bg-error_msg {
+    /* --bs-bg-opacity: 0; */
+    background-color: #ce5757;
+  }
 
