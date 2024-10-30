@@ -55,16 +55,16 @@ router.post('/signin', (req, res) => {
                             });        
                         }
                         if (isMatch) {
+                            req.session.employeeid = user.employeeid;
                             req.session.user = user.firstname +" "+ user.lastname;  // Set session user
-                            console.log('Session User loging:', req.session.user);
+                            console.log('Session User signin:',"employeeid: "+ req.session.employeeid + "user:" + req.session.user);
+                            // console.log(req.session);
                             res.status(200).json({
                                 data: results,
                                 status: 'success',
                                 message: 'เข้าสู่ระบบสำเร็จ......',
                                 redirectUrl: '/home'
                             });
-                            console.log(user.empid)
-                            console.log("Check password เป็น false or true  :",isMatch)
                         } else {
                             console.log('Password ไม่ถูกต้อง');
                             res.status(401).json({
@@ -210,22 +210,23 @@ router.get('/leave-request', (req, res) => {
     }
 });
 
-
-router.get('/leave-request-add', (req, res) => {
+//request success
+router.get('/leave-request-success', (req, res) => {
     if (req.session.user) {
         console.log('Rendering home page for leave_add:', req.session.user);
-        res.render('leave-request-add', { user: req.session.user });
+        res.render('leave-request-success', { user: req.session.user });
+       
     } else {
         console.log('No session found, redirecting to signin');
         res.redirect('/signin');
     }
 });
 
-//submit
+//แบบฟอร์มคำขอลา
 router.post('/leave-request', (req, res) => {
     const { fchk_leave_requeste_employeeid,fchk_leave_requeste_firstname, fchk_leave_requeste_lastname,fchk_leave_requeste_type,fchk_leave_reason,fchk_leave_requeste_start_date,fchk_leave_requeste_end_date,fchk_leave_totaldays,fchk_leave_status,fchk_leave_requestdate} = req.body;
     // ตรวจสอบว่าข้อมูลที่จำเป็นถูกส่งมาหรือไม่
-    if (!fchk_leave_requeste_employeeid || !fchk_leave_requeste_firstname || !fchk_leave_requeste_lastname || !fchk_leave_requeste_start_date || !fchk_leave_requeste_end_date || !fchk_leave_requeste_type || !fchk_leave_totaldays || !fchk_leave_requestdate || !fchk_leave_reason) {
+    if (!fchk_leave_requeste_employeeid || !fchk_leave_requeste_firstname || !fchk_leave_requeste_lastname || !fchk_leave_requeste_type || !fchk_leave_reason || !fchk_leave_requeste_start_date || !fchk_leave_requeste_end_date || !fchk_leave_totaldays || !fchk_leave_status || !fchk_leave_requestdate) {
         return res.status(400).json({
             status: 'error',
             message: 'กรุณากรอกข้อมูลให้ครบทุกช่อง'
@@ -233,31 +234,176 @@ router.post('/leave-request', (req, res) => {
     } else {
         connection.query("insert into leaverequests (employeeid,firstname,lastname,leavetype,reason,startdate,enddate,totaldays,status,requestdate) values(?,?,?,?,?,?,?,?,?,?)",[fchk_leave_requeste_employeeid,fchk_leave_requeste_firstname,
             fchk_leave_requeste_lastname,fchk_leave_requeste_type,fchk_leave_reason,fchk_leave_requeste_start_date,fchk_leave_requeste_end_date,fchk_leave_totaldays,
-            fchk_leave_status,fchk_leave_requestdate],(error,results) => {
-            if (error){
+            fchk_leave_status,fchk_leave_requestdate],(err,results) => {
+            if (err){
                 console.error('Error inserting leaverequests:', err);
-                return res.status(400).json({
+                return res.status(200).json({
                     status: 'error',
                     message: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล leaverequest'
                 }); 
             } else {
                 res.status(201).json({
                     status: 'success',
-                    message: 'ยื่นแบบฟอร์มลาสำเร็จ',
-                    // redirectUrl: '/signin' 
+                    // results: results,
+                    message: 'ยื่นคำขอลาพักร้อนสำเร็จ',
+                    redirectUrl: '/leave-request-success' 
                 });
             }
         });
     }
-    
-    
-    
-
 });
 
 
+//สำหรับดึงประวัติการลา
+router.get('/leave-history', (req, res) => {
+    if (req.session.user) {
+        console.log('Rendering home page for leave-history:', req.session.user);
+        const employeeid = req.session.employeeid; // หรือ session ID ของพนักงานที่ล็อกอินอยู่
+
+        connection.query("SELECT * FROM leaverequests WHERE employeeid = ?",[employeeid],(err, leaveHistory) => {
+                if (err){
+                    console.error('Error query leaveHistory:', err);
+                    return res.status(400).json({
+                        status: 'error',
+                        message: 'เกิดข้อผิดพลาดในการค้นหาประวัติการลา leaveHistory'
+                    }); 
+                } else {
+                    res.render('leave-history', {
+                    leaveHistory: leaveHistory, // ส่งข้อมูลประวัติการลาไปยัง view
+                    user: req.session.user});
+                }
+            }
+        );
+    } else {
+        console.log('No session found, redirecting to signin');
+        res.redirect('/signin');
+    }
+});
 
 
+//สำหรับดึง Profile with signing
+router.get('/leave-profile', (req, res) => {
+    if (req.session.user) {
+        console.log('Rendering home page for leave-profile:', req.session.user);
+        const employeeid = req.session.employeeid; // หรือ session ID ของพนักงานที่ล็อกอินอยู่
+
+        connection.query("SELECT * FROM employee WHERE employeeid = ?",[employeeid],(err, leaveprofile) => {
+                if (err){
+                    console.error('Error query leaveHistory:', err);
+                    return res.status(400).json({
+                        status: 'error',
+                        message: 'เกิดข้อผิดพลาดในการค้นหาประวัติการลา leave-profile'
+                    }); 
+                } else {
+                    res.render('leave-profile', {
+                    leaveprofile: leaveprofile, // ส่งข้อมูลประวัติการลาไปยัง view
+                    user: req.session.user});
+                }
+            }
+        );
+    } else {
+        console.log('No session found, redirecting to signin');
+        res.redirect('/signin');
+    }
+});
+
+// // Route to handle profile update requests
+// router.post('/update-profile', (req, res) => {
+//     if (req.session.user) {
+//         console.log('Received update request for profile:', req.session.user);
+
+//         const employeeid = req.session.employeeid; // Get the current employee ID from session
+//         const { email, firstname, lastname, position, department, startdate, leavebalance } = req.body.updatedProfile; // รับค่าจาก updatedProfile ที่ส่งมา
+//         // Log the received data to debug potential null values
+//         console.log("Received data:", { email, firstname, lastname, position, department, startdate, leavebalance });
+//         const updateQuery = `
+//             UPDATE employee 
+//             SET email = ?, firstname = ?, lastname = ?, position = ?, department = ?, startdate = ?, leavebalance = ?
+//             WHERE employeeid = ?`;
+
+//         // Ensure the values array has data in the correct order
+//         const values = [email, firstname, lastname, position, department, startdate, leavebalance, employeeid];
+
+//         // Log the values array to verify correct data is being sent
+//         console.log("Values for query:", values);
+       
+//         // Execute the update query
+//         connection.query(updateQuery, values, (err, result) => {
+//             if (err) {
+//                 console.error('Error updating profile:', err);
+//                 return res.status(500).json({
+//                     status: 'error',
+//                     message: 'เกิดข้อผิดพลาดในการปรับปรุงข้อมูลโปรไฟล์'
+//                 });
+//             }
+
+//             // On successful update, send a success message and optional redirect URL
+//             res.status(200).json({
+//                 status: 'success',
+//                 message: 'ปรับปรุงข้อมูลโปรไฟล์สำเร็จ',
+//                 redirectUrl: '/leave-profile'
+//             });
+//             console.log('Profile updated successfully');
+//         });
+//     } else {
+//         console.log('No session found, redirecting to signin');
+//         res.status(401).json({
+//             status: 'error',
+//             message: 'กรุณาเข้าสู่ระบบก่อนทำการแก้ไขโปรไฟล์',
+//             redirectUrl: '/signin'
+//         });
+//     }
+// });
+
+// Route เพื่อรับข้อมูล updatedProfile และอัปเดตข้อมูลในฐานข้อมูล
+router.post('/update-profile', (req, res) => {
+    if (req.session.user) {
+        console.log('Received update request for profile:', req.session.user);
+        const employeeid = req.session.employeeid; // session ID ของพนักงาน
+        const updatedProfile = req.body; // ดึงข้อมูลโปรไฟล์ที่อัปเดตจาก body
+        console.log('Updated profile data:', updatedProfile); // ตรวจสอบข้อมูลที่ได้รับจาก frontend
+
+        const updateQuery = `
+            UPDATE employee 
+            SET email = ?, firstname = ?, lastname = ?, position = ?, department = ?, startdate = ?, leavebalance = ?
+            WHERE employeeid = ?`;
+
+        const values = [
+            updatedProfile.email,
+            updatedProfile.firstname,
+            updatedProfile.lastname,
+            updatedProfile.position,
+            updatedProfile.department,
+            updatedProfile.startdate,
+            updatedProfile.leavebalance,
+            employeeid
+        ];
+
+        connection.query(updateQuery, values, (err, result) => {
+            if (err) {
+                console.error('Error updating profile:', err);
+                return res.status(500).json({
+                    status: 'error',
+                    message: 'เกิดข้อผิดพลาดในการปรับปรุงข้อมูลโปรไฟล์'
+                });
+            }
+
+            res.status(200).json({
+                status: 'success',
+                message: 'ปรับปรุงข้อมูลโปรไฟล์สำเร็จ',
+                redirectUrl: '/leave-profile'
+            });
+            console.log('Profile updated successfully');
+        });
+    } else {
+        console.log('No session found, redirecting to signin');
+        res.status(401).json({
+            status: 'error',
+            message: 'กรุณาเข้าสู่ระบบก่อนทำการแก้ไขโปรไฟล์',
+            redirectUrl: '/signin'
+        });
+    }
+});
 
 
 // Route for leave request form
