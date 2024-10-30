@@ -237,14 +237,42 @@
                     
                     <button  type="submit" onclick="validate_leave_request()" class="btn btn-primary">ยื่นคำขอ</button>
                     <button class="btn btn-secondary">ยกเลิก</button>
-                    <p><a href="/leave-request-add">สร้างใบลา</a></p>
-                    <!-- <button class="btn btn-primary" type="submit">ยื่นคำขอ</button> -->
-                    <!-- <button class="btn btn-custom" type="submit">ยื่นคำขอ</button> -->
+            
+
+                    <button class="btn btn-primary btn-sm edit-btn" id="checkLeaveBalanceBtn">ตรวจสอบวันลาคงเหลือ</button>
+                    <div id="leaveBalanceResult"></div>
+
+                    <script>
+                        document.getElementById("checkLeaveBalanceBtn").addEventListener("click", function() {
+                            // ส่ง request ไปยัง backend 
+                            fetch(`/check-leave-balance`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.status === 'success') {
+                                        // แสดงผลข้อมูลวันลาคงเหลือในหน้าเว็บ
+                                        document.getElementById("leaveBalanceResult").innerHTML = `
+                                            <p>วันลาทั้งหมด: ${data.leave_balance}</p>
+                                            <p>วันลาที่ใช้ไป: ${data.days_used}</p>
+                                            <p>วันลาคงเหลือ: ${data.remaining_days}</p>
+                                        `;
+                                    } else {
+                                        // แสดงข้อความเมื่อเกิดข้อผิดพลาด
+                                        document.getElementById("leaveBalanceResult").innerHTML = `<p>${data.message}</p>`;
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error("Error fetching leave balance:", error);
+                                    document.getElementById("leaveBalanceResult").innerHTML = `<p>เกิดข้อผิดพลาดในการดึงข้อมูล</p>`;
+                                });
+                        });
+                    </script>
+
+
                 <!-- </form> -->
             </div>
         </div>
     </main>
-
+  
 
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>

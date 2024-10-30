@@ -455,6 +455,67 @@ function saveProfile(button) {
     });
 }
 
+
+// // ฟังก์ชันตรวจสอบวันลาคงเหลือ
+// function check_leavebalance() {
+//     const chk_leave_requeste_employeeid = document.getElementById("leave_requeste_employeeid").value;
+
+//     fetch('http://localhost:3000/check-leave-balance', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({
+//             fchk_leave_requeste_employeeid: chk_leave_requeste_employeeid
+            
+//         })
+        
+//     })
+    
+//     .then(response => {
+//         if (!response.ok) {
+//             throw new Error('Network response was not ok');
+//         }
+//         return response.json();
+//     })
+//     .then(response => {
+//         if (response.status === 'success') {
+//             Swal.fire({
+//                 icon: 'success',
+//                 title: response.message,
+//                 showConfirmButton: true
+//             });
+//         } else {
+//             Swal.fire({
+//                 icon: 'error',
+//                 title: response.message || 'check-leave-balance Failed',
+//                 confirmButtonText: 'OK'
+//             });
+//         }
+//     })
+//     .catch(err => {
+//         Swal.fire({
+//             icon: 'error',
+//             title: 'check-leave-balanceFailed',
+//             text: 'There was an error processing your request. Please try again.',
+//             confirmButtonText: 'OK'
+//         });
+//         console.error('Error during check-leave-balance request:', err);
+//     });
+// }
+
+
+// // การเรียกใช้ฟังก์ชันและแสดงผล
+// const employeeId = 123; // รหัสพนักงานที่ต้องการตรวจสอบ
+// checkLeaveBalance(employeeId, (err, leaveBalance) => {
+//     if (err) {
+//         console.error("Error:", err.message);
+//     } else {
+//         console.log(`วันลาคงเหลือของพนักงานรหัส ${employeeId}: ${leaveBalance} วัน`);
+//     }
+// });
+
+
 // function gotologout() {
 //     Swal.fire({
 //         icon: "warning",

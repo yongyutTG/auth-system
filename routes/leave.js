@@ -406,6 +406,106 @@ router.post('/update-profile', (req, res) => {
 });
 
 
+// Route สำหรับตรวจสอบวันลาคงเหลือ โดยดึง employeeId จาก session
+router.get('/check-leave-balance', (req, res) => {
+    const employeeId = req.session.employeeid; // ดึง employeeid จาก session
+
+    if (!employeeId) {
+        return res.status(401).json({
+            status: 'error',
+            message: 'กรุณาเข้าสู่ระบบก่อน'
+        });
+    }
+
+    // ดึงข้อมูลวันลาเริ่มต้นและวันลาที่ใช้ไปของพนักงาน
+    const query = `
+        SELECT e.leavebalance, 
+               COALESCE(SUM(lr.totaldays), 0) AS days_used
+        FROM employee e
+        LEFT JOIN leaverequests lr ON e.employeeid = lr.employeeid 
+        AND lr.status = 'approved' -- เฉพาะใบลาที่อนุมัติแล้ว
+        WHERE e.employeeid = ?
+        GROUP BY e.employeeid;
+    `;
+
+    connection.query(query, [employeeId], (err, results) => {
+        if (err) {
+            console.error('Error fetching leave balance:', err);
+            return res.status(500).json({
+                status: 'error',
+                message: 'เกิดข้อผิดพลาดในการดึงข้อมูลวันลา'
+            });
+        }
+
+        // ตรวจสอบว่าพบข้อมูลหรือไม่
+        if (results.length === 0) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'ไม่พบข้อมูลพนักงาน'
+            });
+        }
+
+        // คำนวณวันลาคงเหลือ
+        const { leavebalance, days_used } = results[0];
+        const remaining_days = leavebalance - days_used;
+
+        // ส่งผลลัพธ์กลับไป
+        res.status(200).json({
+            status: 'success',
+            leave_balance: leavebalance,
+            days_used: days_used,
+            remaining_days: remaining_days
+        });
+    });
+});
+
+
+
+
+router.get('/check/:employeeid', (req, res) => {
+    const employeeId = req.params.employeeid;
+
+    // ดึงข้อมูล
+    const query = `
+        SELECT e.leavebalance, 
+               COALESCE(SUM(lr.totaldays), 0) AS days_used
+        FROM employee e
+        LEFT JOIN leaverequests lr ON e.employeeid = lr.employeeid 
+                                    AND lr.status = 'approved' -- เฉพาะใบลาที่อนุมัติแล้ว
+        WHERE e.employeeid = ?
+        GROUP BY e.employeeid;
+    `;
+
+    connection.query(query, [employeeId], (err, results) => {
+        if (err) {
+            console.error('Error fetching leave balance:', err);
+            return res.status(500).json({
+                status: 'error',
+                message: 'เกิดข้อผิดพลาดในการดึงข้อมูลวันลา'
+            });
+        }
+
+        // ตรวจสอบว่าพบข้อมูลหรือไม่
+        if (results.length === 0) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'ไม่พบข้อมูลพนักงาน'
+            });
+        }
+
+        // คำนวณวันลาคงเหลือ
+        const { leavebalance, days_used } = results[0];
+        const remaining_days = leavebalance - days_used;
+
+        // ส่งผลลัพธ์กลับไป
+        res.status(200).json({
+            status: 'success',
+            leave_balance: leavebalance,
+            days_used: days_used,
+            remaining_days: remaining_days
+        });
+    });
+});
 // Route for leave request form
 // router.get('/leave', (req, res) => {
 //     const sql = 'SELECT EmployeeID FROM Employee'; // ดึงข้อมูล EmployeeID จากตาราง Employees

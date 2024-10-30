@@ -4,8 +4,8 @@ const bodyParser = require('body-parser');
 const path = require('path');
 
 const app = express();
-const authRouter = require('./routes/auth'); // ตรวจสอบเส้นทางของไฟล์ให้ถูกต้อง
-
+const leaveRouter = require('./routes/leave'); 
+// const leaveRoutes = require('./routes/leave');   
 
 const crypto = require('crypto');
 const secretkey = crypto.randomBytes(32).toString('hex'); //คีย์ลับที่ปลอดภัย
@@ -25,7 +25,9 @@ app.use(session({
     }
 }));
 
-app.use('/', authRouter); // ใช้ router สำหรับเส้นทางหลัก
+app.use('/', leaveRouter); // ใช้ router สำหรับเส้นทางหลัก
+// app.use('/', leaveRoutes);
+
 
 app.listen(3000, () => {
     console.log('Server is running on http://localhost:3000');
