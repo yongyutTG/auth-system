@@ -460,8 +460,6 @@ router.get('/check-leave-balance', (req, res) => {
 });
 
 
-
-
 router.get('/check/:employeeid', (req, res) => {
     const employeeId = req.params.employeeid;
 
