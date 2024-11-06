@@ -53,3 +53,16 @@ end_date
 reason
 status (Pending, Approved, Rejected)
 requested_days (จำนวนวันลาที่ขอ)
+
+
+-หน้าอนุมัติ ต้องดึงข้อมูล คำขอลาทั้งหมดมา แล้วบันทึกลงใน TABLE `approvalhistory` 
+โดยมี column 
+    `approvalid` int(11) NOT NULL AUTO_INCREMENT,
+    `leaverequestid` int(11) DEFAULT NULL,
+    `approval_status` enum('Approved', 'Rejected') NOT NULL,
+    `approvedby` varchar(50) DEFAULT NULL,
+    `approvaldate` date DEFAULT NULL,
+    `comments` text DEFAULT NULL,
+  
+
+พร้อมทั้ง บันทึกชื่อตำแหน่งโดยเก็บจาก ตารางคำขอลาพักร้อน approveby 

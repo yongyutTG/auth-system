@@ -1,0 +1,537 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Leave Requests</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="public/bootstrap-5.2.3-dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="public/fontawesome-free-6.2.1-web/css/all.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="public/css/home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* สไตล์หลัก */
+        body {
+            background-color: #e9ecef;
+        }
+
+        h1 {
+            color: #4a90e2;
+        }
+
+        /* ช่องค้นหา */
+        #search-box {
+            width: 300px;
+            padding: 8px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .form-container {
+        background-color: #ffffff;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+        }
+        .form-title {
+        font-weight: bold;
+        color: #67696b;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 20px;
+         }
+         
+        .form-control,
+        .form-select-custom {
+            border-radius: 8px;
+            padding: 12px;
+        }
+        .btn-custom {
+        background-color: #007bff;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 16px;
+        color: #ffffff;
+        transition: background-color 0.3s ease;
+        width: 100%;
+        }
+        .btn-custom:hover {
+        background-color: #0056b3;
+        }
+
+        /* ไอคอนสถานะ */
+        .status-icon {
+            font-size: 18px;
+        }
+
+        .status-pending {
+            color: #f39c12;
+        }
+
+        .status-approved {
+            color: #27ae60;
+        }
+
+        .status-rejected {
+            color: #e74c3c;
+        }
+
+            /* Custom styles for leave history table */
+        .table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .table th,
+        .table td {
+            border-top: none;
+            text-align: center;
+            font-size: 14px;
+            padding: 12px;
+        }
+
+        .table thead th {
+            background-color: #9c76b4;
+            color: #ffffff;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .table tbody tr:hover {
+            background-color: #eaf3ff;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+
+        /* ปุ่มแอ็คชั่น */
+        button {
+            background-color: #4caf50;
+            border: none;
+            color: white;
+            padding: 10px 16px;
+            width: 120px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-right: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .reject-btn {
+            background-color: #f44336;
+        }
+
+        .reject-btn:hover {
+            background-color: #e53935;
+        }
+
+        .view-details-btn {
+            background-color: #2196f3;
+        }
+
+        .view-details-btn:hover {
+            background-color: #1e88e5;
+        }
+
+        /* ไอคอนสถานะ */
+        .status-icon {
+            font-size: 18px;
+        }
+
+        .status-pending {
+            color: #f39c12;
+        }
+
+        .status-approved {
+            color: #27ae60;
+        }
+
+        .status-rejected {
+            color: #e74c3c;
+        }
+
+        /* สไตล์ Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 500px;
+            max-width: 90%;
+        }
+
+        .modal-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+         /* Close Modal */
+        .close-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            float: right;
+        }
+         /* Custom styles for leave policy section */
+        .leave-policy {
+            background-color: #f0f8ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #f3f3fa;
+        }
+
+        .leave-policy h4 {
+            font-weight: bold;
+            color: #4b4c4d;
+            margin-bottom: 15px;
+        }
+
+        .leave-policy ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        .leave-policy ul li {
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #69497e;
+        }
+    </style>
+
+    <style>
+        /* สไตล์หลัก dashboard card */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        h1 {
+            color: #69497e;
+            text-align: center;
+        }
+
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .card {
+            background-color: #f4f4f9;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            width: 300px;
+            transition: transform 0.3s;
+            justify-content: center;
+        }
+       
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card i {
+            font-size: 40px;
+            margin-bottom: 10px;
+            color: #69497e;
+        }
+
+        .card h2 {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+
+        .card p {
+            color: #666;
+        }
+
+   
+</style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <a href="#" class="navbar-brand"><i class="fa fa-cube"></i>สวัสดีคุณ <%= user %></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav ml-auto">
+                    <a href="/admin" class="nav-item nav-link"><i class="fa fa-home"></i> หน้าหลัก</a>
+                    <a href="/admin-leave-history" class="nav-item nav-link"><i class="fa fa-history"></i> ประวัติการอนุมัติหรือปฏิเสธคำขอ</a>
+                    <a href="/admin-approvals" class="nav-item nav-link"><i class="fa fa-check-circle"></i> การอนุมัติหรือปฏิเสธคำขอ</a>
+                    <a href="/admin-leave-balance" class="nav-item nav-link"><i class="fa fa-calculator"></i> คำนวณวันลาคงเหลือ</a>
+                    <a href="/admin-users" class="nav-item nav-link"><i class="fa fa-users"></i> เจ้าหน้าที่ทั้งหมด</a>
+                    <a href="#" class="nav-item nav-link"><i class="fa fa-envelope"></i> ข้อความ</a>
+            
+                    <!-- Dropdown Menu for Logout -->
+                    <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-sign-out"></i> ออกจากระบบ
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="/admin-leave-profile"><i class="fa fa-user"></i> โปรไฟล์ของฉัน</a></li>
+                        <li><a class="dropdown-item" href="/admin-settings"><i class="fa fa-cog"></i> ตั้งค่า</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="/logout"><i class="fa fa-sign-out"></i> ออกจากระบบ</a></li>
+                    </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+
+    <main role="main">
+        <div class="container mt-5 pt-5">
+      
+            <!-- Leave Policy Section -->
+            <div class="leave-policy">
+                <h4>ระเบียบการลาของพนักงาน</h4>
+                <ul>
+                    <li><strong>ลาพักร้อน:</strong> พนักงานมีสิทธิลาพักร้อนได้ปีละ 10 วัน หลังจากทำงานครบ 1 ปี</li>
+                    <li><strong>ลากิจส่วนตัว:</strong> สามารถลางานได้โดยไม่หักค่าจ้าง 5 วันต่อปี</li>
+                    <li><strong>ลาป่วย:</strong> พนักงานสามารถลาป่วยได้ตามความจำเป็น แต่ต้องมีใบรับรองแพทย์หากลาติดต่อกันเกิน 3 วัน</li>
+                    <li><strong>ลาคลอด:</strong> พนักงานหญิงมีสิทธิลาคลอดได้ 90 วัน โดยมีเงินเดือนจ่าย 45 วันตามกฎหมายแรงงาน</li>
+                    <li><strong>การยื่นขอลา:</strong> พนักงานต้องยื่นใบคำขอลาล่วงหน้าอย่างน้อย 3 วันทำการ ยกเว้นกรณีลาป่วยที่สามารถยื่นย้อนหลังได้</li>
+                    <li><strong>เอกสาร:</strong> สำหรับการลาป่วยเกิน 3 วัน ต้องแนบใบรับรองแพทย์</li>
+                </ul>
+                
+            </div>
+            
+
+        
+        <h1>Admin Panel - Dashboard</h1>
+    
+        <!-- การ์ดแสดงข้อมูลสรุป -->
+        <div class="dashboard">
+            <div class="card">
+                <i class="fas fa-user-clock"></i>
+                <h2>Pending Requests</h2>
+                <p>15 Requests</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-user-check"></i>
+                <h2>Approved Requests</h2>
+                <p>120 Requests</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-user-times"></i>
+                <h2>Rejected Requests</h2>
+                <p>5 Requests</p>
+            </div>
+        </div>
+  
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    // ค้นหาตารางที่มี class "leave-history-table"
+                    const tableRows = document.querySelectorAll(".leave-history-table .request-date");
+            
+                    tableRows.forEach(cell => {
+                        const date = new Date(cell.innerText);
+                        if (!isNaN(date)) {
+                            // ฟอร์แมตวันที่เป็นรูปแบบ YYYY-MM-DD
+                            cell.innerText = date.toISOString().split('T')[0];
+                        }
+                    });
+                });
+            </script>
+
+            <div class="form-container">
+                <h2 class="form-title mb-4">รายการรออนุมัติหรือปฏิเสธคำขอ</h2>
+                <div class="table-responsive">
+                    <table id="leaveHistoryTable" class="table table-bordered mt-4 leave-history-table">
+                        <thead>
+                        <tr>
+                            <th>เลขคำขอลา</th>
+                            <th>ชื่อ-นามสกุล</th>
+                            <th>ประเภทการลา</th>
+                            <th>เหตุผล</th>
+                            <th>วันที่เริ่มลา-วันที่สิ้นสุดลา</th>
+                            <th>สถานะการยืนคำขอลา</th>
+                            <th>การกระทำ</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <% leaveRequests.forEach(request => { %>
+                            <tr>
+                                <td><%= request.leaverequestid %></td>
+                                <td><%= request.firstname %> <%= request.lastname %></td>
+                                <td><%= request.leavetype %></td>
+                                <td><%= request.reason %></td>
+                                <td class="request-date"><%= request.startdate %> - <%= request.enddate %></td>
+                               
+                                <td>
+                                    <% if (request.status === 'pending') { %>
+                                        <i class="fas fa-clock status-icon status-pending"></i>
+                                    <% } else if (request.status === 'approved') { %>
+                                        <i class="fas fa-check-circle status-icon status-approved"></i>
+                                    <% } else if (request.status === 'rejected') { %>
+                                        <i class="fas fa-times-circle status-icon status-rejected"></i>
+                                    <% } %>
+                                </td>
+                                <td>
+                                    <form id="approve-form-<%= request.leaverequestid %>" action="/leave-request/<%= request.leaverequestid %>/update" method="POST">
+                                        <input type="hidden" name="status" value="approved">
+                                        <button type="button" onclick="confirmAction('approve', '<%= request.leaverequestid %>')"><i class="fas fa-check"></i> อนุมัติ</button>
+                                        <br>
+                                    </form>
+                                    <form id="reject-form-<%= request.leaverequestid %>" action="/leave-request/<%= request.leaverequestid %>/update" method="POST">
+                                        <input type="hidden" name="status" value="rejected">
+                                        <button type="button" class="reject-btn" onclick="confirmAction('reject', '<%= request.leaverequestid %>')"><i class="fas fa-times"></i> ไม่อนุมัติ</button>
+                                    </form>
+                                    <button class="view-details-btn" onclick="openModal(<%= JSON.stringify(request) %>)"><i class="fas fa-eye"></i>รายละเอียด</button>
+                                </td>
+                            </tr>
+                        <% }); %>
+                        </tbody>
+                    </table>
+                </div>    
+            </div>
+        </div>
+
+
+    </main>     
+   
+
+   
+    <!-- Modal แสดงรายละเอียด -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">Close</button>
+            <h2>Leave Request Details</h2>
+            <p><strong>ID:</strong> <span id="modal-id"></span></p>
+            <p><strong>Employee Name:</strong> <span id="modal-name"></span></p>
+            <p><strong>Leave Type:</strong> <span id="modal-leave-type"></span></p>
+            <p><strong>Reason:</strong> <span id="modal-reason"></span></p>
+            <p><strong>Start Date:</strong> <span id="modal-start-date"></span></p>
+            <p><strong>End Date:</strong> <span id="modal-end-date"></span></p>
+            <p><strong>Total Days:</strong> <span id="modal-total-days"></span></p>
+            <p><strong>Status:</strong> <span id="modal-status"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // เปิด Modal และใส่ข้อมูล
+        function openModal(request) {
+            document.getElementById('modal-id').innerText = request.leaverequestid;
+            document.getElementById('modal-name').innerText = request.firstname + ' ' + request.lastname;
+            document.getElementById('modal-leave-type').innerText = request.leavetype;
+            document.getElementById('modal-reason').innerText = request.reason;
+            document.getElementById('modal-start-date').innerText = request.startdate;
+            document.getElementById('modal-end-date').innerText = request.enddate;
+            document.getElementById('modal-total-days').innerText = request.totaldays;
+            document.getElementById('modal-status').innerText = request.status;
+
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        // ปิด Modal
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // ฟังก์ชันสำหรับกรองตาราง
+        function filterTable() {
+            const searchBox = document.getElementById('search-box');
+            const filter = searchBox.value.toLowerCase();
+            const rows = document.querySelectorAll('#leave-requests-body tr');
+
+            rows.forEach(row => {
+                const name = row.cells[1].innerText.toLowerCase();
+                const leaveType = row.cells[2].innerText.toLowerCase();
+                if (name.includes(filter) || leaveType.includes(filter)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // แสดงป็อปอัปยืนยันการเปลี่ยนสถานะด้วย SweetAlert2
+        function confirmAction(action, requestId) {
+            const message = action === 'approve' ? "Are you sure you want to approve this request?" : "Are you sure you want to reject this request?";
+            const formId = action === 'approve' ? `approve-form-${requestId}` : `reject-form-${requestId}`;
+
+            Swal.fire({
+                title: 'Confirmation',
+                text: message,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, proceed!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(formId).submit();
+                }
+            });
+        }
+    </script>
+     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+   
+     <script src="public/js/jquery-3.4.1.slim.min.js"></script>
+     <script src="public/bootstrap-5.2.3-dist/js/bootstrap.min.js"></script>
+     <script src="public/js/sweetalert2.all.min.js"></script>
+    <!-- Scripts for Bootstrap, jQuery, DataTables -->
+     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+   
+     <script>
+       $(document).ready(function() {
+         // Initialize DataTable with search and pagination
+         $('#leaveHistoryTable').DataTable({
+           "language": {
+             "search": "ค้นหา:",
+             "paginate": {
+               "next": "ถัดไป",
+               "previous": "ก่อนหน้า"
+             },
+             "lengthMenu": "แสดง _MENU_ รายการต่อหน้า",
+             "info": "แสดง _START_ ถึง _END_ จาก _TOTAL_ รายการ"
+           },
+           "paging": true,
+           "searching": true,
+         });
+       });
+     </script>
+ 
+</body>
+</html>

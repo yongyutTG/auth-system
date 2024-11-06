@@ -66,7 +66,19 @@ button {
     outline: none;
     user-select: none;
 }
+.form-select-custom {
+    background-color: #f0f8ff;
+    color: #000000;
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    padding: 12px;
+}
 
+.form-select-custom:focus, 
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+}
 /* H2 {
     font-size: 8px;
     width: 100%;

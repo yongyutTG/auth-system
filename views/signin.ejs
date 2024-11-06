@@ -39,6 +39,7 @@
                     
                     
                     <div class="signin-link">   
+                      
                         <button  type="submit"   id="input_login" onclick="validat_signin()" >Sign In <i class="fas fa-sign-in-alt"></i></button>
                     
                     </div>
@@ -233,6 +234,16 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="leaverole">สถานะผู้ใช้งาน</label>
+                                                <select class="form-select form-select-custom" id="txt-modal-signup-leaverole" name="modal-leaverole" >
+                                                    <!-- <option selected disabled></option> -->
+                                                    <option value="user">พนักงาน</option>
+                                                    <option value="admin">ผู้ดูแลระบบ</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>  
                                 </div>
                                 <div id="error_msg_register"></div>
@@ -241,16 +252,17 @@
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
                                         <label class="form-check-label" for="invalidCheck">
-                                            <p><a href="https://www.baania.com/terms" style="font-size: 14px;color: #070707 "> ยอมรับนโยบายความเป็นส่วนตัว และเงื่อนไขการใช้บริการ</a></p>
+                                            <p><a href="#" style="font-size: 14px;color: #070707 "> ยอมรับนโยบายความเป็นส่วนตัวเงื่อนไขการใช้บริการ</a></p>
                                         </label>
                                         <div class="invalid-feedback">
                                             You must agree before submitting.
                                         </div>
                                     </div>
-                                </div>       
-                                <div class="modal-footer">          
                                     <button onclick="validate_signup()" class="btn btn-success">Sign Up</button>
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                </div>       
+                                <div class="modal-footer">          
+                                  
                                 </div>
                             </div>
                         </div>

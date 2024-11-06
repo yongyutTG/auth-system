@@ -78,6 +78,7 @@ function validate_signup(){
     const chk_signup_position = document.getElementById("txt-modal-signup-position").value;
     const chk_signup_department = document.getElementById("txt-modal-signup-department").value;
     const chk_signup_startdate = document.getElementById("txt-modal-signup-startdate").value;
+    const chk_signup_role = document.getElementById("txt-modal-signup-leaverole").value;
     const chk_signup_leavebalance = document.getElementById("txt-modal-signup-leavebalance").value;
     // if(document.getElementById("txt-modal-signup-empid").value=="" || document.getElementById("txt-modal-signup-email").value==""){
     //     alert("Please fill Username and Password "); 
@@ -134,6 +135,11 @@ function validate_signup(){
         error_msg_register.html("กรุณากรอกวันที่เริ่มทำงาน").css("color","red")
         document.getElementById("txt-modal-signup-startdate").focus();
         return false
+    } else if (chk_signup_role.length <= 0) {
+        error_msg_register.show();
+        error_msg_register.html("กรุณาเลือกสถานะผู้ใช้งาน").css("color","red")
+        document.getElementById("ttxt-modal-signup-leaverole").focus();
+        return false
     } else if (chk_signup_leavebalance.length <= 0) {
         error_msg_register.show();
         error_msg_register.html("กรุณากรอกวันลาตามสิทธิ์").css("color","red")
@@ -169,6 +175,7 @@ function validate_signup(){
                 fchk_signup_position: chk_signup_position,
                 fchk_signup_department: chk_signup_department,
                 fchk_signup_startdate: chk_signup_startdate,
+                fchk_signup_role: chk_signup_role,
                 fchk_signup_leavebalance: chk_signup_leavebalance
             })
         })

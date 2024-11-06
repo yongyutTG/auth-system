@@ -28,14 +28,14 @@ router.get('/signin', (req, res) => {
 
 router.post('/signin', (req, res) => {
     const { fchk_username, fchk_password } = req.body;
-      // valida data
+    // Validate data
     if (!fchk_username || !fchk_password) {
         return res.status(400).json({
             status: "error",
             message: "กรุณากรอกข้อมูลให้ครบทุกช่อง"
-        })
+        });
     } else {
-        connection.query('select * from employee where email = ?',[fchk_username],(err,results)=>{
+        connection.query('SELECT * FROM employee WHERE email = ?', [fchk_username], (err, results) => {
             if (err) {
                 console.error('Error querying database:', err);
                 return res.status(500).json({
@@ -43,28 +43,40 @@ router.post('/signin', (req, res) => {
                     message: 'query เกิดข้อผิดพลาด'
                 });
             } else {
-                if(results.length > 0){
-                    const user =results[0];
-                    bcrypt.compare(fchk_password,user.password, (err, isMatch) => {
-                        console.log('password เข้ารหัส',user.password);
+                if (results.length > 0) {
+                    const user = results[0];
+                    bcrypt.compare(fchk_password, user.password, (err, isMatch) => {
+                        console.log('password เข้ารหัส', user.password);
                         if (err) {
                             console.error(err);
                             return res.status(500).json({
                                 status: 'error',
                                 message: 'Error password validation'
-                            });        
+                            });
                         }
                         if (isMatch) {
                             req.session.employeeid = user.employeeid;
-                            req.session.user = user.firstname +" "+ user.lastname;  // Set session user
-                            console.log('Session User signin:',"employeeid: "+ req.session.employeeid + "user:" + req.session.user);
-                            // console.log(req.session);
-                            res.status(200).json({
-                                data: results,
-                                status: 'success',
-                                message: 'เข้าสู่ระบบสำเร็จ......',
-                                redirectUrl: '/home'
-                            });
+                            req.session.user = user.firstname + " " + user.lastname; // Set session user
+                            console.log('Session User signin:', "employeeid: " + req.session.employeeid + " user: " + req.session.user);
+
+                            // ตรวจสอบบทบาท (role) ของผู้ใช้
+                            if (user.role === 'admin') {
+                                // ถ้าเป็น admin ให้เปลี่ยนเส้นทางไปหน้า admin
+                                res.status(200).json({
+                                    data: results,
+                                    status: 'success',
+                                    message: 'เข้าสู่ระบบสำเร็จ......',
+                                    redirectUrl: '/admin'
+                                });
+                            } else {
+                                // ถ้าเป็น user ปกติ ให้เปลี่ยนเส้นทางไปหน้า home
+                                res.status(200).json({
+                                    data: results,
+                                    status: 'success',
+                                    message: 'เข้าสู่ระบบสำเร็จ......',
+                                    redirectUrl: '/home'
+                                });
+                            }
                         } else {
                             console.log('Password ไม่ถูกต้อง');
                             res.status(401).json({
@@ -84,6 +96,8 @@ router.post('/signin', (req, res) => {
         });
     }
 });
+
+
  
 // GET signup page
 router.get('/signup', (req, res) => {
@@ -91,9 +105,9 @@ router.get('/signup', (req, res) => {
 });
 // POST signup
 router.post('/signup', (req, res) => {
-    const { fchk_signup_empid,fchk_signup_email,fchk_signup_password,fchk_signup_confrim_password, fchk_signup_firstname, fchk_signup_lastname, fchk_signup_position ,fchk_signup_department, fchk_signup_startdate,fchk_signup_leavebalance} = req.body;
+    const { fchk_signup_empid,fchk_signup_email,fchk_signup_password,fchk_signup_confrim_password, fchk_signup_firstname, fchk_signup_lastname, fchk_signup_position ,fchk_signup_department, fchk_signup_startdate,fchk_signup_role,fchk_signup_leavebalance} = req.body;
     // ตรวจสอบว่าข้อมูลที่จำเป็นถูกส่งมาหรือไม่
-    if (!fchk_signup_empid || !fchk_signup_email || !fchk_signup_password || !fchk_signup_confrim_password || !fchk_signup_firstname || !fchk_signup_lastname || !fchk_signup_position || !fchk_signup_department || !fchk_signup_startdate || !fchk_signup_leavebalance) {
+    if (!fchk_signup_empid || !fchk_signup_email || !fchk_signup_password || !fchk_signup_confrim_password || !fchk_signup_firstname || !fchk_signup_lastname || !fchk_signup_position || !fchk_signup_department || !fchk_signup_startdate || !fchk_signup_role || !fchk_signup_leavebalance) {
         return res.status(400).json({
             status: 'error',
             message: 'กรุณากรอกข้อมูลให้ครบทุกช่อง'
@@ -142,6 +156,7 @@ router.post('/signup', (req, res) => {
                     position: fchk_signup_position,
                     department: fchk_signup_department,
                     startdate: fchk_signup_startdate,
+                    role: fchk_signup_role,
                     leavebalance: fchk_signup_leavebalance
                     
                 };
@@ -166,6 +181,7 @@ router.post('/signup', (req, res) => {
         }
     });
 });
+
 
 
 router.get('/home', (req, res) => {
@@ -226,7 +242,7 @@ router.get('/leave-request-success', (req, res) => {
 router.post('/leave-request', (req, res) => {
     const { fchk_leave_requeste_employeeid,fchk_leave_requeste_firstname, fchk_leave_requeste_lastname,fchk_leave_requeste_type,fchk_leave_reason,fchk_leave_requeste_start_date,fchk_leave_requeste_end_date,fchk_leave_totaldays,fchk_leave_status,fchk_leave_requestdate} = req.body;
     // ตรวจสอบว่าข้อมูลที่จำเป็นถูกส่งมาหรือไม่
-    if (!fchk_leave_requeste_employeeid || !fchk_leave_requeste_firstname || !fchk_leave_requeste_lastname || !fchk_leave_requeste_type || !fchk_leave_reason || !fchk_leave_requeste_start_date || !fchk_leave_requeste_end_date || !fchk_leave_totaldays || !fchk_leave_status || !fchk_leave_requestdate) {
+    if (!fchk_leave_requeste_employeeid || !fchk_leave_requeste_firstname || !fchk_leave_requeste_lastname || !fchk_leave_requeste_type || !fchk_leave_reason || !fchk_leave_requeste_start_date || !fchk_leave_requeste_end_date || !fchk_leave_totaldays  || !fchk_leave_status || !fchk_leave_requestdate) {
         return res.status(400).json({
             status: 'error',
             message: 'กรุณากรอกข้อมูลให้ครบทุกช่อง'
@@ -307,53 +323,8 @@ router.get('/leave-profile', (req, res) => {
     }
 });
 
-// // Route to handle profile update requests
-// router.post('/update-profile', (req, res) => {
-//     if (req.session.user) {
-//         console.log('Received update request for profile:', req.session.user);
 
-//         const employeeid = req.session.employeeid; // Get the current employee ID from session
-//         const { email, firstname, lastname, position, department, startdate, leavebalance } = req.body.updatedProfile; // รับค่าจาก updatedProfile ที่ส่งมา
-//         // Log the received data to debug potential null values
-//         console.log("Received data:", { email, firstname, lastname, position, department, startdate, leavebalance });
-//         const updateQuery = `
-//             UPDATE employee 
-//             SET email = ?, firstname = ?, lastname = ?, position = ?, department = ?, startdate = ?, leavebalance = ?
-//             WHERE employeeid = ?`;
 
-//         // Ensure the values array has data in the correct order
-//         const values = [email, firstname, lastname, position, department, startdate, leavebalance, employeeid];
-
-//         // Log the values array to verify correct data is being sent
-//         console.log("Values for query:", values);
-       
-//         // Execute the update query
-//         connection.query(updateQuery, values, (err, result) => {
-//             if (err) {
-//                 console.error('Error updating profile:', err);
-//                 return res.status(500).json({
-//                     status: 'error',
-//                     message: 'เกิดข้อผิดพลาดในการปรับปรุงข้อมูลโปรไฟล์'
-//                 });
-//             }
-
-//             // On successful update, send a success message and optional redirect URL
-//             res.status(200).json({
-//                 status: 'success',
-//                 message: 'ปรับปรุงข้อมูลโปรไฟล์สำเร็จ',
-//                 redirectUrl: '/leave-profile'
-//             });
-//             console.log('Profile updated successfully');
-//         });
-//     } else {
-//         console.log('No session found, redirecting to signin');
-//         res.status(401).json({
-//             status: 'error',
-//             message: 'กรุณาเข้าสู่ระบบก่อนทำการแก้ไขโปรไฟล์',
-//             redirectUrl: '/signin'
-//         });
-//     }
-// });
 
 // Route เพื่อรับข้อมูล updatedProfile และอัปเดตข้อมูลในฐานข้อมูล
 router.post('/update-profile', (req, res) => {
@@ -504,6 +475,57 @@ router.get('/check/:employeeid', (req, res) => {
         });
     });
 });
+
+
+// Route สำหรับแสดงรายการคำขอลาทั้งหมด (สำหรับ Admin)
+router.get('/admin', (req, res) => {
+    if (req.session.user) {
+        connection.query('SELECT * FROM leaverequests', (err, results) => {
+            // if (err) return res.status(500).json({ error: err.message });
+            // res.render('admin', { leaveRequests: results });
+            if (err){
+                console.error('Error query leaverequests admin:', err);
+                return res.status(400).json({
+                    status: 'error',
+                    message: 'เกิดข้อผิดพลาดในการค้นหาประวัติการลา leaveHistory'
+                }); 
+            } else {
+                res.render('admin', {
+                    leaveRequests: results, // ส่งข้อมูลประวัติการลาไปยัง view
+                user: req.session.user});
+            }
+        });
+    } else {
+        console.log('No session found, redirecting to signin');
+        res.status(401).json({
+            status: 'error',
+            message: 'กรุณาเข้าสู่ระบบก่อน',
+            redirectUrl: '/signin'
+        });
+    }
+});
+
+// Route สำหรับอัปเดตสถานะของคำขอลาแล้วบันทึกข้อมูลลงตาราง approvalhistory
+router.post('/leave-request/:id/update', (req, res) => {
+    if (req.session.user) {
+        const { id } = req.params;
+        const { status } = req.body;
+       
+        connection.query('UPDATE leaverequests SET status = ? WHERE leaverequestid = ?', [status, id], (err) => {
+            if (err) return res.status(500).json({ error: err.message });
+            res.redirect('/admin');
+        });
+    } else {
+        console.log('No session found, redirecting to signin');
+        res.status(401).json({
+            status: 'error',
+            message: 'กรุณาเข้าสู่ระบบก่อน',
+            redirectUrl: '/signin'
+        });
+    }
+});
+
+
 // Route for leave request form
 // router.get('/leave', (req, res) => {
 //     const sql = 'SELECT EmployeeID FROM Employee'; // ดึงข้อมูล EmployeeID จากตาราง Employees

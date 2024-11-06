@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* สไตล์หลัก */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        h1 {
+            color: #4a90e2;
+            text-align: center;
+        }
+
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            width: 300px;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card i {
+            font-size: 40px;
+            margin-bottom: 10px;
+            color: #4a90e2;
+        }
+
+        .card h2 {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+
+        .card p {
+            color: #666;
+        }
+
+        /* ตารางข้อมูลสรุป */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        thead {
+            background-color: #4a90e2;
+            color: white;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #e0f7fa;
+        }
+
+        th {
+            font-weight: bold;
+            border-bottom: 2px solid #ddd;
+        }
+
+        td {
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Panel - Dashboard</h1>
+
+    <!-- การ์ดแสดงข้อมูลสรุป -->
+    <div class="dashboard">
+        <div class="card">
+            <i class="fas fa-user-clock"></i>
+            <h2>Pending Requests</h2>
+            <p>15 Requests</p>
+        </div>
+        <div class="card">
+            <i class="fas fa-user-check"></i>
+            <h2>Approved Requests</h2>
+            <p>120 Requests</p>
+        </div>
+        <div class="card">
+            <i class="fas fa-user-times"></i>
+            <h2>Rejected Requests</h2>
+            <p>5 Requests</p>
+        </div>
+        <div class="card">
+            <i class="fas fa-users"></i>
+            <h2>Total Employees</h2>
+            <p>50 Employees</p>
+        </div>
+    </div>
+
+    <!-- ตารางสรุปคำขอการลา -->
+    <h2 style="margin-top: 30px;">Latest Leave Requests</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Employee Name</th>
+                <th>Leave Type</th>
+                <th>Dates</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- ตัวอย่างข้อมูล สามารถแทนที่ด้วยข้อมูลจากฐานข้อมูล -->
+            <tr>
+                <td>001</td>
+                <td>John Doe</td>
+                <td>Annual Leave</td>
+                <td>2024-11-01 to 2024-11-10</td>
+                <td>Pending</td>
+            </tr>
+            <tr>
+                <td>002</td>
+                <td>Jane Smith</td>
+                <td>Sick Leave</td>
+                <td>2024-10-15 to 2024-10-20</td>
+                <td>Approved</td>
+            </tr>
+            <tr>
+                <td>003</td>
+                <td>Mark Johnson</td>
+                <td>Emergency Leave</td>
+                <td>2024-11-03 to 2024-11-05</td>
+                <td>Rejected</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
