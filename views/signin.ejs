@@ -3,277 +3,270 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Signin Form</title>
+    <title>Signin ระบบลา</title>
     <link rel="stylesheet" href="public/css/signin.css">
     <link href="public/bootstrap-5.2.3-dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="public/fontawesome-free-6.2.1-web/css/all.css" rel="stylesheet" />
-
 </head>
 <body>
-    <!-- <form action="/signin" method="POST">     -->
-        <div class="login-wrapper">
-            <main id="form" >
-                <section style="display: inline;" id="ma">
-                    <div class="title">
-                        <i class='far fa-user-circle' style='font-size:84px;padding: 1px; color: #070707'></i>
-                        <h2>Leave Management System</h2>
-                    </div> 
-                    <br>
-
-                    <div class="form-group">
-                        <i class="fa fa-user"></i>
-                        <label><input type=text id ="input_username"name="input_username"style="text-align:center"placeholder="username or email"></label>
-                        <small></small>
-                        <!-- <div class="bg-error_msg bg-danger-subtle text-white" id="error_msg_signin_user"></div>   -->
-                        <div id="error_msg_signin_user"></div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <i class="fa fa-unlock-alt"></i>
-                        <label for="password"></label>
-                        <input type="password"id="input_password" name = "input_password" style="text-align:center" placeholder =" password">
-                        <small></small>
-                        <div id="error_msg_signin_password"></div>
-                    </div>
-
-                    
-                    
-                    <div class="signin-link">   
-                      
-                        <button  type="submit"   id="input_login" onclick="validat_signin()" >Sign In <i class="fas fa-sign-in-alt"></i></button>
-                    
-                    </div>
-                    <div class="signup-forget_password-link">
-                        <br>
-                        <p><a href="#" data-toggle="modal" data-target="#modal_register">Sign Up</a></p>
-                        <p><a href="#" data-toggle="modal" data-target="#modal_forget_password ">Forget Password</a></p>
-                    </div>
-
+<!-- <form action="/signin" method="POST">     -->
+<div class="login-wrapper">
+    <main id="form" >
+        <section style="display: inline;" id="ma">
+            <div class="title">
+                <i class='far fa-user-circle' style='font-size:84px;padding: 1px; color: #3d216b'></i>
+                <h2 class="custom-title-color">Sign in to your account</h2>
+            </div> 
+           <br>
+            <div class="form-group">
+                <i class="fa fa-user"></i>
+                <label><input type=text id ="input_username"name="input_username"style="text-align:center"placeholder="username or email"></label>
+                <small></small>
+                <div class="bg-error_msg " id="error_msg_signin_user"></div>  
+            </div>
+            
+            <div class="form-group">
+                <i class="fa fa-unlock-alt"></i>
+                <label for="password"></label>
+                <input type="password"id="input_password" name = "input_password" style="text-align:center" placeholder =" password">
+                <small></small>
+            </div>
+            <div class="bg-error_msg" id="error_msg_signin_password"></div>
+            
+            <div class="signup-button">   
+                <button  type="submit" id="input_login" onclick="validat_signin()" >Sign In <i class="fas fa-sign-in-alt"></i></button>
+            </div>
+            <br>
+            <div class="signup-forget_password-link">
+                <p><a href="#" data-toggle="modal" data-target="#modal_register">Sign Up</a></p>
+                <p><a href="#" data-toggle="modal" data-target="#modal_forget_password ">Forget Password</a></p>
+            </div>
+           
 <!-- ทำรายการลืมรหัสผ่าน -->
-                    <!-- modal -->
-                    <div class="modal fade" id="modal_forget_password">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">
-                                        <i class="fa fa-send mr-1"></i>ทำรายการลืมรหัสผ่าน
-                                    </h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span>&times;</span>
-                                </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-row">
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="modal_fullname">Fullname</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                    <i class="fa fa-user"></i>
-                                                </span>
-                                                    <input type="text" id="txt_modal_forget_fullname" name="modal_fullname" class="form-control" placeholder="Enter FullName" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="modal_new_password">New Password</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-unlock-alt"></i>
-                                                        <!-- <i class="fa fa-user"></i>  -->
-                                                    </span>
-                                                    <input type="password" id="txt_modal_forget_new_password" name="modal_new_password" class="form-control" placeholder="Enter New Password" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+            <!-- modal -->
+            <div class="modal fade" id="modal_forget_password">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="fa fa-send mr-1"></i>ทำรายการลืมรหัสผ่าน
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span>&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-row">
+                                <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="modal_contact_email">Email address</label>
+                                        <label for="modal_fullname">Fullname</label>
                                         <div class="input-group">
                                             <span class="input-group-addon">
-                                            <i class="fa fa-envelope"></i>
+                                            <i class="fa fa-user"></i>
                                         </span>
-                                            <input type="email" id="txt_modal_forget_email" name="modal_email" class="form-control" placeholder="Enter email" />
+                                            <input type="text" id="txt_modal_forget_fullname" name="modal_fullname" class="form-control" placeholder="Enter FullName" />
                                         </div>
                                     </div>
                                 </div>
-                                <div id="error_msg_forget"></div>
-                                <div class="modal-footer">
-                                    <button onclick="goto_forget()" class="btn btn-success">Save</button>
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <!-- signup -->
-                    <div class="modal fade" id="modal_register">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">
-                                        <i class="fa fa-user-plus mr-1"></i> ทำการสมัครสมาชิก
-                                    </h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span>&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-row">
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="modal-signup-empid">เลขพนักงาน</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-id-badge"></i>
-                                                    </span>
-                                                    <input type="number" id="txt-modal-signup-empid" name="modal-empid" class="form-control" placeholder="เลขพนักงาน" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="modal-email">อีเมลล์</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-envelope"></i> 
-                                                    </span>
-                                                    <input type="text" id="txt-modal-signup-email" name="modal-email" class="form-control" placeholder="อีเมลล์" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="modal-password">รหัสผ่าน(กำหนดเอง)</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-key"></i> 
-                                                    </span>
-                                                    <input type="password" id="txt-modal-signup-password" name="modal-password" class="form-control" placeholder="รหัสผ่าน" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="modal-confrim-password">รหัสผ่าน(ยืนยัน)</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-key"></i> 
-                                                    </span>
-                                                    <input type="password" id="txt-modal-signup-confrim-password" name="modal-confrim-password" class="form-control" placeholder="รหัสผ่าน" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="modal-firstname">ชื่อ</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-user"></i> 
-                                                    </span>
-                                                    <input type="text" id="txt-modal-signup-firstname" name="modal-firstname" class="form-control" placeholder="ชื่อ" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="modal-lastlname">นามสกุล</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-user"></i>
-                                                    </span>
-                                                    <input type="text" id="txt-modal-signup-lastname" name="modal-lastlname" class="form-control" placeholder="นามสกุล" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="modal-role">ตำแหน่ง</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-calendar-check"></i> 
-                                                    </span>
-                                                    <input type="text" id="txt-modal-signup-position" name="modal-position" class="form-control" placeholder="ตำแหน่ง" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="modal-department">ฝ่าย/แผนก</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-calendar-check"></i> 
-                                                    </span>
-                                                    <input type="text" id="txt-modal-signup-department" name="modal-department" class="form-control" placeholder="ฝ่าย/แผนก" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="modal-StartDate">StartDate</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-calendar-alt"></i> 
-                                                    </span>
-                                                    <input type="date" id="txt-modal-signup-startdate" name="modal-startdate" class="form-control" placeholder="วันที่เริ่มงาน" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="modal-leavebalance">วันลาตามสิทธิ์</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-calendar-check"></i> 
-                                                    </span>
-                                                    <input type="number" id="txt-modal-signup-leavebalance" name="modal-leavebalance" class="form-control" placeholder="วันลาตามสิทธิ์" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="leaverole">สถานะผู้ใช้งาน</label>
-                                                <select class="form-select form-select-custom" id="txt-modal-signup-leaverole" name="modal-leaverole" >
-                                                    <!-- <option selected disabled></option> -->
-                                                    <option value="user">พนักงาน</option>
-                                                    <option value="admin">ผู้ดูแลระบบ</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>  
-                                </div>
-                                <div id="error_msg_register"></div>
-
-                                <div class="form-group">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-                                        <label class="form-check-label" for="invalidCheck">
-                                            <p><a href="#" style="font-size: 14px;color: #070707 "> ยอมรับนโยบายความเป็นส่วนตัวเงื่อนไขการใช้บริการ</a></p>
-                                        </label>
-                                        <div class="invalid-feedback">
-                                            You must agree before submitting.
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="modal_new_password">New Password</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-unlock-alt"></i>
+                                                <!-- <i class="fa fa-user"></i>  -->
+                                            </span>
+                                            <input type="password" id="txt_modal_forget_new_password" name="modal_new_password" class="form-control" placeholder="Enter New Password" />
                                         </div>
                                     </div>
-                                    <button onclick="validate_signup()" class="btn btn-success">Sign Up</button>
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                </div>       
-                                <div class="modal-footer">          
-                                  
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="modal_contact_email">Email address</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                    <i class="fa fa-envelope"></i>
+                                </span>
+                                    <input type="email" id="txt_modal_forget_email" name="modal_email" class="form-control" placeholder="Enter email" />
                                 </div>
                             </div>
                         </div>
+                        <div id="error_msg_forget"></div>
+                        <div class="modal-footer">
+                            <button onclick="goto_forget()" class="btn btn-success">Save</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+
+                        </div>
                     </div>
+                </div>
+            </div>
+
+
+            <!-- signup -->
+            <div class="modal fade" id="modal_register">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="fa fa-user-plus mr-1"></i> ทำการสมัครสมาชิก
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="modal-signup-empid">เลขพนักงาน</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-id-badge"></i>
+                                            </span>
+                                            <input type="number" id="txt-modal-signup-empid" name="modal-empid" class="form-control" placeholder="เลขพนักงาน" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="modal-email">อีเมลล์</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-envelope"></i> 
+                                            </span>
+                                            <input type="text" id="txt-modal-signup-email" name="modal-email" class="form-control" placeholder="อีเมลล์" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="modal-password">รหัสผ่าน(กำหนดเอง)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-key"></i> 
+                                            </span>
+                                            <input type="password" id="txt-modal-signup-password" name="modal-password" class="form-control" placeholder="รหัสผ่าน" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="modal-confrim-password">รหัสผ่าน(ยืนยัน)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-key"></i> 
+                                            </span>
+                                            <input type="password" id="txt-modal-signup-confrim-password" name="modal-confrim-password" class="form-control" placeholder="รหัสผ่าน" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="modal-firstname">ชื่อ</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-user"></i> 
+                                            </span>
+                                            <input type="text" id="txt-modal-signup-firstname" name="modal-firstname" class="form-control" placeholder="ชื่อ" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="modal-lastlname">นามสกุล</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-user"></i>
+                                            </span>
+                                            <input type="text" id="txt-modal-signup-lastname" name="modal-lastlname" class="form-control" placeholder="นามสกุล" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="modal-role">ตำแหน่ง</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar-check"></i> 
+                                            </span>
+                                            <input type="text" id="txt-modal-signup-position" name="modal-position" class="form-control" placeholder="ตำแหน่ง" />
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="modal-department">ฝ่าย/แผนก</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar-check"></i> 
+                                            </span>
+                                            <input type="text" id="txt-modal-signup-department" name="modal-department" class="form-control" placeholder="ฝ่าย/แผนก" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="modal-StartDate">StartDate</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar-alt"></i> 
+                                            </span>
+                                            <input type="date" id="txt-modal-signup-startdate" name="modal-startdate" class="form-control" placeholder="วันที่เริ่มงาน" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="modal-leavebalance">วันลาตามสิทธิ์</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar-check"></i> 
+                                            </span>
+                                            <input type="number" id="txt-modal-signup-leavebalance" name="modal-leavebalance" class="form-control" placeholder="วันลาตามสิทธิ์" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="leaverole">สถานะผู้ใช้งาน</label>
+                                        <select class="form-select form-select-custom" id="txt-modal-signup-leaverole" name="modal-leaverole" >
+                                            <!-- <option selected disabled></option> -->
+                                            <option value="user">พนักงาน</option>
+                                            <option value="admin">ผู้ดูแลระบบ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>  
+                        </div>
+                        <div id="error_msg_register"></div>
+                    
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+                                <label class="form-check-label" for="invalidCheck">
+                                    <p><a href="#" style="font-size: 14px;color: #070707 "> ยอมรับนโยบายความเป็นส่วนตัวเงื่อนไขการใช้บริการ</a></p>
+                                </label>
+                                <div class="invalid-feedback">
+                                    You must agree before submitting.
+                                </div>
+                            </div>
+                            <button onclick="validate_signup()" class="btn btn-success">Sign Up</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>       
+                        <div class="modal-footer">          
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
 
-                </section>
-            </main>
-        </div>
-    <!-- </form> -->
+        </section>
+    </main>
+</div>
+<!-- </form> -->
 
     <br><br>
     <footer id="footer ">
@@ -284,7 +277,7 @@
     <script src="public/bootstrap-5.2.3-dist/js/bootstrap.min.js"></script>
     <script src="public/js/sweetalert2.all.min.js"></script>
 
-    <script src="public/js/action.js" type="text/javascript "></script>
+    <script src="public/js/validat.js" type="text/javascript "></script>
     <script src="public/js/hashmd5.js" type="text/javascript "></script>
  
 </body>

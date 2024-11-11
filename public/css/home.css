@@ -10,7 +10,7 @@
 
 .navbar.navbar-dark.bg-dark  {
     color: #fff;
-    background: #9c76b4 !important;
+    background: #3d216b !important;
     padding: 5px 16px;
     border-radius: 0;
     border: none;
@@ -121,12 +121,12 @@
 
 .navbar .dropdown-menu {
     border-radius: 1px;
-    border-color: #e5e5e5;
+    border-color: #3d216b;
     box-shadow: 0 2px 8px rgba(0, 0, 0, .05);
 }
 
 .navbar .dropdown-menu a {
-    color: #777 !important;
+    color: #3d216b !important;
     padding: 8px 20px;
     line-height: normal;
     font-size: 15px;
@@ -134,8 +134,8 @@
 
 .navbar .dropdown-menu a:hover,
 .navbar .dropdown-menu a:focus {
-    color: #333 !important;
-    background:  #9c76b4!important;
+    color: #f3f2f2 !important;
+    background:  #3d216b!important;
 }
 
 .navbar .navbar-nav .active a,

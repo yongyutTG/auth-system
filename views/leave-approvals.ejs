@@ -24,11 +24,12 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ml-auto">
-                    <a href="/admin" class="nav-item nav-link"><i class="fa fa-home"></i> หน้าหลัก</a>
-                    <a href="/admin-leave-history" class="nav-item nav-link"><i class="fa fa-history"></i> ประวัติการอนุมัติหรือปฏิเสธคำขอ</a>
-                    <a href="/admin-approvals" class="nav-item nav-link"><i class="fa fa-check-circle"></i> การอนุมัติหรือปฏิเสธคำขอ</a>
-                    <a href="/admin-leave-balance" class="nav-item nav-link"><i class="fa fa-calculator"></i> คำนวณวันลาคงเหลือ</a>
-                    <a href="/admin-users" class="nav-item nav-link"><i class="fa fa-users"></i> เจ้าหน้าที่ทั้งหมด</a>
+                    <a href="/home" class="nav-item nav-link"><i class="fa fa-home"></i> หน้าหลัก</a>
+                    <a href="/leave-request" class="nav-item nav-link"><i class="fa fa-file-alt"></i> ยื่นคำขอลา</a>
+                    <a href="/leave-history" class="nav-item nav-link"><i class="fa fa-history"></i> ประวัติการลา</a>
+                    <a href="/leave-approvals" class="nav-item nav-link"><i class="fa fa-check-circle"></i> การอนุมัติหรือปฏิเสธคำขอ</a>
+                    <a href="/leave-balance" class="nav-item nav-link"><i class="fa fa-calculator"></i> คำนวณวันลาคงเหลือ</a>
+                    <a href="/users" class="nav-item nav-link"><i class="fa fa-users"></i> เจ้าหน้าที่ทั้งหมด</a>
                     <a href="#" class="nav-item nav-link"><i class="fa fa-envelope"></i> ข้อความ</a>
             
                     <!-- Dropdown Menu for Logout -->
@@ -37,8 +38,8 @@
                         <i class="fa fa-sign-out"></i> ออกจากระบบ
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/admin-leave-profile"><i class="fa fa-user"></i> โปรไฟล์ของฉัน</a></li>
-                        <li><a class="dropdown-item" href="/admin-settings"><i class="fa fa-cog"></i> ตั้งค่า</a></li>
+                        <li><a class="dropdown-item" href="/leave-profile"><i class="fa fa-user"></i> โปรไฟล์ของฉัน</a></li>
+                        <li><a class="dropdown-item" href="/settings"><i class="fa fa-cog"></i> ตั้งค่า</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="/logout"><i class="fa fa-sign-out"></i> ออกจากระบบ</a></li>
                     </ul>
@@ -64,23 +65,23 @@
                 
             </div>
             
-        <h1>Admin Panel - Dashboard</h1>
+        <!-- <h2>Admin Panel - Dashboard</h2> -->
     
         <!-- การ์ดแสดงข้อมูลสรุป -->
         <div class="dashboard">
             <div class="card">
                 <i class="fas fa-user-clock"></i>
-                <h2>Pending Requests</h2>
-                <p>15 Requests</p>
+                <h2>คำขอลาที่ได้ดำเนินการขอทั้งหมด</h2>
+                <p>130 Requests</p>
             </div>
             <div class="card">
                 <i class="fas fa-user-check"></i>
-                <h2>Approved Requests</h2>
+                <h2>คำขอลาที่ได้รับการอนุมัติทั้งหมด</h2>
                 <p>120 Requests</p>
             </div>
             <div class="card">
                 <i class="fas fa-user-times"></i>
-                <h2>Rejected Requests</h2>
+                <h2>คำขอลาที่ได้รับการไม่อนุมัติทั้งหมด</h2>
                 <p>5 Requests</p>
             </div>
         </div>
@@ -101,49 +102,38 @@
             </script>
 
             <div class="form-container">
-                <h2 class="form-title mb-4">รายการรออนุมัติหรือปฏิเสธคำขอ</h2>
+                <h2 class="form-title mb-4"></i> คำขอลาที่ได้รับการอนุมัติ<i class="fas fa-check-circle fa-2x status-icon status-approved"></i> หรือปฏิเสธ <i class="fas fa-times-circle fa-2x status-icon status-rejected"></i> </h2>
                 <div class="table-responsive">
                     <table id="leaveHistoryTable" class="table table-bordered mt-4 leave-history-table">
                         <thead>
                         <tr>
                             <th>เลขคำขอลา</th>
+                            <th>วันที่ยื่นคำขอ</th>
                             <th>ชื่อ-นามสกุล</th>
                             <th>ประเภทการลา</th>
                             <th>เหตุผล</th>
-                            <th>วันที่เริ่มลา-วันที่สิ้นสุดลา</th>
+                            <th>วันที่เริ่มลา</th>
+                            <th>วันที่สิ้นสุดลา</th>
                             <th>สถานะการยืนคำขอลา</th>
-                            <th>การกระทำ</th>
                         </tr>
                         </thead>
                         <tbody>
-                            <% leaveRequests.forEach(request => { %>
+                            <% leaveRequests_leave_approvals.forEach(request => { %>
                             <tr>
                                 <td><%= request.leaverequestid %></td>
+                                <td class="request-date"><%= request.requestdate %></td>
                                 <td><%= request.firstname %> <%= request.lastname %></td>
                                 <td><%= request.leavetype %></td>
                                 <td><%= request.reason %></td>
-                                <td class="request-date"><%= request.startdate %> - <%= request.enddate %></td>
-                               
+                                <!-- <td class="request-date"><%= request.startdate %> - <%= request.enddate %></td> -->
+                                <td class="request-date"><%= request.startdate %></td>
+                                <td class="request-date"><%= request.enddate %></td>
                                 <td>
-                                    <% if (request.status === 'pending') { %>
-                                        <i class="fas fa-clock status-icon status-pending"></i>
-                                    <% } else if (request.status === 'approved') { %>
-                                        <i class="fas fa-check-circle status-icon status-approved"></i>
+                                    <% if (request.status === 'approved') { %>
+                                        <i class="fas fa-check-circle fa-2x status-icon status-approved"></i> 
                                     <% } else if (request.status === 'rejected') { %>
-                                        <i class="fas fa-times-circle status-icon status-rejected"></i>
+                                        <i class="fas fa-times-circle fa-2x status-icon status-rejected"></i>
                                     <% } %>
-                                </td>
-                                <td>
-                                    <form id="approve-form-<%= request.leaverequestid %>" action="/leave-request/<%= request.leaverequestid %>/update" method="POST">
-                                        <input type="hidden" name="status" value="approved">
-                                        <button type="button" onclick="confirmAction('approve', '<%= request.leaverequestid %>')"><i class="fas fa-check"></i> อนุมัติ</button>
-                                        <br>
-                                    </form>
-                                    <form id="reject-form-<%= request.leaverequestid %>" action="/leave-request/<%= request.leaverequestid %>/update" method="POST">
-                                        <input type="hidden" name="status" value="rejected">
-                                        <button type="button" class="reject-btn" onclick="confirmAction('reject', '<%= request.leaverequestid %>')"><i class="fas fa-times"></i> ไม่อนุมัติ</button>
-                                    </form>
-                                    <button class="view-details-btn" onclick="openModal(<%= JSON.stringify(request) %>)"><i class="fas fa-eye"></i>รายละเอียด</button>
                                 </td>
                             </tr>
                         <% }); %>

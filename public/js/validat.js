@@ -9,19 +9,16 @@ window.addEventListener("load", (e)=>{
 function validat_signin() {
     const error_msg_signin_user = $("#error_msg_signin_user");
     const error_msg_signin_password = $("#error_msg_signin_password");
-    $(error_msg_signin_user).hide();
-    $(error_msg_signin_password).hide();
-    
-    let chk_username = document.getElementById("input_username").value;
-    let chk_password = document.getElementById("input_password").value;
+        error_msg_signin_user.hide().removeClass('alert alert-danger');
+        error_msg_signin_password.hide().removeClass('alert alert-danger');
+    const chk_username = document.getElementById("input_username").value.trim();
+    const chk_password = document.getElementById("input_password").value.trim();
 
-    if (chk_username.length <= 0) {
-        $(error_msg_signin_user).show();
-        error_msg_signin_user.html("กรุณากรอก Username").css("color", "red");
+    if (chk_username.length === 0) {
+        error_msg_signin_user.addClass('alert alert-danger').show().html("กรุณากรอก Username");
         document.getElementById("input_username").focus();
-    } else if (chk_password.length <= 0) {
-        $(error_msg_signin_password).show();
-        error_msg_signin_password.html("กรุณากรอก password").css("color", "red");
+    } else if (chk_password.length === 0) {
+        error_msg_signin_password.addClass('alert alert-danger').show().html("กรุณากรอก Password");
         document.getElementById("input_password").focus();
     } else {
         fetch('http://localhost:3000/signin', {
@@ -38,13 +35,13 @@ function validat_signin() {
         .then(response => {
             if (response.status === 'success') {
                 Swal.fire({
-                    position: "top-end",
+                    // position: "top-end",
                     icon: 'success',
                     title: response.message,
                     timer: 1500,
                     showConfirmButton: false
                 }).then(() => {
-                    window.location.href = response.redirectUrl;  // Redirect to profile/home
+                    window.location.href = response.redirectUrl;
                 });
             } else {
                 Swal.fire({
@@ -61,10 +58,11 @@ function validat_signin() {
                 text: 'There was an error processing your request. Please try again.',
                 confirmButtonText: 'OK'
             });
-            console.error('Error during login request', err);
+            console.error('Error during login request:', err);
         });
     }
 }
+
 
 function validate_signup(){
     const error_msg_register = $("#error_msg_register");
@@ -192,7 +190,7 @@ function validate_signup(){
             if (response.status === 'success') {
                
                 Swal.fire({
-                    position: "top-end",
+                    // position: "top-end",
                     icon: 'success',
                     title: response.message,
                     timer: 1500,

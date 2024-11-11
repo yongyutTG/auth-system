@@ -92,7 +92,7 @@
     .leave-policy ul li {
         margin-bottom: 10px;
         font-size: 14px;
-        color: #69497e;
+        color: #3d216b;
     }
 
     /* Custom styles for leave history table */
@@ -110,7 +110,7 @@
     }
 
     .table thead th {
-        background-color: #9c76b4;
+        background-color: #3d216b;
         color: #ffffff;
     }
 
@@ -143,7 +143,7 @@
                     <a href="/home" class="nav-item nav-link"><i class="fa fa-home"></i> หน้าหลัก</a>
                     <a href="/leave-request" class="nav-item nav-link"><i class="fa fa-file-alt"></i> ยื่นคำขอลา</a>
                     <a href="/leave-history" class="nav-item nav-link"><i class="fa fa-history"></i> ประวัติการลา</a>
-                    <a href="/approvals" class="nav-item nav-link"><i class="fa fa-check-circle"></i> การอนุมัติหรือปฏิเสธคำขอ</a>
+                    <a href="/leave-approvals" class="nav-item nav-link"><i class="fa fa-check-circle"></i> การอนุมัติหรือปฏิเสธคำขอ</a>
                     <a href="/leave-balance" class="nav-item nav-link"><i class="fa fa-calculator"></i> คำนวณวันลาคงเหลือ</a>
                     <a href="/users" class="nav-item nav-link"><i class="fa fa-users"></i> เจ้าหน้าที่ทั้งหมด</a>
                     <a href="#" class="nav-item nav-link"><i class="fa fa-envelope"></i> ข้อความ</a>
@@ -228,11 +228,11 @@
                             <td>
                             <!-- <td><%= request.status %></td> -->
                             <% if (request.status === 'pending') { %>
-                                <i class="fas fa-clock status-icon status-pending"></i>
+                                <i class="fas fa-clock fa-2x status-icon status-pending"></i>
                             <% } else if (request.status === 'approved') { %>
-                                <i class="fas fa-check-circle status-icon status-approved"></i>
+                                <i class="fas fa-check-circle fa-2x status-icon status-approved"></i>
                             <% } else if (request.status === 'rejected') { %>
-                                <i class="fas fa-times-circle status-icon status-rejected"></i>
+                                <i class="fas fa-times-circle fa-2x status-icon status-rejected"></i>
                                 <% } %>
                             </td> 
                             </tr>

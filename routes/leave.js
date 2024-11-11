@@ -40,18 +40,18 @@ router.post('/signin', (req, res) => {
                 console.error('Error querying database:', err);
                 return res.status(500).json({
                     status: 'error',
-                    message: 'query เกิดข้อผิดพลาด'
+                    message: 'query signin เกิดข้อผิดพลาด'
                 });
             } else {
                 if (results.length > 0) {
                     const user = results[0];
                     bcrypt.compare(fchk_password, user.password, (err, isMatch) => {
-                        console.log('password เข้ารหัส', user.password);
+                        console.log('password เข้ารหัส เรียบร้อยแล้ว', user.password);
                         if (err) {
                             console.error(err);
                             return res.status(500).json({
                                 status: 'error',
-                                message: 'Error password validation'
+                                message: 'Error password เข้ารหัส'
                             });
                         }
                         if (isMatch) {
@@ -65,7 +65,7 @@ router.post('/signin', (req, res) => {
                                 res.status(200).json({
                                     data: results,
                                     status: 'success',
-                                    message: 'เข้าสู่ระบบสำเร็จ......',
+                                    message: 'เข้าสู่ระบบสำเร็จ',
                                     redirectUrl: '/admin'
                                 });
                             } else {
@@ -172,7 +172,7 @@ router.post('/signup', (req, res) => {
                       // ส่งผลลัพธ์การลงทะเบียนสำเร็จกลับไปยัง frontend
                     res.status(201).json({
                         status: 'success',
-                        message: 'ลงทะเบียนสำเร็จ',
+                        message: 'ลงทะเบียนสำเร็จ.....',
                         redirectUrl: '/signin'  // URL ที่จะ redirect หลังจากลงทะเบียนสำเร็จ
                     });
                     console.log("ลงทะเบียนสำเร็จ")
@@ -276,7 +276,7 @@ router.get('/leave-history', (req, res) => {
         console.log('Rendering home page for leave-history:', req.session.user);
         const employeeid = req.session.employeeid; // หรือ session ID ของพนักงานที่ล็อกอินอยู่
 
-        connection.query("SELECT * FROM leaverequests WHERE employeeid = ?",[employeeid],(err, leaveHistory) => {
+        connection.query("SELECT * FROM leaverequests WHERE employeeid = ? ",[employeeid],(err, leaveHistory) => {
                 if (err){
                     console.error('Error query leaveHistory:', err);
                     return res.status(400).json({
@@ -476,13 +476,35 @@ router.get('/check/:employeeid', (req, res) => {
     });
 });
 
+//Route สำหรับดึงข้อมูลวันลาที่ status = approved หรือ rejected เท่านั่น ตามวันที่ขอลา requestdate ล่าสุด
+router.get('/leave-approvals', (req, res) => {
+    if (req.session.user) {
+        connection.query('SELECT * FROM leaverequests WHERE status = "approved" OR status = "rejected" ORDER BY requestdate DESC', (err, results) => {
+            if (err){
+                console.error('Error query approved user:', err);
+                return res.status(400).json({
+                    status: 'error',
+                    message: 'เกิดข้อผิดพลาด leave-approved'
+                }); 
+            } else {
+                res.render('leave-approvals', {
+                    leaveRequests_leave_approvals: results, // ส่งข้อมูลประวัติการลาไปยัง view
+                user: req.session.user});
+            }
+        });
+    } else {
+        console.log('No session found, redirecting to signin');
+        res.redirect('/signin');
+    }
+});
+
+
+// (Route ส่วนสำหรับ Admin)
 
 // Route สำหรับแสดงรายการคำขอลาทั้งหมด (สำหรับ Admin)
 router.get('/admin', (req, res) => {
     if (req.session.user) {
         connection.query('SELECT * FROM leaverequests', (err, results) => {
-            // if (err) return res.status(500).json({ error: err.message });
-            // res.render('admin', { leaveRequests: results });
             if (err){
                 console.error('Error query leaverequests admin:', err);
                 return res.status(400).json({
@@ -502,6 +524,28 @@ router.get('/admin', (req, res) => {
             message: 'กรุณาเข้าสู่ระบบก่อน',
             redirectUrl: '/signin'
         });
+    }
+});
+
+// Route สำหรับแสดงรายการคำขอลาทั้งหมด (สำหรับ Admin)
+router.get('/admin-approvals', (req, res) => {
+    if (req.session.user) {
+        connection.query('SELECT * FROM leaverequests', (err, results) => {
+            if (err){
+                console.error('Error query leaverequests admin:', err);
+                return res.status(400).json({
+                    status: 'error',
+                    message: 'เกิดข้อผิดพลาด admin-approvals'
+                }); 
+            } else {
+                res.render('admin-approvals', {
+                    leaveRequests: results, // ส่งข้อมูลประวัติการลาไปยัง view
+                user: req.session.user});
+            }
+        });
+    } else {
+        console.log('No session found, redirecting to signin');
+        res.redirect('/signin');
     }
 });
 

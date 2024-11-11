@@ -10,11 +10,11 @@
   <link rel="stylesheet" href="public/css/home.css">
   <style>
     body {
-        background-color: #e9ecef;
+        background-color: #ffffff;
     }
 
     .form-container {
-        background-color: #ffffff;
+        background-color: #3d216b;
         border-radius: 15px;
         padding: 40px;
         box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
@@ -23,27 +23,19 @@
 
     .form-title {
         font-weight: bold;
-        color: #67696b;
+        color: #ffffff;
         margin-bottom: 20px;
         text-align: center;
         font-size: 20px;
     }
 
-    /* label {
-        font-weight: 600;
-    } */
-    /* label {
-        display: block;
-        font:
-        1rem 'Fira Sans',
-        sans-serif;
-    }
+  
 
     input,
     label {
-        color: red;
+        color: rgb(253, 251, 251);
         margin: 0.4rem 0;
-    } */
+    } 
 
     .form-control {
         border-radius: 8px;
@@ -84,7 +76,7 @@
     }
 
     .dashboard-card {
-        background-color: #f8f9fa;
+        background-color: #3d216b;
         border: 1px solid #ddd;
         border-radius: 10px;
         padding: 20px;
@@ -113,7 +105,7 @@
 
       .leave-policy h4 {
           font-weight: bold;
-          color: #4b4c4d;
+          color: #3d216b;
           margin-bottom: 15px;
       }
 
@@ -125,7 +117,7 @@
       .leave-policy ul li {
           margin-bottom: 10px;
           font-size: 14px;
-          color: #69497e;
+          color: #3d216b;
       }
   </style>
 
@@ -142,7 +134,7 @@
             <a href="/home" class="nav-item nav-link"><i class="fa fa-home"></i> หน้าหลัก</a>
             <a href="/leave-request" class="nav-item nav-link"><i class="fa fa-file-alt"></i> ยื่นคำขอลา</a>
             <a href="/leave-history" class="nav-item nav-link"><i class="fa fa-history"></i> ประวัติการลา</a>
-            <a href="/approvals" class="nav-item nav-link"><i class="fa fa-check-circle"></i> การอนุมัติหรือปฏิเสธคำขอ</a>
+            <a href="/leave-approvals" class="nav-item nav-link"><i class="fa fa-check-circle"></i> การอนุมัติหรือปฏิเสธคำขอ</a>
             <a href="/leave-balance" class="nav-item nav-link"><i class="fa fa-calculator"></i> คำนวณวันลาคงเหลือ</a>
             <a href="/users" class="nav-item nav-link"><i class="fa fa-users"></i> เจ้าหน้าที่ทั้งหมด</a>
             <a href="#" class="nav-item nav-link"><i class="fa fa-envelope"></i> ข้อความ</a>
@@ -209,7 +201,22 @@
                         </div>
                     </div>
 
-                    <div class="mb-3">
+                    <div class="row">
+                        <div class="col-md-2 mb-6">
+                            <label for="totaldays">จำนวนวันที่ลา</label>
+                            <input type="number" class="form-control" id="leave_totaldays" name="totaldays" >
+                        </div>
+                       
+                        <div class="col-md-4 mb-3">
+                            <label for="requestdate">วันที่ยื่นขอลา</label>
+                            <input type="date" class="form-control" id="leave_requestdate" name="requestdate" >
+                        </div>
+                       
+                        <div class="col-md-4 mb-3">
+                            <label for="exampleFormControlFile1">ใบรับรองแพทย์(กรณีลาป่วยเกิน 3 วัน)</label>
+                            <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                        </div>
+                        <div class="col-md-3 mb-2">
                         <label for="leave_type">ประเภทการลา</label>
                         <select class="form-select form-select-custom" id="leave_requeste_type" name="leave_type" >
                             <option selected disabled></option>
@@ -217,30 +224,23 @@
                             <option value="ลาพักร้อน">ลาพักร้อน</option>
                             <option value="ลาป่วย">ลาป่วย</option>
                         </select>
-                        
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2 mb-3">
-                            <label for="totaldays">จำนวนวันที่ลา</label>
-                            <input type="number" class="form-control" id="leave_totaldays" name="totaldays" >
-                        </div>
-                       
-                        <div class="col-md-6 mb-3">
-                            <label for="requestdate">RequestDate</label>
-                            <input type="date" class="form-control" id="leave_requestdate" name="requestdate" >
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="reason">เหตุผลในการลา</label>
                         <textarea class="form-control" id="leave_reason" name="reason" rows="3" ></textarea>
                     </div>
-                    
+                 
+                   
+                   
                     <button  type="submit" onclick="validate_leave_request()" class="btn btn-primary">ยื่นคำขอ</button>
                     <button class="btn btn-secondary">ยกเลิก</button>
             
 
                     <button class="btn btn-primary btn-sm edit-btn" id="checkLeaveBalanceBtn">ตรวจสอบวันลาคงเหลือ</button>
                     <div id="leaveBalanceResult"></div>
+
+
 
                     <script>
                         document.getElementById("checkLeaveBalanceBtn").addEventListener("click", function() {
@@ -278,7 +278,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
   <script src="public/js/sweetalert2.all.min.js"></script>
 
-  <script src="public/js/action.js" type="text/javascript "></script>
+  <script src="public/js/validat.js" type="text/javascript "></script>
   <script src="public/js/jquery-3.4.1.slim.min.js"></script>
   <script src="public/bootstrap-5.2.3-dist/js/bootstrap.min.js"></script>
 </body>

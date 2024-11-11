@@ -50,17 +50,47 @@ Input:Focus {
     background-color: rgb(255, 255, 255);
     color: rgb(9, 9, 9);
 }
-
-button {
+/* .signin-link {
     cursor: pointer;
     border: none;
-    background: #6c7577fa;
-    color: white;
+    background: #3d216b;
+    color: rgb(247, 246, 248);
+    padding: 11px 26px;
+    border-radius: 5px;
+    font-size: 16px;
+    transition-duration: .1s;
+} */
+
+.signup-button button{
+    display: block;
+    /* width: 100%; */
+    cursor: pointer;
+    border: none;
+    background: #3d216b;
+    color: rgb(247, 246, 248);
     padding: 11px 26px;
     border-radius: 5px;
     font-size: 16px;
     transition-duration: .1s;
 }
+
+#input_login:hover {
+    background-color: #574b90; /* สีเมื่อโฮเวอร์ */
+}
+
+#input_login:active {
+    transform: translateY(2px); /* ขยับลงเมื่อคลิก */
+}
+/* button {
+    cursor: pointer;
+    border: none;
+    background: #3d216b;
+    color: rgb(247, 246, 248);
+    padding: 11px 26px;
+    border-radius: 5px;
+    font-size: 16px;
+    transition-duration: .1s;
+} */
 
 * {
     outline: none;
@@ -79,35 +109,33 @@ button {
     border-color: #007bff;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
 }
-/* H2 {
-    font-size: 8px;
-    width: 100%;
-    color: rgb(196, 11, 11);
-} */
+.custom-title-color {
+    width: 90%;
+    color: #141314;
+    text-align: -webkit-center;
+    font-size: 28px; 
+}
 
 #form {
     outline: 15px solid #4bbaed;
-    margin: 20px;
+    margin: 200px;
     text-align: -webkit-center;
-    background: rgb(255, 255, 255);
+    background: rgb(252, 252, 255);
     /* background: url(/public/images/bg1.jpg); */
-    padding: 50px 10px;
-    border-top: 30px solid #9c76b4;
-    border-bottom: 30px solid #9c76b4;
-    box-shadow: -1px 1px 20px rgba(190, 189, 189, 0.5);
-    /* Border: none; */
+    padding: 60px 10px;
+    border-top: 30px solid #f3f0f5;
+    border-bottom: 300px solid #9a87a5;
+    box-shadow: -1px 1px 20px rgba(190, 135, 216, 0.5);
+    Border: none;
     outline: none;
     animation: animatebottom 1s cubic-bezier(1, -0.06, 0.26, 1.06);
-    margin: 1.1em auto;
+    margin: 4.1em auto;
     align-items: center;
 }
 
 body {
     align-items: center;
     justify-content: center;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
     background: url(/public/images/bg1.jpg);
     background-attachment: fixed;
@@ -118,12 +146,11 @@ body {
     padding: 0px;
     margin: 0;
     color: #888;
-    font-family: Consolas, "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", "monospace";
     text-align: -webkit-center;
 }
 .signup-forget_password-link a {
-    color: #596670;
-    font-weight: bold;
+    color: #060108;
+    /* font-weight: bold; */
     text-decoration: none;
     font-size: 15px;
 }
@@ -134,7 +161,7 @@ body {
     border-radius: 10px;
     text-align: -webkit-center;
     /* padding: 3px 10px; */
-    /* background: url(./bg.jpg); */
+    background: url(./bg.jpg);
     background: rgb(104, 14, 14);
     background-repeat: no-repeat;
     background-size: cover;
@@ -168,13 +195,9 @@ footer {
 
 /* header h2 {
     width: 90%;
-    Border: 5px dotted #27a5df;
-    color: #27a5df;
+    Border: 5px dotted #9c76b4;
+    color: #9c76b4;
     text-align: -webkit-center;
     border-radius: 5px;
 }  */
-.bg-error_msg {
-    /* --bs-bg-opacity: 0; */
-    background-color: #ce5757;
-  }
 

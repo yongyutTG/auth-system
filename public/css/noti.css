@@ -1,0 +1,19 @@
+#notification {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #e8f5e9;
+    color: #388e3c;
+    padding: 105px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #4caf50;
+    z-index: 1000;
+}
+#notification .close-btn {
+    cursor: pointer;
+    margin-left: 15px;
+    font-weight: bold;
+    color: #388e3c;
+}
