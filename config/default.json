@@ -5,6 +5,7 @@
     "password": "12345678",
     "database": "auth_system"
   },
+  
   "server": {
     "port": 3000
   }
