@@ -1,4 +1,5 @@
 # auth-system
+function
 -employees = signin
 -leave_approvals = อนุมัติลา
 -leave_requests = สมัครลา
