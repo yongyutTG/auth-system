@@ -66,3 +66,18 @@ requested_days (จำนวนวันลาที่ขอ)
   
 
 พร้อมทั้ง บันทึกชื่อตำแหน่งโดยเก็บจาก ตารางคำขอลาพักร้อน approveby 
+
+Deploy ผ่านแพลตฟอร์มต่าง ๆ:
+
+*GitHub Actions: ใช้ GitHub Actions เพื่อสร้าง pipeline สำหรับการ deploy และรัน Node.js application บน server หรือ cloud service
+Heroku: รองรับการ deploy Node.js application โดยตรงจาก Git repository ผ่านการเชื่อมต่อกับ GitHub หรือการ push โค้ดโดยตรงไปยัง Heroku
+Vercel: เหมาะสำหรับการ deploy full-stack application โดยใช้ Node.js สำหรับฟังก์ชัน backend
+Render: อีกหนึ่งแพลตฟอร์มที่ช่วยให้คุณ deploy Node.js application จาก Git repository ได้ง่ายๆ
+
+
+*Deploy บนเซิร์ฟเวอร์:
+หลังจาก push โค้ด Node.js ไปยัง Git repository แล้ว คุณสามารถ clone repository นั้นลงบนเซิร์ฟเวอร์ที่คุณต้องการรันแอปพลิเคชัน และใช้คำสั่ง npm install และ npm start เพื่อรันแอปพลิเคชัน
+
+
+*ใช้ CI/CD Pipeline:
+คุณสามารถตั้งค่า continuous integration/continuous deployment (CI/CD) pipeline เช่น GitLab CI/CD หรือ GitHub Actions เพื่อ build และ deploy แอปพลิเคชัน Node.js อัตโนมัติเมื่อมีการ push โค้ดใหม่

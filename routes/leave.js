@@ -476,6 +476,9 @@ router.get('/check/:employeeid', (req, res) => {
     });
 });
 
+
+
+                               
 //Route สำหรับดึงข้อมูลวันลาที่ status = approved หรือ rejected เท่านั่น ตามวันที่ขอลา requestdate ล่าสุด
 router.get('/leave-approvals', (req, res) => {
     if (req.session.user) {
@@ -499,8 +502,7 @@ router.get('/leave-approvals', (req, res) => {
 });
 
 
-// (Route ส่วนสำหรับ Admin)
-
+              // (Route ส่วนสำหรับ Admin)
 // Route สำหรับแสดงรายการคำขอลาทั้งหมด (สำหรับ Admin)
 router.get('/admin', (req, res) => {
     if (req.session.user) {
@@ -527,6 +529,8 @@ router.get('/admin', (req, res) => {
     }
 });
 
+
+        
 // Route สำหรับแสดงรายการคำขอลาทั้งหมด (สำหรับ Admin)
 router.get('/admin-approvals', (req, res) => {
     if (req.session.user) {
@@ -549,25 +553,57 @@ router.get('/admin-approvals', (req, res) => {
     }
 });
 
-// Route สำหรับอัปเดตสถานะของคำขอลาแล้วบันทึกข้อมูลลงตาราง approvalhistory
+// Route สำหรับอัปเดตสถานะของคำขอลาแล้ว บันทึกข้อมูลลงตาราง approvalhistory
 router.post('/leave-request/:id/update', (req, res) => {
     if (req.session.user) {
         const { id } = req.params;
         const { status } = req.body;
        
         connection.query('UPDATE leaverequests SET status = ? WHERE leaverequestid = ?', [status, id], (err) => {
-            if (err) return res.status(500).json({ error: err.message });
-            res.redirect('/admin');
+            if (err){
+                console.error('Error query leaverequests SET status:', err);
+                return res.status(400).json({
+                    status: 'error',
+                    message: 'เกิดข้อผิดพลาด leaverequests SET status'
+                }); 
+            } else {
+               res.redirect('/admin-approvals');
+                console.log('อัปเดตใบคำขอลา id:'+ id +'เป็น : '+ status+'เรียบร้อยแล้ว');
+            }
         });
     } else {
         console.log('No session found, redirecting to signin');
-        res.status(401).json({
-            status: 'error',
-            message: 'กรุณาเข้าสู่ระบบก่อน',
-            redirectUrl: '/signin'
-        });
+        res.redirect('/signin');
     }
 });
+// router.post('/leave-request/:id/update', (req, res) => {
+//     if (req.session.user) {
+//         const { id } = req.params;
+//         const { status } = req.body;
+       
+//         connection.query('UPDATE leaverequests SET status = ? WHERE leaverequestid = ?', [status, id], (err) => {
+//             if (err) {
+//                 console.error('Error query leaverequests SET status:', err);
+//                 return res.status(400).json({
+//                     status: 'error',
+//                     message: 'เกิดข้อผิดพลาด leaverequests SET status'
+//                 }); 
+//             } else {
+//                 console.log('อัปเดตใบคำขอลา id:' + id + ' เป็น: ' + status + ' เรียบร้อยแล้ว');
+//                 return res.status(200).json({
+//                     status: 'success',
+//                     message: `อัปเดตใบคำขอลาสำเร็จเป็น: ${status}`
+//                 });
+//             }
+//         });
+//     } else {
+//         console.log('No session found, redirecting to signin');
+//         return res.status(401).json({
+//             status: 'error',
+//             message: 'กรุณาเข้าสู่ระบบ'
+//         });
+//     }
+// });
 
 
 // Route for leave request form

@@ -133,15 +133,122 @@
                                     <% } %>
                                 </td>
                                 <td>
-                                    <form id="approve-form-<%= request.leaverequestid %>" action="/leave-request/<%= request.leaverequestid %>/update" method="POST">
+                                    <form id="approve-form-<%= request.leaverequestid %>" 
+                                        action="/leave-request/<%= request.leaverequestid %>/update" method="POST">
                                         <input type="hidden" name="status" value="approved">
                                         <button type="button" onclick="confirmAction('approve', '<%= request.leaverequestid %>')"><i class="fas fa-check"></i> อนุมัติ</button>
                                         <br>
                                     </form>
-                                    <form id="reject-form-<%= request.leaverequestid %>" action="/leave-request/<%= request.leaverequestid %>/update" method="POST">
+                                    <form id="reject-form-<%= request.leaverequestid %>" 
+                                        action="/leave-request/<%= request.leaverequestid %>/update" method="POST">
                                         <input type="hidden" name="status" value="rejected">
                                         <button type="button" class="reject-btn" onclick="confirmAction('reject', '<%= request.leaverequestid %>')"><i class="fas fa-times"></i> ไม่อนุมัติ</button>
                                     </form>
+
+                                    <!-- ปุ่มสำหรับอนุมัติ -->
+                                <!-- <button type="button" onclick="submitRequest('approve', '<%= request.leaverequestid %>')"><i class="fas fa-check"></i> อนุมัติ</button> -->
+
+                                <!-- ปุ่มสำหรับปฏิเสธ -->
+                                <!-- <button type="button"class="reject-btn" onclick="submitRequest('reject', '<%= request.leaverequestid %>')"><i class="fas fa-times"></i> ไม่อนุมัติ</button> -->
+
+                                <!-- <script>
+                                    function submitRequest(action, requestId) {
+                                        const status = action === 'approve' ? 'approved' : 'rejected';
+                                        const url = `/leave-request/${requestId}/update`;
+
+                                        Swal.fire({
+                                            title: 'Confirmation',
+                                            text: `Are you sure you want to ${action} this request?`,
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+                                            confirmButtonText: 'Yes, proceed!'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                fetch(url,{
+                                                    method: "POST",
+                                                    headers: {'Content-Type': 'application/json'},
+                                                    body: JSON.stringify({ status: status })
+                                                })
+                                                .then(response => {
+                                                    // ตรวจสอบว่าผลลัพธ์เป็น JSON หรือไม่
+                                                    if (!response.ok) {
+                                                        throw new Error('Network response was not ok');
+                                                    }
+                                                    return response.json(); // แปลง response ให้เป็น JSON
+                                                })
+                                                .then(response => {
+                                                    // ตรวจสอบ status ที่ส่งกลับมาจากเซิร์ฟเวอร์
+                                                    if (response.status === 'success') {
+                                                        Swal.fire({
+                                                            icon: 'success',
+                                                            title: response.message,
+                                                            timer: 1500,
+                                                            
+                                                            showConfirmButton: true
+                                                        });
+                                                    } else {
+                                                        Swal.fire({
+                                                            icon: 'error',
+                                                            title: response.message || 'leave_requeste Failed',
+                                                            confirmButtonText: 'OK'
+                                                        });
+                                                    }
+                                                })
+                                                .catch(err => {
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        title: response.message,
+                                                        confirmButtonText: 'OK'
+                                                    });
+                                                    console.error('Error during leave_requeste request:', err);
+                                            
+                                                });
+                                                // รีเฟรชหน้าเว็บหรืออัปเดตตารางแบบไดนามิก
+                                                location.reload(); // หรือใช้โค้ดอื่นเพื่ออัปเดต DOM
+                                                
+                                                
+                                                
+                                                // // ส่งคำขอแบบ AJAX ด้วย fetch()
+                                                // fetch(url, {
+                                                //     method: 'POST',
+                                                //     headers: {
+                                                //         'Content-Type': 'application/json'
+                                                //     },
+                                                //     body: JSON.stringify({ status: status })
+                                                // })
+                                                // .then(response => response.json())
+                                                // .then(data => {
+                                                //     if (data.success) {
+                                                //         Swal.fire(
+                                                //             'Success!',
+                                                //             `The request has been ${action}d successfully.`,
+                                                //             'success'
+                                                //         );
+                                                //         // รีเฟรชหน้าเว็บหรืออัปเดตตารางแบบไดนามิก
+                                                //         location.reload(); // หรือใช้โค้ดอื่นเพื่ออัปเดต DOM
+                                                //     } else {
+                                                //         Swal.fire(
+                                                //             'Error!',
+                                                //             'There was an issue processing the request.',
+                                                //             'error'
+                                                //         );
+                                                //     }
+                                                // })
+                                                // .catch((error) => {
+                                                //     Swal.fire(
+                                                //         'Error!',
+                                                //         'An unexpected error occurred.',
+                                                //         'error'
+                                                //     );
+                                                //     console.error('Error:', error);
+                                                // });
+                                            }
+                                        });
+                                    }
+                                </script> -->
+
                                     <button class="view-details-btn" onclick="openModal(<%= JSON.stringify(request) %>)"><i class="fas fa-eye"></i>รายละเอียด</button>
                                 </td>
                             </tr>
@@ -174,6 +281,7 @@
     </div>
 
     <script>
+        
         // เปิด Modal และใส่ข้อมูล
         function openModal(request) {
             document.getElementById('modal-id').innerText = request.leaverequestid;
@@ -226,6 +334,12 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     document.getElementById(formId).submit();
+                    Swal.fire({
+                        title: 'Success!',
+                        text: action === 'approve' ? 'The request has been approved successfully.' : 'The request has been rejected successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
                 }
             });
         }
