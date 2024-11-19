@@ -31,18 +31,27 @@ function validat_signin() {
                 fchk_password: chk_password
             })
         })
-        .then(response => response.json())
+        .then(response => {
+            // ตรวจสอบว่าผลลัพธ์เป็น JSON หรือไม่
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); // แปลง response ให้เป็น JSON
+        })
         .then(response => {
             if (response.status === 'success') {
+                window.location.href = response.redirectUrl;
                 Swal.fire({
                     // position: "top-end",
                     icon: 'success',
                     title: response.message,
+                 
                     timer: 1500,
                     showConfirmButton: false
                 }).then(() => {
                     window.location.href = response.redirectUrl;
                 });
+                console.log(response.data);
             } else {
                 Swal.fire({
                     icon: 'error',

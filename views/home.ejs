@@ -33,13 +33,21 @@
             border-radius: 10px;
             margin-bottom: 20px;
         }
+        .btn {
+            background-color: #3d216b;
+            color: #f8dc3e;
+            border: 1px solid #ddd; 
+            
+            border-radius: 120px;
+            margin-bottom: 20px;  
+        }
         .card-title {
-            color: #007bff;
+            color: #3d216b;
             font-weight: bold;
         }
         .calendar {
             height: 500px;
-            background-color: #e9ecef;
+            background-color: #aeb0b3;
             border-radius: 10px;
             /* padding: 10px; */
         }
@@ -63,7 +71,8 @@
             <div class="navbar-nav ml-auto">
                 <a href="/home" class="nav-item nav-link"><i class="fa fa-home"></i> หน้าหลัก</a>
                 <a href="/leave-request" class="nav-item nav-link"><i class="fa fa-file-alt"></i> ยื่นคำขอลา</a>
-               
+                <a href="/leave-request-test" class="nav-item nav-link"><i class="fa fa-file-alt"></i> ยื่นคำขอลา TEST</a>
+                <a href="/leave-request-cancel" class="nav-item nav-link"><i class="fas fa-times-circle "></i> ยกเลิกคำขอลา</a>
                 <a href="/leave-history" class="nav-item nav-link"><i class="fa fa-history"></i> ประวัติการลา</a>
                 <a href="/leave-approvals" class="nav-item nav-link"><i class="fa fa-check-circle"></i> การอนุมัติหรือปฏิเสธคำขอ</a>
                 <!-- <a href="/admin" class="nav-item nav-link"><i class="fa fa-check-circle"></i> หน้าอนุมัติลา(TEST)</a> -->
@@ -132,14 +141,16 @@
         <div class="row">
             <!-- User Information Summary -->
             <div class="col-md-3">
+                <% user_detail.forEach(request => { %>
                 <div class="dashboard-card">
                     <div class="text-center">
                         <img src="public/img/profile-placeholder.png" class="profile-pic" alt="Profile Picture">
                     </div>
                     <h5 class="text-center mt-3">ชื่อผู้ใช้งาน : <%= user %></h5>
-                    <p class="text-center">ตำแหน่ง: `</p>
-                    <p class="text-center">แผนก: ฝ่ายทรัพยากรบุคคล</p>
+                    <p class="text-center">ตำแหน่ง: <%= request.position %>  </p>
+                    <p class="text-center">แผนก: <%= request.department %> </p>
                     <hr>
+
                     <h6>สิทธิการลา</h6>
                     <ul class="list-unstyled">
                         <li>ลาพักร้อน: 10 วัน</li>
@@ -147,10 +158,11 @@
                         <li>ลากิจ: 3 วัน</li>
                     </ul>
                 </div>
+                <% }); %>
                 <div class="dashboard-card">
                     <h6 class="card-title">ทางลัดการทำงาน</h6>
-                    <button class="btn btn-primary btn-block mb-2">ยื่นคำขอลา</button>
-                    <button class="btn btn-secondary btn-block">ดูคำขอลาทั้งหมด</button>
+                    <button class="btn btn-block mb-2">ยื่นคำขอลา</button>
+                    <button class="btn btn-block">ดูคำขอลาทั้งหมด</button>
                 </div>
             </div>
 
@@ -193,8 +205,8 @@
                 </div>
                 <div class="dashboard-card">
                     <h6 class="card-title">ทางลัดการทำงาน</h6>
-                    <button class="btn btn-primary btn-block mb-2">ยื่นคำขอลา</button>
-                    <button class="btn btn-secondary btn-block">ดูคำขอลาทั้งหมด</button>
+                    <button class="btn btn-block mb-2">ยื่นคำขอลา</button>
+                    <button class="btn btn-block">ดูคำขอลาทั้งหมด</button>
                 </div>
             </div>
         </div>
@@ -239,5 +251,6 @@
     <script src="public/js/jquery-3.4.1.slim.min.js"></script>
     <script src="public/bootstrap-5.2.3-dist/js/bootstrap.min.js"></script>
     <script src="public/js/sweetalert2.all.min.js"></script>
+    
 </body>
 </html>  

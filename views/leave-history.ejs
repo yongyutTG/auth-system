@@ -9,6 +9,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
   <link rel="stylesheet" href="public/css/home.css">
+  <!-- <link rel="stylesheet" href="public/css/admin.css"> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     body {
         background-color: #e9ecef;
@@ -126,10 +129,125 @@
         overflow-x: auto;
     }
 
-    
+        
+    /* ปุ่มแอ็คชั่น */
+    button {
+        background-color: #4caf50;
+        border: none;
+        color: white;
+        padding: 10px 16px;
+        width: 120px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 14px;
+        cursor: pointer;
+        border-radius: 4px;
+        margin-right: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .view-details-btn {
+        background-color: #a19b92;
+    }
+
+    .view-details-btn:hover {
+        background-color: #a19b92;
+    }
+
+    /* ไอคอนสถานะ */
+    .status-icon {
+        font-size: 18px;
+    }
+
+    .status-pending {
+        color: #f39c12;
+    }
+
+    .status-approved {
+        color: #27ae60;
+    }
+
+    .status-rejected {
+        color: #e74c3c;
+    }
+
    
+    /* สไตล์ Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        width: 500px;
+        max-width: 90%;
+    }
+
+    .modal-header {
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    /* Close Modal */
+    .close-btn {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 3px;
+        float: right;
+    }
 
   </style>
+
+  <!-- CSS สำหรับ Modal -->
+<!-- <style>
+    .modal {
+      display: none; /* ซ่อน Modal เริ่มต้น */
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+  
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 500px;
+    }
+  
+    .close-btn {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      cursor: pointer;
+      float: right;
+      border-radius: 5px;
+    }
+  
+    .close-btn:hover {
+      background-color: darkred;
+    }
+  </style> -->
 </head>
 <body>
     <header>
@@ -202,7 +320,7 @@
 
                
 
-                <h2 class="form-title mb-4">ประวัติคำขอลา</h2>
+                <h2 class="form-title mb-4">ประวัติคำขอลา พนักงานสามารถดูรายละเอียดประวัติการลาย้อนหลังได้ หมายเหตุ การยกเลิกใบลาทำได้กรณีสถานะการยื่นคำขอลารอดำเนินการ </h2>
                 <div class="table-responsive">
                     <table id="leaveHistoryTable" class="table table-bordered mt-4 leave-history-table">
                         <thead>
@@ -214,6 +332,7 @@
                             <th>วันที่สิ้นสุดลา</th>
                             <th>จำนวนวันลา</th>
                             <th>สถานะการยืนคำขอลา</th>
+                            <th>การกระทำ</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -233,8 +352,31 @@
                                 <i class="fas fa-check-circle fa-2x status-icon status-approved"></i>
                             <% } else if (request.status === 'rejected') { %>
                                 <i class="fas fa-times-circle fa-2x status-icon status-rejected"></i>
+                            <% } else if (request.status === 'cancelled') { %>
+                                พนักงานยกเลิกใบลา
                                 <% } %>
+                            </td>
+                            <td>
+                                <% if (request.status === 'pending') { %>
+                                    <button class="btn btn-danger btn-cancel" 
+                                      onclick="cancelLeaveRequest('<%= request.leaverequestid %>')">
+                                      <i class="fas fa-ban"></i> ยกเลิก
+                                    </button>
+                                  <% } %>
+                                <br>
+                                <button class="view-details-btn" onclick="openModal(<%= JSON.stringify(request) %>)"><i class="fas fa-eye"></i></button>
                             </td> 
+                            <!-- <td>
+                                <% if (request.status === 'pending') { %>
+                                  <button class="btn btn-danger btn-cancel" 
+                                    onclick="cancelLeaveRequest('<%= request.leaverequestid %>')">
+                                    <i class="fas fa-ban"></i> ยกเลิก
+                                  </button>
+                                <% } else { %>
+                                  <span class="text-muted">ไม่สามารถยกเลิกได้</span>
+                                <% } %>
+                              </td> -->
+                              
                             </tr>
                         <% }); %>
                         </tbody>
@@ -243,7 +385,97 @@
             </div>
         </div>
     </main>
+    <!-- Modal แสดงรายละเอียด -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">Close</button>
+            <h2>Leave Request Details</h2>
+            <p><strong>ID:</strong> <span id="modal-id"></span></p>
+            <p><strong>Employee Name:</strong> <span id="modal-name"></span></p>
+            <p><strong>Leave Type:</strong> <span id="modal-leave-type"></span></p>
+            <p><strong>Reason:</strong> <span id="modal-reason"></span></p>
+            <p><strong>Start Date:</strong> <span id="modal-start-date"></span></p>
+            <p><strong>End Date:</strong> <span id="modal-end-date"></span></p>
+            <p><strong>Total Days:</strong> <span id="modal-total-days"></span></p>
+            <p><strong>Status:</strong> <span id="modal-status"></span></p>
+        </div>
+    </div>
 
+    <script>
+        // เปิด Modal และใส่ข้อมูล
+        function openModal(request) {
+            document.getElementById('modal-id').innerText = request.leaverequestid;
+            document.getElementById('modal-name').innerText = request.firstname + ' ' + request.lastname;
+            document.getElementById('modal-leave-type').innerText = request.leavetype;
+            document.getElementById('modal-reason').innerText = request.reason;
+            document.getElementById('modal-start-date').innerText = request.startdate;
+            document.getElementById('modal-end-date').innerText = request.enddate;
+            document.getElementById('modal-total-days').innerText = request.totaldays;
+            document.getElementById('modal-status').innerText = request.status;
+
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        // ปิด Modal
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // ฟังก์ชันสำหรับกรองตาราง
+        function filterTable() {
+            const searchBox = document.getElementById('search-box');
+            const filter = searchBox.value.toLowerCase();
+            const rows = document.querySelectorAll('#leave-requests-body tr');
+
+            rows.forEach(row => {
+                const name = row.cells[1].innerText.toLowerCase();
+                const leaveType = row.cells[2].innerText.toLowerCase();
+                if (name.includes(filter) || leaveType.includes(filter)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+    </script>
+
+    <script>
+        function cancelLeaveRequest(leaveRequestId) {
+            Swal.fire({
+                title: 'ยืนยันการยกเลิก?',
+                text: "คุณต้องการยกเลิกคำขอลาหรือไม่?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'ยืนยัน',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                fetch(`/leave-request/cancel/${leaveRequestId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                    if (data.status === 'success') {
+                        Swal.fire('สำเร็จ!', data.message, 'success').then(() => {
+                        location.reload(); // โหลดหน้าซ้ำเพื่ออัปเดตตาราง
+                        });
+                    } else {
+                        Swal.fire('ผิดพลาด!', data.message, 'error');
+                    }
+                    })
+                    .catch(error => {
+                    Swal.fire('ผิดพลาด!', 'ไม่สามารถยกเลิกคำขอได้', 'error');
+                    console.error('Error:', error);
+                    });
+                }
+            });
+            }
+
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
   

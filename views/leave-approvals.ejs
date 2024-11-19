@@ -72,17 +72,17 @@
             <div class="card">
                 <i class="fas fa-user-clock"></i>
                 <h2>คำขอลาที่ได้ดำเนินการขอทั้งหมด</h2>
-                <p>130 Requests</p>
+                <p><%= totalCount %> Requests</p>
             </div>
             <div class="card">
                 <i class="fas fa-user-check"></i>
                 <h2>คำขอลาที่ได้รับการอนุมัติทั้งหมด</h2>
-                <p>120 Requests</p>
+                <p><%= approvedCount %> ใบคำขอ </p>
             </div>
             <div class="card">
                 <i class="fas fa-user-times"></i>
                 <h2>คำขอลาที่ได้รับการไม่อนุมัติทั้งหมด</h2>
-                <p>5 Requests</p>
+                <p><%= rejectedCount %>:  rejected</p>
             </div>
         </div>
   
@@ -146,7 +146,19 @@
 
     </main>     
    
-
+                            <!-- <h2>ใบคำขออนุมัติ</h2>
+                            <p>จำนวนใบคำขอที่ได้รับการอนุมัติ: <%= approvedCount %></p>
+                            <ul>
+                                <% leaveRequests_leave_approvals.forEach(request => { %>
+                                    <li>
+                                        รหัสคำขอ: <%= request.leaverequestid %> <br>
+                                        เหตุผล: <%= request.reason %> <br>
+                                        สถานะ: <%= request.status %> <br>
+                                        วันที่ลา: <%= request.startdate %> ถึง <%= request.enddate %>
+                                    </li>
+                                <% }); %>
+                            </ul>
+                            -->
    
     <!-- Modal แสดงรายละเอียด -->
     <div id="modal" class="modal">
