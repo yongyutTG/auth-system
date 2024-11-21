@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const mysql = require('mysql2');
-const saltRounds = 10
+
+ //กำหนดจำนวนรอบของการ hashing 
+const saltRounds = 10  
 
 require('dotenv').config();
 
@@ -110,14 +112,14 @@ router.get('/signup', (req, res) => {
 // POST signup
 router.post('/signup', (req, res) => {
     const { fchk_signup_empid,fchk_signup_email,fchk_signup_password,fchk_signup_confrim_password, fchk_signup_firstname, fchk_signup_lastname, fchk_signup_position ,fchk_signup_department, fchk_signup_startdate,fchk_signup_role,fchk_signup_leavebalance} = req.body;
-    // ตรวจสอบว่าข้อมูลที่จำเป็นถูกส่งมาหรือไม่
+
     if (!fchk_signup_empid || !fchk_signup_email || !fchk_signup_password || !fchk_signup_confrim_password || !fchk_signup_firstname || !fchk_signup_lastname || !fchk_signup_position || !fchk_signup_department || !fchk_signup_startdate || !fchk_signup_role || !fchk_signup_leavebalance) {
         return res.status(400).json({
             status: 'error',
             message: 'กรุณากรอกข้อมูลให้ครบทุกช่อง'
         });
     }
-      // ตรวจสอบว่ารหัสผ่านและการยืนยันรหัสผ่านตรงกันหรือไม่
+
     if (fchk_signup_password !== fchk_signup_confrim_password) {
         return res.status(200).json({
         status: 'warning',
@@ -164,7 +166,7 @@ router.post('/signup', (req, res) => {
                     leavebalance: fchk_signup_leavebalance
                     
                 };
-                // บันทึกข้อมูลผู้ใช้ลงในฐานข้อมูล
+               
                 connection.query('INSERT INTO employee SET ?', newUser, (err) => {
                     if (err) {
                         console.error('Error inserting user:', err);
@@ -189,7 +191,7 @@ router.post('/signup', (req, res) => {
 router.get('/home', (req, res) => {
     if (req.session.user) {
         console.log('Rendering หน้า home โดย user:', req.session.user);
-        const employeeid = req.session.employeeid; // หรือ session ID ของพนักงานที่ล็อกอินอยู่
+        const employeeid = req.session.employeeid; 
 
         connection.query("SELECT * FROM employee WHERE employeeid = ?",[employeeid],(err, user_detail) => {
                 if (err){
@@ -200,7 +202,7 @@ router.get('/home', (req, res) => {
                     }); 
                 } else {
                     res.render('home', {
-                    user_detail: user_detail, // ส่งข้อมูลประวัติการลาไปยัง view
+                    user_detail: user_detail, 
                     user: req.session.user});
                 }
             }
@@ -211,18 +213,17 @@ router.get('/home', (req, res) => {
     }
 });
 
-// GET signup page
-// router.get('/users', (req, res) => {
-//     res.render('users', { errorMessage: null });
-// });
+//GET signup page
+router.get('/users', (req, res) => {
+    res.render('users', { errorMessage: null });
+});
 router.get('/users', (req, res) => {
     if (req.session.user) {
         console.log('Rendering home page for user:', req.session.user);
-        // ดึงข้อมูลของพนักงานทั้งหมดจากฐานข้อมูล
+        
         connection.query('SELECT * FROM employees', (err, results) => {
             if (err) throw err;
             const employees = results;
-            // ส่งข้อมูลพนักงานทั้งหมดไปยัง EJS template
             res.render('users', { user: req.session.user, employees });
         });
     } else {
@@ -253,45 +254,17 @@ router.get('/leave-request-success', (req, res) => {
     }
 });
 
-//แบบฟอร์มคำขอลา
-router.post('/leave-request', (req, res) => {
-    const { fchk_leave_requeste_employeeid,fchk_leave_requeste_firstname, fchk_leave_requeste_lastname,fchk_leave_requeste_type,fchk_leave_reason,fchk_leave_requeste_start_date,fchk_leave_requeste_end_date,fchk_leave_totaldays,fchk_leave_status,fchk_leave_requestdate} = req.body;
-    // ตรวจสอบว่าข้อมูลที่จำเป็นถูกส่งมาหรือไม่
-    if (!fchk_leave_requeste_employeeid || !fchk_leave_requeste_firstname || !fchk_leave_requeste_lastname || !fchk_leave_requeste_type || !fchk_leave_reason || !fchk_leave_requeste_start_date || !fchk_leave_requeste_end_date || !fchk_leave_totaldays  || !fchk_leave_status || !fchk_leave_requestdate) {
-        return res.status(400).json({
-            status: 'error',
-            message: 'กรุณากรอกข้อมูลให้ครบทุกช่อง'
-        });
-    } else {
-        connection.query("insert into leaverequests (employeeid,firstname,lastname,leavetype,reason,startdate,enddate,totaldays,status,requestdate) values(?,?,?,?,?,?,?,?,?,?)",[fchk_leave_requeste_employeeid,fchk_leave_requeste_firstname,
-            fchk_leave_requeste_lastname,fchk_leave_requeste_type,fchk_leave_reason,fchk_leave_requeste_start_date,fchk_leave_requeste_end_date,fchk_leave_totaldays,
-            fchk_leave_status,fchk_leave_requestdate],(err,results) => {
-            if (err){
-                console.error('Error inserting leaverequests:', err);
-                return res.status(200).json({
-                    status: 'error',
-                    message: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล leaverequest'
-                }); 
-            } else {
-                res.status(201).json({
-                    status: 'success',
-                    // results: results,
-                    message: 'ยื่นคำขอลาพักร้อนสำเร็จ',
-                    redirectUrl: '/leave-request-success' 
-                });
-            }
-        });
-    }
-});
-
-//สำหรับดึงประวัติการลา
+//สำหรับดึงประวัติการลาที่ได้มีการ Approved แล้ว
 router.get('/leave-history', (req, res) => {
     if (req.session.user) {
         console.log('Rendering home page for leave-history:', req.session.user);
-        const employeeid = req.session.employeeid; // หรือ session ID ของพนักงานที่ล็อกอินอยู่
+        const employeeid = req.session.employeeid; 
 
-        connection.query("SELECT * FROM leaverequests WHERE employeeid = ? ",[employeeid],(err, leaveHistory) => {
-                if (err){
+        connection.query(
+            "SELECT * FROM leaverequests WHERE employeeid = ? and status <> 'pending' ORDER BY leaverequestid DESC",
+            [employeeid],
+            (err, leaveHistory) => {
+                if (err) {
                     console.error('Error query leaveHistory:', err);
                     return res.status(400).json({
                         status: 'error',
@@ -299,8 +272,9 @@ router.get('/leave-history', (req, res) => {
                     }); 
                 } else {
                     res.render('leave-history', {
-                    leaveHistory: leaveHistory, // ส่งข้อมูลประวัติการลาไปยัง view
-                    user: req.session.user});
+                        leaveHistory: leaveHistory, // ส่งข้อมูลประวัติการลาไปยัง view
+                        user: req.session.user
+                    });
                 }
             }
         );
@@ -309,6 +283,37 @@ router.get('/leave-history', (req, res) => {
         res.redirect('/signin');
     }
 });
+
+//สำหรับดึงรายการลาที่รอดำเนินการ
+router.get('/leave-request-pending', (req, res) => {
+    if (req.session.user) {
+        console.log('Rendering home page for leave-request-pending:', req.session.user);
+        const employeeid = req.session.employeeid; 
+
+        connection.query(
+            "SELECT * FROM leaverequests WHERE employeeid = ? and status = 'pending' ",
+            [employeeid],
+            (err, leavePending) => {
+                if (err) {
+                    console.error('Error query leave-request-pending:', err);
+                    return res.status(400).json({
+                        status: 'error',
+                        message: 'เกิดข้อผิดพลาดในการleave-request-pending'
+                    }); 
+                } else {
+                    res.render('leave-request-pending', {
+                        leavePending: leavePending, // ส่งข้อมูลประวัติการลาไปยัง view
+                        user: req.session.user
+                    });
+                }
+            }
+        );
+    } else {
+        console.log('No session found, redirecting to signin');
+        res.redirect('/signin');
+    }
+});
+
 
 ///สำหรับยกเลิกคำขอลา:
 router.post('/leave-request/cancel/:id', (req, res) => {
@@ -345,7 +350,7 @@ router.post('/leave-request/cancel/:id', (req, res) => {
 router.get('/leave-profile', (req, res) => {
     if (req.session.user) {
         console.log('Rendering home page for leave-profile:', req.session.user);
-        const employeeid = req.session.employeeid; // หรือ session ID ของพนักงานที่ล็อกอินอยู่
+        const employeeid = req.session.employeeid; 
 
         connection.query("SELECT * FROM employee WHERE employeeid = ?",[employeeid],(err, leaveprofile) => {
                 if (err){
@@ -371,9 +376,9 @@ router.get('/leave-profile', (req, res) => {
 router.post('/update-profile', (req, res) => {
     if (req.session.user) {
         console.log('Received update request for profile:', req.session.user);
-        const employeeid = req.session.employeeid; // session ID ของพนักงาน
-        const updatedProfile = req.body; // ดึงข้อมูลโปรไฟล์ที่อัปเดตจาก body
-        console.log('Updated profile data:', updatedProfile); // ตรวจสอบข้อมูลที่ได้รับจาก frontend
+        const employeeid = req.session.employeeid; 
+        const updatedProfile = req.body; 
+        console.log('Updated profile data:', updatedProfile); 
 
         const updateQuery = `
             UPDATE employee 
@@ -418,20 +423,20 @@ router.post('/update-profile', (req, res) => {
 });
 
 //สำหรับดึงฟอร์มใบคำขอลา
-router.get('/leave-request-test', (req, res) => {
+router.get('/leave-request-form', (req, res) => {
     if (req.session.user) {
-        console.log('Rendering home page for leave-request-test:', req.session.user);
-        const employeeid = req.session.employeeid; // หรือ session ID ของพนักงานที่ล็อกอินอยู่
+        console.log('Rendering home page for leave-request-form:', req.session.user);
+        const employeeid = req.session.employeeid; 
 
         connection.query("SELECT * FROM employee WHERE employeeid = ?",[employeeid],(err, leave_request_form) => {
                 if (err){
                     console.error('Error query leaveHistory:', err);
                     return res.status(400).json({
                         status: 'error',
-                        message: 'เกิดข้อผิดพลาดในการค้นหาประวัติการลา leave-request-test'
+                        message: 'เกิดข้อผิดพลาดในการค้นหาประวัติการลา leave-request-form'
                     }); 
                 } else {
-                    res.render('leave-request-test', {
+                    res.render('leave-request-form', {
                     leave_request_form: leave_request_form, // ส่งข้อมูลประวัติการลาไปยัง view
                     user: req.session.user});
                 }
@@ -447,7 +452,7 @@ router.get('/leave-request-test', (req, res) => {
 
 // Route สำหรับตรวจสอบวันลาคงเหลือ โดยดึง employeeId จาก session
 router.get('/check-leave-balance', (req, res) => {
-    const employeeId = req.session.employeeid; // ดึง employeeid จาก session
+    const employeeId = req.session.employeeid; 
 
     if (!employeeId) {
         return res.status(401).json({
@@ -476,7 +481,7 @@ router.get('/check-leave-balance', (req, res) => {
             });
         }
 
-        // ตรวจสอบว่าพบข้อมูลหรือไม่
+        
         if (results.length === 0) {
             return res.status(404).json({
                 status: 'error',
@@ -488,7 +493,7 @@ router.get('/check-leave-balance', (req, res) => {
         const { leavebalance, days_used } = results[0];
         const remaining_days = leavebalance - days_used;
 
-        // ส่งผลลัพธ์กลับไป
+       
         res.status(200).json({
             status: 'success',
             leave_balance: leavebalance,
@@ -500,8 +505,6 @@ router.get('/check-leave-balance', (req, res) => {
 
 router.get('/check/:employeeid', (req, res) => {
     const employeeId = req.params.employeeid;
-
-    // ดึงข้อมูล
     const query = `
         SELECT e.leavebalance, 
                COALESCE(SUM(lr.totaldays), 0) AS days_used
@@ -545,27 +548,24 @@ router.get('/check/:employeeid', (req, res) => {
 //Route สำหรับดึงข้อมูลวันลาที่ status = approved หรือ rejected เท่านั่น ตาม leaverequestid ล่าสุด
 router.get('/leave-approvals', (req, res) => {
     if (req.session.user) {
-        // SQL Query นับจำนวนใบคำขอที่ approved
+        
         const queryCountApproved = `
             SELECT COUNT(*) AS approvedCount
             FROM leaverequests 
             WHERE status = 'approved'
         `;
 
-        // SQL Query นับจำนวนใบคำขอที่ rejected
         const queryCountRejected = `
             SELECT COUNT(*) AS rejectedCount
             FROM leaverequests 
             WHERE status = 'rejected'
         `;
 
-        // SQL Query นับจำนวนใบคำขอลาทั้งหมด
         const queryCountTotal = `
             SELECT COUNT(*) AS totalCount
             FROM leaverequests
         `;
 
-        // SQL Query ดึงข้อมูลใบคำขอที่ approved หรือ rejected
         const queryRecentLeaveRequests = `
             SELECT * 
             FROM leaverequests 
@@ -573,7 +573,7 @@ router.get('/leave-approvals', (req, res) => {
             AND leaverequestid = (SELECT MAX(leaverequestid) FROM leaverequests WHERE status IN ('approved', 'rejected'))
         `;
 
-        // เรียกใช้ Query เพื่อดึงจำนวน approved
+
         connection.query(queryCountApproved, (err, approvedResult) => {
             if (err) {
                 console.error('Error querying count of approved requests:', err);
@@ -583,9 +583,9 @@ router.get('/leave-approvals', (req, res) => {
                 });
             }
 
-            const approvedCount = approvedResult[0].approvedCount; // จำนวนใบคำขอที่ approved
+            const approvedCount = approvedResult[0].approvedCount;
 
-            // เรียกใช้ Query เพื่อดึงจำนวน rejected
+           
             connection.query(queryCountRejected, (err, rejectedResult) => {
                 if (err) {
                     console.error('Error querying count of rejected requests:', err);
@@ -595,9 +595,9 @@ router.get('/leave-approvals', (req, res) => {
                     });
                 }
 
-                const rejectedCount = rejectedResult[0].rejectedCount; // จำนวนใบคำขอที่ rejected
+                const rejectedCount = rejectedResult[0].rejectedCount; 
 
-                // เรียกใช้ Query เพื่อดึงจำนวนคำขอลาทั้งหมด
+             
                 connection.query(queryCountTotal, (err, totalResult) => {
                     if (err) {
                         console.error('Error querying count of total requests:', err);
@@ -607,9 +607,9 @@ router.get('/leave-approvals', (req, res) => {
                         });
                     }
 
-                    const totalCount = totalResult[0].totalCount; // จำนวนใบคำขอลาทั้งหมด
+                    const totalCount = totalResult[0].totalCount; 
 
-                    // เรียกใช้ Query เพื่อดึงข้อมูลใบคำขอที่ approved/rejected ล่าสุด
+               
                     connection.query(queryRecentLeaveRequests, (err, results) => {
                         if (err) {
                             console.error('Error querying recent leave requests:', err);
@@ -618,13 +618,13 @@ router.get('/leave-approvals', (req, res) => {
                                 message: 'เกิดข้อผิดพลาดในการดึงข้อมูล leave approvals'
                             });
                         } else {
-                            // ส่งข้อมูลไปยัง view
+                            
                             res.render('leave-approvals', {
-                                leaveRequests_leave_approvals: results, // ข้อมูลใบคำขอ
-                                approvedCount: approvedCount, // จำนวนใบคำขอที่ approved
-                                rejectedCount: rejectedCount, // จำนวนใบคำขอที่ rejected
-                                totalCount: totalCount, // จำนวนใบคำขอลาทั้งหมด
-                                user: req.session.user // ข้อมูลผู้ใช้
+                                leaveRequests_leave_approvals: results,
+                                approvedCount: approvedCount, 
+                                rejectedCount: rejectedCount, 
+                                totalCount: totalCount,
+                                user: req.session.user 
                             });
                         }
                     });
@@ -652,7 +652,7 @@ router.get('/admin', (req, res) => {
                 }); 
             } else {
                 res.render('admin', {
-                    leaveRequests: results, // ส่งข้อมูลประวัติการลาไปยัง view
+                    leaveRequests: results, 
                 user: req.session.user});
             }
         });
@@ -687,20 +687,37 @@ router.get('/admin-approvals', (req, res) => {
 // Route สำหรับอัปเดตสถานะของคำขอลาแล้ว บันทึกข้อมูลลงตาราง approvalhistory
 router.post('/leave-request/:id/update', (req, res) => {
     if (req.session.user) {
-        const { id } = req.params;
-        const { status } = req.body;
-       
+        const { id } = req.params; // id ของใบลา
+        const { status } = req.body; // สถานะใหม่
+        const employeeid = req.session.employeeid; // id ของพนักงานที่ล็อกอิน
+
+        // เริ่มต้นกระบวนการอัปเดตข้อมูล
         connection.query('UPDATE leaverequests SET status = ? WHERE leaverequestid = ?', [status, id], (err) => {
-            if (err){
-                console.error('Error query leaverequests SET status:', err);
-                return res.status(400).json({
+            if (err) {
+                console.error('Error updating leave request status:', err);
+                return res.status(500).json({
                     status: 'error',
-                    message: 'เกิดข้อผิดพลาด leaverequests SET status'
-                }); 
-            } else {
-               res.redirect('/admin-approvals');
-                console.log('อัปเดตใบคำขอลา id:'+ id +'เป็น : '+ status+'เรียบร้อยแล้ว');
+                    message: 'เกิดข้อผิดพลาดในการอัปเดตสถานะใบลา'
+                });
             }
+
+            console.log(`อัปเดตใบคำขอลา id: ${id} เป็นสถานะ: ${status} เรียบร้อยแล้ว`);
+
+            // เพิ่มข้อความแจ้งเตือน
+            const message = `ใบลาของคุณ (ID: ${id}) ได้รับการอัปเดตเป็นสถานะ: ${status}`;
+            connection.query('INSERT INTO notifications (employeeid, message) VALUES (?, ?)', [employeeid, message], (err) => {
+                if (err) {
+                    console.error('Error inserting notification:', err);
+                    return res.status(500).json({
+                        status: 'error',
+                        message: 'เกิดข้อผิดพลาดในการสร้างข้อความแจ้งเตือน'
+                    });
+                }
+
+                console.log('สร้างข้อความแจ้งเตือนสำเร็จ');
+                // เมื่อทำงานเสร็จสิ้นทั้งหมด ให้ redirect กลับไปหน้า admin-approvals
+                res.redirect('/admin-approvals');
+            });
         });
     } else {
         console.log('No session found, redirecting to signin');
@@ -708,81 +725,52 @@ router.post('/leave-request/:id/update', (req, res) => {
     }
 });
 
+//Route สำหรับแสดงข้อความ:
+router.get('/notifications', (req, res) => {
+    const employeeid = req.session.employeeid;
+
+    const query = `
+        SELECT * FROM notifications 
+        WHERE employeeid = ? 
+        ORDER BY created_at DESC
+        LIMIT 10
+    `;
+    connection.query(query, [employeeid], (err, notifications) => {
+        if (err) {
+            console.error('Error fetching notifications:', err);
+            return res.status(400).json({
+                status: 'error',
+                message: 'เกิดข้อผิดพลาดในการดึงข้อมูลแจ้งเตือน'
+            });
+        }
+
+        res.render('notifications', { notifications}); // ส่ง notifications ไปยัง View
+       console.log(notifications);
+    });
+});
 
 
-// Route for leave request form
-// router.get('/leave', (req, res) => {
-//     const sql = 'SELECT EmployeeID FROM Employee'; // ดึงข้อมูล EmployeeID จากตาราง Employees
-//     connection.query(sql, (err, employee) => {
-//         if (err) throw err;
-//         res.render('leave_form', { employee });
-//     });
-// });
+//อัปเดตข้อความเป็น "อ่านแล้ว" เมื่อผู้ใช้เข้าดู:เมื่อผู้ใช้เปิดหน้า ข้อความ ให้ส่งคำสั่งอัปเดต is_read เป็น true
+router.post('/mark-notifications-read', (req, res) => {
+    const employeeid = req.session.employeeid;
 
-// POST request to submit leave request
-// router.post('/leave', (req, res) => {
-//     const { employeeID, leaveType, startDate, endDate, totalDays, status, requestDate } = req.body;
-//     const sql = `INSERT INTO LeaveRequests (EmployeeID, LeaveType, StartDate, EndDate, TotalDays, Status, RequestDate) 
-//                  VALUES (?, ?, ?, ?, ?, ?, ?)`;
-//                  connection.query(sql, [employeeID, leaveType, startDate, endDate, totalDays, status, requestDate], (err, result) => {
-//         if (err) throw err;
-//         res.redirect('/leave');
-//     });
-// });
+    const query = `
+        UPDATE notifications 
+        SET is_read = TRUE 
+        WHERE employeeid = ?
+    `;
+    connection.query(query, [employeeid], (err) => {
+        if (err) {
+            console.error('Error marking notifications as read:', err);
+            return res.status(400).json({
+                status: 'error',
+                message: 'เกิดข้อผิดพลาดในการอัปเดตสถานะการอ่าน'
+            });
+        }
 
-// Route for Approval form
-// router.get('/approval', (req, res) => {
-//     const sql = 'SELECT LeaveRequestID FROM LeaveRequests'; // ดึงข้อมูล LeaveRequestID จากตาราง LeaveRequests
-//     db.query(sql, (err, leaveRequests) => {
-//         if (err) throw err;
-//         res.render('approval_form', { leaveRequests });
-//     });
-// });
-
-// POST request to submit approval form data
-// router.post('/approval', (req, res) => {
-//     const { leaveRequestID, approvedBy, approvalDate, comments } = req.body;
-//     const sql = `INSERT INTO ApprovalHistory (LeaveRequestID, ApprovedBy, ApprovalDate, Comments) 
-//                  VALUES (?, ?, ?, ?)`;
-//     db.query(sql, [leaveRequestID, approvedBy, approvalDate, comments], (err, result) => {
-//         if (err) throw err;
-//         res.redirect('/approval');
-//     });
-// });
-
-// router.get('/users/:id', async (req, res) => {
-//     const { id } = req.params
-//     let sql = "SELECT * FROM users WHERE id = ?"
-//    await conn.execute(sql,
-//         [id],
-//         (err, result) => {
-//             if(err) {
-//                 res.status(500).json({
-//                     message : err.message
-//                 })
-//                 return
-//             }
-//             res.status(200).json({
-//                 message : "เรียกข้อมูลสำเร็จ",
-//                 data : result
-//             })
-//         })
-// })
-// Search route
-// router.get('/search', (req, res) => {
-//     const searchQuery = req.query.query;
-
-//     // SQL to search employees by ID or Name
-//     const sql = `SELECT * FROM employees WHERE empid LIKE ? OR email LIKE ?`;
-//     const queryValue = `%${searchQuery}%`;
-
-//     connection.query(sql, [queryValue, queryValue], (err, results) => {
-//         if (err) {
-//             return res.status(500).send('Database query error');
-//         }
-//         res.render('home', { employees: results });
-//     });
-// });
+        res.status(200).json({ status: 'success', message: 'อัปเดตข้อความเป็นอ่านแล้ว' });
+    });
+});
 
 // GET logout
 router.get('/logout', (req, res) => {

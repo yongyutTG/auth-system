@@ -1,0 +1,9 @@
+<h2>ข้อความแจ้งเตือน</h2>
+<ul>
+    <% notifications.forEach(notification => { %>
+        <li>
+            <%= notification.message %> 
+            <small>(<%= notification.created_at %>)</small>
+        </li>
+    <% }); %>
+</ul>

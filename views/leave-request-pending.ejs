@@ -320,7 +320,7 @@
 
                
 
-                <h2 class="form-title mb-4">ประวัติคำขอลา พนักงานสามารถดูรายละเอียดประวัติการลาย้อนหลังได้ หมายเหตุ การยกเลิกใบลาทำได้กรณีสถานะการยื่นคำขอลารอดำเนินการ </h2>
+                <h2 class="form-title mb-4">รายการยื่นคำขอลารอดำเนินการ </h2>
                 <div class="table-responsive">
                     <table id="leaveHistoryTable" class="table table-bordered mt-4 leave-history-table">
                         <thead>
@@ -336,7 +336,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <% leaveHistory.forEach(request => { %>
+                        <% leavePending.forEach(request => { %>
                             <tr>
                                 <td class="request-date"><%= request.requestdate %></td>
                             <td><%= request.leavetype %></td>
