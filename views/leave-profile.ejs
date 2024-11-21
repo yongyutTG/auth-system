@@ -67,23 +67,39 @@
         <div class="navbar-nav ml-auto">
           <a href="/home" class="nav-item nav-link"><i class="fa fa-home"></i> หน้าหลัก</a>
           <a href="/leave-request-form" class="nav-item nav-link"><i class="fa fa-file-alt"></i> ยื่นคำขอลา</a>
+          <a href="/leave-request-pending" class="nav-item nav-link"><i class="fa fa-file-alt"></i> รอการอนุมัติ</a>
           <a href="/leave-history" class="nav-item nav-link"><i class="fa fa-history"></i> ประวัติการลา</a>
           <a href="/leave-approvals" class="nav-item nav-link"><i class="fa fa-check-circle"></i> การอนุมัติหรือปฏิเสธคำขอ</a>
           <a href="/leave-balance" class="nav-item nav-link"><i class="fa fa-calculator"></i> คำนวณวันลาคงเหลือ</a>
-          <a href="/users" class="nav-item nav-link"><i class="fa fa-users"></i> เจ้าหน้าที่ทั้งหมด</a>
-          <a href="#" class="nav-item nav-link"><i class="fa fa-envelope"></i> ข้อความ</a>
-  
+          <a href="/dashboard" class="nav-item nav-link"><i class="fa fa-users"></i> เจ้าหน้าที่ทั้งหมด</a>
+          
+          <!-- <a href="/notifications" class="nav-item nav-link"><i class="fa fa-envelope"></i> ข้อความ -->
+          <!-- Dropdown Menu for notifications -->
+          <div class="nav-item dropdown position-relative">
+              <a href="#" class="nav-link dropdown-toggle" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa fa-envelope"></i> ข้อความ
+                  <span id="notificationBadge" class="position-absolute translate-middle badge rounded-pill bg-danger d-none">
+                      <!-- จะใส่จำนวนข้อความใหม่ใน badge -->
+                  </span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" id="notificationsList">
+                  <li class="dropdown-item text-center">กำลังโหลด...</li>
+              </ul>
+          </div>
+          
+          
+          
           <!-- Dropdown Menu for Logout -->
           <div class="nav-item dropdown">
-          <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fa fa-sign-out"></i> ออกจากระบบ
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="/leave-profile"><i class="fa fa-user"></i> โปรไฟล์ของฉัน</a></li>
-              <li><a class="dropdown-item" href="/settings"><i class="fa fa-cog"></i> ตั้งค่า</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="/logout"><i class="fa fa-sign-out"></i> ออกจากระบบ</a></li>
-          </ul>
+              <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                   <i class="fa fa-user me-1"></i> บัญชีผู้ใช้
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                 <li><a class="dropdown-item" href="/leave-profile"><i class="fa fa-user me-2"></i> โปรไฟล์ของฉัน</a></li>
+                  <li><a class="dropdown-item" href="/leave-settings"><i class="fa fa-cog"></i> ตั้งค่า</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="/logout"><i class="fa fa-sign-out-alt"></i> ออกจากระบบ</a></li>
+              </ul>
           </div>
       </div>
       </div>
