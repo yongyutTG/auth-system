@@ -4,8 +4,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 
 const app = express();
-const leaveRouter = require('./routes/leave'); 
-// const leaveRoutes = require('./routes/leave');   
+const leaveRouter = require('./routes/leave');  //ใช้สำหรับลา   
 
 const crypto = require('crypto');
 const secretkey = crypto.randomBytes(32).toString('hex'); //คีย์ลับที่ปลอดภัย
@@ -26,9 +25,10 @@ app.use(session({
 }));
 
 app.use('/', leaveRouter); // ใช้ router สำหรับเส้นทางหลัก
-// app.use('/', leaveRoutes);
 
 
-app.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });

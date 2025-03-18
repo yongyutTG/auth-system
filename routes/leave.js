@@ -23,11 +23,11 @@ connection.connect((err) => {
 });
 
 router.get('/', (req, res) => {
-    res.render('signin/', { errorMessage: null });
+    res.render('signin', { errorMessage: null });
 })
 router.get('/signin', (req, res) => {
     
-    res.render('signin/signin', { errorMessage: null });
+    res.render('signin', { errorMessage: null });
 });
 
 router.post('/signin', (req, res) => {
