@@ -211,11 +211,26 @@
                     <div class="dashboard-card">
                         <h6 class="card-title">คำขอลาที่อยู่ระหว่างดำเนินการ</h6>
                         <ul class="list-group">
-                            <li class="list-group-item">รอการอนุมัติ: 2023-10-13 ถึง 2023-10-14 (ลาพักร้อน)</li>
-                            <li class="list-group-item">อนุมัติแล้ว: 2023-09-10 ถึง 2023-09-12 (ลากิจ)</li>
+                            <% if (user_detail.length > 0) { %>
+                                <% user_detail.forEach(request => { %>
+                                    <li class="list-group-item">
+                                        <%= request.status === 'pending' ? 'รอการอนุมัติ' : 'อนุมัติแล้ว' %>: 
+                                        ใบลาที่ <%= request.leaverequestid %>
+                                        วันที่ขอลา <%= request.startdate %> ถึง <%= request.enddate %> (<%= request.leavetype %>)
+                                        <%= request.reason %>
+                                    </li>
+                                <% }) %>
+                            <% } else { %>
+                                <li class="list-group-item">ไม่มีคำขอลาที่อยู่ระหว่างดำเนินการ</li>
+                            <% } %>
                         </ul>
                     </div>
-
+                    
+                    
+                   
+                    
+                    
+                    
                     <!-- ปฏิทินการทำงาน -->
                     <div class="dashboard-card">
                         <h6 class="card-title">ปฏิทินการทำงานและวันหยุดตามที่ บริษัท ประกาศ</h6>

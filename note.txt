@@ -81,3 +81,23 @@ Render: อีกหนึ่งแพลตฟอร์มที่ช่วย
 
 *ใช้ CI/CD Pipeline:
 คุณสามารถตั้งค่า continuous integration/continuous deployment (CI/CD) pipeline เช่น GitLab CI/CD หรือ GitHub Actions เพื่อ build และ deploy แอปพลิเคชัน Node.js อัตโนมัติเมื่อมีการ push โค้ดใหม่
+
+การใช้งาน PM2 Run 
+pm2 start app.js	รันแอป
+pm2 list	ดูรายการแอปที่รันอยู่
+pm2 stop my-app	หยุดแอป
+pm2 restart my-app	รีสตาร์ทแอป
+pm2 delete my-app	ลบแอปออกจาก PM2
+pm2 logs	ดู log ของแอป
+pm2 save	บันทึก process ที่รันอยู่
+pm2 startup	ตั้งค่าให้ PM2 รันตอนเปิดเครื่
+
+
+test ระบบ
+user admin
+User = admin@gmail.com
+password = 1234
+
+User ทั่วไป
+User = yongyuttgsaving@gmail.com
+Password = 1234

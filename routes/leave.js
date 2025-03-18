@@ -9,6 +9,7 @@ const saltRounds = 10
 require('dotenv').config();
 
 //connection env
+//connection env
 const connection = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -22,11 +23,11 @@ connection.connect((err) => {
 });
 
 router.get('/', (req, res) => {
-    res.render('signin', { errorMessage: null });
+    res.render('signin/', { errorMessage: null });
 })
 router.get('/signin', (req, res) => {
     
-    res.render('signin', { errorMessage: null });
+    res.render('signin/signin', { errorMessage: null });
 });
 
 router.post('/signin', (req, res) => {
@@ -75,7 +76,6 @@ router.post('/signin', (req, res) => {
                                     redirectUrl: '/admin'
                                  });
                             } else {
-                                
                                 // // ถ้าเป็น user ปกติ ให้เรนเดอร์หน้า home.ejs พร้อมส่งข้อมูลและ status
                                 res.status(200).json({
                                     data: results,
@@ -193,19 +193,35 @@ router.get('/home', (req, res) => {
     if (req.session.user) {
         console.log('Rendering หน้า home โดย user:', req.session.user);
         const employeeid = req.session.employeeid; 
-
-        connection.query("SELECT * FROM employee WHERE employeeid = ?",[employeeid],(err, user_detail) => {
+        const query = `
+            SELECT e.employeeid, e.firstname, e.lastname, 
+                   e.position, e.department,
+                   lr.leavetype, lr.reason, 
+                   lr.startdate, lr.enddate, lr.status ,lr.leaverequestid
+            FROM employee e
+            JOIN leaverequests lr ON e.employeeid = lr.employeeid
+            WHERE lr.status = 'pending' AND lr.employeeid = ?;
+        `;
+        connection.query(query, [employeeid], (err, user_detail) => {
                 if (err){
                     console.error('Error query user_detail:', err);
                     return res.status(400).json({
                         status: 'error',
                         message: 'เกิดข้อผิดพลาดในการค้นหาประวัติการลา leave-profile'
                     }); 
+                    
                 } else {
+                       // ✅ แปลงวันที่ให้เป็น YYYY-MM-DD ก่อนส่งไปที่ EJS
+                       user_detail = user_detail.map(request => ({
+                        ...request,
+                        startdate: new Date(request.startdate).toISOString().split('T')[0],
+                        enddate: new Date(request.enddate).toISOString().split('T')[0]
+                    }));
                     res.render('home', {
                     user_detail: user_detail, 
                     user: req.session.user});
                 }
+                console.log(user_detail)
             }
         );
     } else {
@@ -715,65 +731,72 @@ router.get('/admin-approvals', (req, res) => {
 });
 
 // Route สำหรับอัปเดตสถานะของคำขอลาแล้ว 
-router.post('/leave-request/:id/update', (req, res) => {
-    if (req.session.user) {
-        const { id } = req.params; // id ของใบลา
-        const { status, employeeid } = req.body; // ดึง status และ employeeid จาก body
+// 🟢 Route: อัปเดตสถานะใบลา
+router.post('/leave-request/:id/update', async (req, res) => {
+    try {
+        if (!req.session.user) {
+            console.log('❌ No session found, redirecting to signin');
+            return res.redirect('/signin');
+        }
 
-        // เริ่มต้นกระบวนการอัปเดตข้อมูล
-        connection.query(
-            'UPDATE leaverequests SET status = ? WHERE leaverequestid = ?',
-            [status, id],
-            (err) => {
-                if (err) {
-                    console.error('Error updating leave request status:', err);
-                    return res.status(500).json({
-                        status: 'error',
-                        message: 'เกิดข้อผิดพลาดในการอัปเดตสถานะใบลา'
-                    });
-                }
+        const { id } = req.params; // ID ของใบลา
+        const { status, employeeid } = req.body; // ดึงค่าจาก body
 
-                console.log(`อัปเดตใบคำขอลา id: ${id} เป็นสถานะ: ${status} เรียบร้อยแล้ว`);
+        // 🔹 ตรวจสอบค่าว่าง
+        if (!status || !employeeid) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'กรุณากรอกข้อมูลให้ครบ'
+            });
+        }
 
-                // เพิ่มข้อความแจ้งเตือน
-                const message = `ใบลาของคุณ (ID: ${id}) ได้รับการอัปเดตเป็นสถานะ: ${status}`;
-                connection.query(
-                    'INSERT INTO notifications (employeeid, message) VALUES (?, ?)',
-                    [employeeid, message],
-                    (err) => {
-                        if (err) {
-                            console.error('Error inserting notification:', err);
-                            return res.status(500).json({
-                                status: 'error',
-                                message: 'เกิดข้อผิดพลาดในการสร้างข้อความแจ้งเตือน'
-                            });
-                        }
+        // 🔵 อัปเดตสถานะใบลา
+        const updateQuery = 'UPDATE leaverequests SET status = ? WHERE leaverequestid = ?';
+        await connection.promise().execute(updateQuery, [status, id]);
 
-                        console.log('สร้างข้อความแจ้งเตือนสำเร็จ');
-                        // เมื่อทำงานเสร็จสิ้นทั้งหมด ให้ redirect กลับไปหน้า admin-approvals
-                        res.redirect('/admin-approvals');
-                    }
-                );
-            }
-        );
-    } else {
-        console.log('No session found, redirecting to signin');
-        res.redirect('/signin');
+        console.log(`✅ อัปเดตใบคำขอลา ID: ${id} เป็นสถานะ: ${status}`);
+
+        // 🔵 เพิ่มข้อความแจ้งเตือน
+        const message = `ใบลาของคุณ (ID: ${id}) ได้รับการอัปเดตเป็นสถานะ: ${status}`;
+        const insertNotificationQuery = 'INSERT INTO notifications (employeeid, message) VALUES (?, ?)';
+        await connection.promise().execute(insertNotificationQuery, [employeeid, message]);
+
+        console.log('✅ สร้างข้อความแจ้งเตือนสำเร็จ');
+
+        // 🔄 Redirect ไปหน้า admin-approvals
+        res.redirect('/admin-approvals');
+
+    } catch (error) {
+        console.error('❌ Error updating leave request:', error);
+        res.status(500).json({
+            status: 'error',
+            message: 'เกิดข้อผิดพลาดในการอัปเดตสถานะใบลา'
+        });
     }
 });
 
-//Route สำหรับแสดงข้อความ: โดยใช้ employeeid
+
+//การทำงาน notifications เมื่อมีการเปิดอ่านจะ UPDATE notifications SET is_read = TRUE หรือ 1 ถ้ายังไม่อ่านจะเป็น false หรือ 0
+//Route สำหรับแสดงข้อความ: โดยใช้ employeeid ทั้งหมด ทั้งอ่านแล้วและยังไม่อ่าน
 router.get('/api/notifications', (req, res) => {
     const employeeid = req.session.employeeid;
 
     if (!employeeid) {
         return res.status(401).json({ status: 'error', message: 'ไม่ได้เข้าสู่ระบบ' });
     }
-
+    //     const query = `
+    //     SELECT message, created_at, is_read 
+    //     FROM notifications 
+    //     WHERE employeeid = ?
+    //     ORDER BY created_at DESC 
+    //     LIMIT 10
+    //  `;
+     
+    //ข้อความที่ยังไม่ได้เปิดอ่าน
     const query = `
         SELECT message, created_at, is_read 
         FROM notifications 
-        WHERE employeeid = ? 
+        WHERE employeeid = ? and is_read = false
         ORDER BY created_at DESC 
         LIMIT 10
     `;
@@ -788,7 +811,7 @@ router.get('/api/notifications', (req, res) => {
     });
 });
 
-// อัปเดตว่า notifications ถูกอ่านแล้วเมื่อเปิด dropdown:
+// อัปเดตว่า notifications เมื่อถูกอ่านแล้วหรือเมื่อเปิด dropdown: is_read = true หรือ 1
 router.post('/api/notifications/read', (req, res) => {
     const employeeid = req.session.employeeid;
 
